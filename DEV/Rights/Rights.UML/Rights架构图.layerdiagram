@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<layerModel xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" xmlns:dm1="http://schemas.microsoft.com/dsltools/SimpleShapesModel" dslVersion="1.0.0.0" Id="47093edf-b0ae-408b-a9a3-f8eeddaa7e1c" xmlns="http://schemas.microsoft.com/VisualStudio/TeamArchitect/LayerDesigner">
+  <layers>
+    <layer Id="5e7eb713-7268-4e6a-80f5-d9aa37fdc9ec" name="DAL">
+      <childLayers>
+        <layer Id="d901a325-e726-456f-9f65-9b517104054e" name="Dapper" />
+      </childLayers>
+    </layer>
+    <layer Id="00391d01-5d24-4395-bde2-49456a227a40" name="Service">
+      <dependencyToLayers>
+        <dependencyFromLayerToLayer Id="b28689f9-0569-470c-862e-ec65135f17a2" direction="Forward">
+          <layerMoniker Id="5e7eb713-7268-4e6a-80f5-d9aa37fdc9ec" />
+        </dependencyFromLayerToLayer>
+      </dependencyToLayers>
+      <childLayers>
+        <layer Id="74596c32-7bb0-4943-b16d-14978863913f" name="WCF" />
+      </childLayers>
+    </layer>
+    <layer Id="13125011-1b6d-4855-bd36-c7bd7e0689c3" name="Entity">
+      <childLayers>
+        <layer Id="b707134b-a671-4d4f-8fa6-d3083f4d6e99" name="DBEntity" />
+        <layer Id="0f9c6030-c0e1-46f3-a6b0-8f9e2c87ba60" name="BizEntity" />
+        <layer Id="14334bdb-92a6-49b8-9dfb-1089d4a613c4" name="Metadata" />
+      </childLayers>
+    </layer>
+    <layer Id="03d56147-e00b-4669-a763-b7b7a793e0b4" name="OpenAPI">
+      <dependencyToLayers>
+        <dependencyFromLayerToLayer Id="44c9fad5-4e00-436c-9013-b352e409998f" direction="Forward">
+          <layerMoniker Id="00391d01-5d24-4395-bde2-49456a227a40" />
+        </dependencyFromLayerToLayer>
+      </dependencyToLayers>
+    </layer>
+    <layer Id="37b1c9c3-8399-43d6-b0e2-1499e0d6b635" name="UI">
+      <dependencyToLayers>
+        <dependencyFromLayerToLayer Id="7c0cc168-71b3-4f14-96c9-50c1df37baaf" direction="Forward">
+          <layerMoniker Id="00391d01-5d24-4395-bde2-49456a227a40" />
+        </dependencyFromLayerToLayer>
+      </dependencyToLayers>
+    </layer>
+    <layer Id="6e949ceb-d707-4062-b027-eedce27a6d16" name="A">
+      <dependencyToLayers>
+        <dependencyFromLayerToLayer Id="8dd91d74-f5cb-4ad7-9275-6ab835acadb8" direction="Forward">
+          <layerMoniker Id="03d56147-e00b-4669-a763-b7b7a793e0b4" />
+        </dependencyFromLayerToLayer>
+      </dependencyToLayers>
+    </layer>
+    <layer Id="3a5c2726-52c6-42b6-be8d-227e1a410729" name="B">
+      <dependencyToLayers>
+        <dependencyFromLayerToLayer Id="3d237468-7e88-4d84-81b8-33ae1e93fb9e" direction="Forward">
+          <layerMoniker Id="03d56147-e00b-4669-a763-b7b7a793e0b4" />
+        </dependencyFromLayerToLayer>
+      </dependencyToLayers>
+    </layer>
+    <layer Id="c2a6b091-83c6-4408-ae5d-5e56493cd30d" name="Common">
+      <childLayers>
+        <layer Id="aa666d61-c205-4504-8026-e4e77780630a" name="Cache" />
+        <layer Id="0427750d-b96b-44c4-b0f2-cd7922de426f" name="Session" />
+        <layer Id="ec07903a-9bbb-458d-857f-132acb0a82ed" name="Log" />
+        <layer Id="de4a3de3-982e-47ff-80f6-dab4fac1d840" name="序列化" />
+        <layer Id="9f1ee2f5-f5e7-4aba-b3f8-b4bba8cee248" name="Config" />
+        <layer Id="8beea723-0ced-4037-af46-def6eb78674c" name="Exception" />
+        <layer Id="6fdddee4-63d4-4ae7-9113-3a78a3134795" name="Scheduler" />
+      </childLayers>
+    </layer>
+  </layers>
+</layerModel>
