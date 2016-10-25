@@ -48,6 +48,12 @@
     <Compile Include="Helper\RightsHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Rights.Entity\Rights.Entity.csproj">
+      <Project>{051ce919-124e-4ff6-9605-824417ad4f51}</Project>
+      <Name>Rights.Entity</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
