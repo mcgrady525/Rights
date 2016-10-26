@@ -1,4 +1,4 @@
-﻿USE Rights;
+﻿USE RightsDB;
 GO
 
 

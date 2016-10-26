@@ -1,76 +1,76 @@
 /*==============================================================*/
 /* DBMS name:      Microsoft SQL Server 2008                    */
-/* Created on:     2016/10/25 15:48:24                          */
+/* Created on:     2016/10/26 11:55:42                          */
 /*==============================================================*/
 
 
 if exists (select 1
             from  sysobjects
-           where  id = object_id('t_sys_rights_button')
+           where  id = object_id('t_rights_button')
             and   type = 'U')
-   drop table t_sys_rights_button
+   drop table t_rights_button
 go
 
 if exists (select 1
             from  sysobjects
-           where  id = object_id('t_sys_rights_menu')
+           where  id = object_id('t_rights_menu')
             and   type = 'U')
-   drop table t_sys_rights_menu
+   drop table t_rights_menu
 go
 
 if exists (select 1
             from  sysobjects
-           where  id = object_id('t_sys_rights_menu_button')
+           where  id = object_id('t_rights_menu_button')
             and   type = 'U')
-   drop table t_sys_rights_menu_button
+   drop table t_rights_menu_button
 go
 
 if exists (select 1
             from  sysobjects
-           where  id = object_id('t_sys_rights_organization')
+           where  id = object_id('t_rights_organization')
             and   type = 'U')
-   drop table t_sys_rights_organization
+   drop table t_rights_organization
 go
 
 if exists (select 1
             from  sysobjects
-           where  id = object_id('t_sys_rights_role')
+           where  id = object_id('t_rights_role')
             and   type = 'U')
-   drop table t_sys_rights_role
+   drop table t_rights_role
 go
 
 if exists (select 1
             from  sysobjects
-           where  id = object_id('t_sys_rights_role_menu_button')
+           where  id = object_id('t_rights_role_menu_button')
             and   type = 'U')
-   drop table t_sys_rights_role_menu_button
+   drop table t_rights_role_menu_button
 go
 
 if exists (select 1
             from  sysobjects
-           where  id = object_id('t_sys_rights_user')
+           where  id = object_id('t_rights_user')
             and   type = 'U')
-   drop table t_sys_rights_user
+   drop table t_rights_user
 go
 
 if exists (select 1
             from  sysobjects
-           where  id = object_id('t_sys_rights_user_organization')
+           where  id = object_id('t_rights_user_organization')
             and   type = 'U')
-   drop table t_sys_rights_user_organization
+   drop table t_rights_user_organization
 go
 
 if exists (select 1
             from  sysobjects
-           where  id = object_id('t_sys_rights_user_role')
+           where  id = object_id('t_rights_user_role')
             and   type = 'U')
-   drop table t_sys_rights_user_role
+   drop table t_rights_user_role
 go
 
 /*==============================================================*/
-/* Table: t_sys_rights_button                                   */
+/* Table: t_rights_button                                       */
 /*==============================================================*/
-create table t_sys_rights_button (
+create table t_rights_button (
    id                   int                  identity,
    name                 nvarchar(32)         not null,
    code                 nvarchar(32)         not null,
@@ -80,17 +80,17 @@ create table t_sys_rights_button (
    created_time         datetime             not null,
    last_updated_by      int                  null,
    last_updated_time    datetime             null,
-   constraint PK_T_SYS_RIGHTS_BUTTON primary key (id)
+   constraint PK_T_RIGHTS_BUTTON primary key (id)
 )
 go
 
 if exists (select 1 from  sys.extended_properties
-           where major_id = object_id('t_sys_rights_button') and minor_id = 0)
+           where major_id = object_id('t_rights_button') and minor_id = 0)
 begin 
    declare @CurrentUser sysname 
 select @CurrentUser = user_name() 
 execute sp_dropextendedproperty 'MS_Description',  
-   'user', @CurrentUser, 'table', 't_sys_rights_button' 
+   'user', @CurrentUser, 'table', 't_rights_button' 
  
 end 
 
@@ -98,18 +98,18 @@ end
 select @CurrentUser = user_name() 
 execute sp_addextendedproperty 'MS_Description',  
    '按钮(动作)表', 
-   'user', @CurrentUser, 'table', 't_sys_rights_button'
+   'user', @CurrentUser, 'table', 't_rights_button'
 go
 
 if exists(select 1 from sys.extended_properties p where
-      p.major_id = object_id('t_sys_rights_button')
+      p.major_id = object_id('t_rights_button')
   and p.minor_id = (select c.column_id from sys.columns c where c.object_id = p.major_id and c.name = 'id')
 )
 begin
    declare @CurrentUser sysname
 select @CurrentUser = user_name()
 execute sp_dropextendedproperty 'MS_Description', 
-   'user', @CurrentUser, 'table', 't_sys_rights_button', 'column', 'id'
+   'user', @CurrentUser, 'table', 't_rights_button', 'column', 'id'
 
 end
 
@@ -117,18 +117,18 @@ end
 select @CurrentUser = user_name()
 execute sp_addextendedproperty 'MS_Description', 
    '主键',
-   'user', @CurrentUser, 'table', 't_sys_rights_button', 'column', 'id'
+   'user', @CurrentUser, 'table', 't_rights_button', 'column', 'id'
 go
 
 if exists(select 1 from sys.extended_properties p where
-      p.major_id = object_id('t_sys_rights_button')
+      p.major_id = object_id('t_rights_button')
   and p.minor_id = (select c.column_id from sys.columns c where c.object_id = p.major_id and c.name = 'name')
 )
 begin
    declare @CurrentUser sysname
 select @CurrentUser = user_name()
 execute sp_dropextendedproperty 'MS_Description', 
-   'user', @CurrentUser, 'table', 't_sys_rights_button', 'column', 'name'
+   'user', @CurrentUser, 'table', 't_rights_button', 'column', 'name'
 
 end
 
@@ -136,18 +136,18 @@ end
 select @CurrentUser = user_name()
 execute sp_addextendedproperty 'MS_Description', 
    '按钮名称',
-   'user', @CurrentUser, 'table', 't_sys_rights_button', 'column', 'name'
+   'user', @CurrentUser, 'table', 't_rights_button', 'column', 'name'
 go
 
 if exists(select 1 from sys.extended_properties p where
-      p.major_id = object_id('t_sys_rights_button')
+      p.major_id = object_id('t_rights_button')
   and p.minor_id = (select c.column_id from sys.columns c where c.object_id = p.major_id and c.name = 'code')
 )
 begin
    declare @CurrentUser sysname
 select @CurrentUser = user_name()
 execute sp_dropextendedproperty 'MS_Description', 
-   'user', @CurrentUser, 'table', 't_sys_rights_button', 'column', 'code'
+   'user', @CurrentUser, 'table', 't_rights_button', 'column', 'code'
 
 end
 
@@ -155,18 +155,18 @@ end
 select @CurrentUser = user_name()
 execute sp_addextendedproperty 'MS_Description', 
    '按钮编码',
-   'user', @CurrentUser, 'table', 't_sys_rights_button', 'column', 'code'
+   'user', @CurrentUser, 'table', 't_rights_button', 'column', 'code'
 go
 
 if exists(select 1 from sys.extended_properties p where
-      p.major_id = object_id('t_sys_rights_button')
+      p.major_id = object_id('t_rights_button')
   and p.minor_id = (select c.column_id from sys.columns c where c.object_id = p.major_id and c.name = 'icon')
 )
 begin
    declare @CurrentUser sysname
 select @CurrentUser = user_name()
 execute sp_dropextendedproperty 'MS_Description', 
-   'user', @CurrentUser, 'table', 't_sys_rights_button', 'column', 'icon'
+   'user', @CurrentUser, 'table', 't_rights_button', 'column', 'icon'
 
 end
 
@@ -174,18 +174,18 @@ end
 select @CurrentUser = user_name()
 execute sp_addextendedproperty 'MS_Description', 
    '按钮图标',
-   'user', @CurrentUser, 'table', 't_sys_rights_button', 'column', 'icon'
+   'user', @CurrentUser, 'table', 't_rights_button', 'column', 'icon'
 go
 
 if exists(select 1 from sys.extended_properties p where
-      p.major_id = object_id('t_sys_rights_button')
+      p.major_id = object_id('t_rights_button')
   and p.minor_id = (select c.column_id from sys.columns c where c.object_id = p.major_id and c.name = 'sort')
 )
 begin
    declare @CurrentUser sysname
 select @CurrentUser = user_name()
 execute sp_dropextendedproperty 'MS_Description', 
-   'user', @CurrentUser, 'table', 't_sys_rights_button', 'column', 'sort'
+   'user', @CurrentUser, 'table', 't_rights_button', 'column', 'sort'
 
 end
 
@@ -193,18 +193,18 @@ end
 select @CurrentUser = user_name()
 execute sp_addextendedproperty 'MS_Description', 
    '排序',
-   'user', @CurrentUser, 'table', 't_sys_rights_button', 'column', 'sort'
+   'user', @CurrentUser, 'table', 't_rights_button', 'column', 'sort'
 go
 
 if exists(select 1 from sys.extended_properties p where
-      p.major_id = object_id('t_sys_rights_button')
+      p.major_id = object_id('t_rights_button')
   and p.minor_id = (select c.column_id from sys.columns c where c.object_id = p.major_id and c.name = 'created_by')
 )
 begin
    declare @CurrentUser sysname
 select @CurrentUser = user_name()
 execute sp_dropextendedproperty 'MS_Description', 
-   'user', @CurrentUser, 'table', 't_sys_rights_button', 'column', 'created_by'
+   'user', @CurrentUser, 'table', 't_rights_button', 'column', 'created_by'
 
 end
 
@@ -212,18 +212,18 @@ end
 select @CurrentUser = user_name()
 execute sp_addextendedproperty 'MS_Description', 
    '创建人id',
-   'user', @CurrentUser, 'table', 't_sys_rights_button', 'column', 'created_by'
+   'user', @CurrentUser, 'table', 't_rights_button', 'column', 'created_by'
 go
 
 if exists(select 1 from sys.extended_properties p where
-      p.major_id = object_id('t_sys_rights_button')
+      p.major_id = object_id('t_rights_button')
   and p.minor_id = (select c.column_id from sys.columns c where c.object_id = p.major_id and c.name = 'created_time')
 )
 begin
    declare @CurrentUser sysname
 select @CurrentUser = user_name()
 execute sp_dropextendedproperty 'MS_Description', 
-   'user', @CurrentUser, 'table', 't_sys_rights_button', 'column', 'created_time'
+   'user', @CurrentUser, 'table', 't_rights_button', 'column', 'created_time'
 
 end
 
@@ -231,18 +231,18 @@ end
 select @CurrentUser = user_name()
 execute sp_addextendedproperty 'MS_Description', 
    '创建时间',
-   'user', @CurrentUser, 'table', 't_sys_rights_button', 'column', 'created_time'
+   'user', @CurrentUser, 'table', 't_rights_button', 'column', 'created_time'
 go
 
 if exists(select 1 from sys.extended_properties p where
-      p.major_id = object_id('t_sys_rights_button')
+      p.major_id = object_id('t_rights_button')
   and p.minor_id = (select c.column_id from sys.columns c where c.object_id = p.major_id and c.name = 'last_updated_by')
 )
 begin
    declare @CurrentUser sysname
 select @CurrentUser = user_name()
 execute sp_dropextendedproperty 'MS_Description', 
-   'user', @CurrentUser, 'table', 't_sys_rights_button', 'column', 'last_updated_by'
+   'user', @CurrentUser, 'table', 't_rights_button', 'column', 'last_updated_by'
 
 end
 
@@ -250,18 +250,18 @@ end
 select @CurrentUser = user_name()
 execute sp_addextendedproperty 'MS_Description', 
    '最后更新人id',
-   'user', @CurrentUser, 'table', 't_sys_rights_button', 'column', 'last_updated_by'
+   'user', @CurrentUser, 'table', 't_rights_button', 'column', 'last_updated_by'
 go
 
 if exists(select 1 from sys.extended_properties p where
-      p.major_id = object_id('t_sys_rights_button')
+      p.major_id = object_id('t_rights_button')
   and p.minor_id = (select c.column_id from sys.columns c where c.object_id = p.major_id and c.name = 'last_updated_time')
 )
 begin
    declare @CurrentUser sysname
 select @CurrentUser = user_name()
 execute sp_dropextendedproperty 'MS_Description', 
-   'user', @CurrentUser, 'table', 't_sys_rights_button', 'column', 'last_updated_time'
+   'user', @CurrentUser, 'table', 't_rights_button', 'column', 'last_updated_time'
 
 end
 
@@ -269,13 +269,13 @@ end
 select @CurrentUser = user_name()
 execute sp_addextendedproperty 'MS_Description', 
    '最后更新时间',
-   'user', @CurrentUser, 'table', 't_sys_rights_button', 'column', 'last_updated_time'
+   'user', @CurrentUser, 'table', 't_rights_button', 'column', 'last_updated_time'
 go
 
 /*==============================================================*/
-/* Table: t_sys_rights_menu                                     */
+/* Table: t_rights_menu                                         */
 /*==============================================================*/
-create table t_sys_rights_menu (
+create table t_rights_menu (
    id                   int                  identity,
    name                 nvarchar(64)         not null,
    parent_id            int                  not null,
@@ -287,17 +287,17 @@ create table t_sys_rights_menu (
    created_time         datetime             not null,
    last_updated_by      int                  null,
    last_updated_time    datetime             null,
-   constraint PK_T_SYS_RIGHTS_MENU primary key (id)
+   constraint PK_T_RIGHTS_MENU primary key (id)
 )
 go
 
 if exists (select 1 from  sys.extended_properties
-           where major_id = object_id('t_sys_rights_menu') and minor_id = 0)
+           where major_id = object_id('t_rights_menu') and minor_id = 0)
 begin 
    declare @CurrentUser sysname 
 select @CurrentUser = user_name() 
 execute sp_dropextendedproperty 'MS_Description',  
-   'user', @CurrentUser, 'table', 't_sys_rights_menu' 
+   'user', @CurrentUser, 'table', 't_rights_menu' 
  
 end 
 
@@ -305,18 +305,18 @@ end
 select @CurrentUser = user_name() 
 execute sp_addextendedproperty 'MS_Description',  
    '菜单表', 
-   'user', @CurrentUser, 'table', 't_sys_rights_menu'
+   'user', @CurrentUser, 'table', 't_rights_menu'
 go
 
 if exists(select 1 from sys.extended_properties p where
-      p.major_id = object_id('t_sys_rights_menu')
+      p.major_id = object_id('t_rights_menu')
   and p.minor_id = (select c.column_id from sys.columns c where c.object_id = p.major_id and c.name = 'name')
 )
 begin
    declare @CurrentUser sysname
 select @CurrentUser = user_name()
 execute sp_dropextendedproperty 'MS_Description', 
-   'user', @CurrentUser, 'table', 't_sys_rights_menu', 'column', 'name'
+   'user', @CurrentUser, 'table', 't_rights_menu', 'column', 'name'
 
 end
 
@@ -324,18 +324,18 @@ end
 select @CurrentUser = user_name()
 execute sp_addextendedproperty 'MS_Description', 
    '菜单名称',
-   'user', @CurrentUser, 'table', 't_sys_rights_menu', 'column', 'name'
+   'user', @CurrentUser, 'table', 't_rights_menu', 'column', 'name'
 go
 
 if exists(select 1 from sys.extended_properties p where
-      p.major_id = object_id('t_sys_rights_menu')
+      p.major_id = object_id('t_rights_menu')
   and p.minor_id = (select c.column_id from sys.columns c where c.object_id = p.major_id and c.name = 'parent_id')
 )
 begin
    declare @CurrentUser sysname
 select @CurrentUser = user_name()
 execute sp_dropextendedproperty 'MS_Description', 
-   'user', @CurrentUser, 'table', 't_sys_rights_menu', 'column', 'parent_id'
+   'user', @CurrentUser, 'table', 't_rights_menu', 'column', 'parent_id'
 
 end
 
@@ -343,18 +343,18 @@ end
 select @CurrentUser = user_name()
 execute sp_addextendedproperty 'MS_Description', 
    '上级菜单id',
-   'user', @CurrentUser, 'table', 't_sys_rights_menu', 'column', 'parent_id'
+   'user', @CurrentUser, 'table', 't_rights_menu', 'column', 'parent_id'
 go
 
 if exists(select 1 from sys.extended_properties p where
-      p.major_id = object_id('t_sys_rights_menu')
+      p.major_id = object_id('t_rights_menu')
   and p.minor_id = (select c.column_id from sys.columns c where c.object_id = p.major_id and c.name = 'code')
 )
 begin
    declare @CurrentUser sysname
 select @CurrentUser = user_name()
 execute sp_dropextendedproperty 'MS_Description', 
-   'user', @CurrentUser, 'table', 't_sys_rights_menu', 'column', 'code'
+   'user', @CurrentUser, 'table', 't_rights_menu', 'column', 'code'
 
 end
 
@@ -362,18 +362,18 @@ end
 select @CurrentUser = user_name()
 execute sp_addextendedproperty 'MS_Description', 
    '菜单编码',
-   'user', @CurrentUser, 'table', 't_sys_rights_menu', 'column', 'code'
+   'user', @CurrentUser, 'table', 't_rights_menu', 'column', 'code'
 go
 
 if exists(select 1 from sys.extended_properties p where
-      p.major_id = object_id('t_sys_rights_menu')
+      p.major_id = object_id('t_rights_menu')
   and p.minor_id = (select c.column_id from sys.columns c where c.object_id = p.major_id and c.name = 'url')
 )
 begin
    declare @CurrentUser sysname
 select @CurrentUser = user_name()
 execute sp_dropextendedproperty 'MS_Description', 
-   'user', @CurrentUser, 'table', 't_sys_rights_menu', 'column', 'url'
+   'user', @CurrentUser, 'table', 't_rights_menu', 'column', 'url'
 
 end
 
@@ -381,18 +381,18 @@ end
 select @CurrentUser = user_name()
 execute sp_addextendedproperty 'MS_Description', 
    '菜单url',
-   'user', @CurrentUser, 'table', 't_sys_rights_menu', 'column', 'url'
+   'user', @CurrentUser, 'table', 't_rights_menu', 'column', 'url'
 go
 
 if exists(select 1 from sys.extended_properties p where
-      p.major_id = object_id('t_sys_rights_menu')
+      p.major_id = object_id('t_rights_menu')
   and p.minor_id = (select c.column_id from sys.columns c where c.object_id = p.major_id and c.name = 'icon')
 )
 begin
    declare @CurrentUser sysname
 select @CurrentUser = user_name()
 execute sp_dropextendedproperty 'MS_Description', 
-   'user', @CurrentUser, 'table', 't_sys_rights_menu', 'column', 'icon'
+   'user', @CurrentUser, 'table', 't_rights_menu', 'column', 'icon'
 
 end
 
@@ -400,18 +400,18 @@ end
 select @CurrentUser = user_name()
 execute sp_addextendedproperty 'MS_Description', 
    '菜单图标',
-   'user', @CurrentUser, 'table', 't_sys_rights_menu', 'column', 'icon'
+   'user', @CurrentUser, 'table', 't_rights_menu', 'column', 'icon'
 go
 
 if exists(select 1 from sys.extended_properties p where
-      p.major_id = object_id('t_sys_rights_menu')
+      p.major_id = object_id('t_rights_menu')
   and p.minor_id = (select c.column_id from sys.columns c where c.object_id = p.major_id and c.name = 'sort')
 )
 begin
    declare @CurrentUser sysname
 select @CurrentUser = user_name()
 execute sp_dropextendedproperty 'MS_Description', 
-   'user', @CurrentUser, 'table', 't_sys_rights_menu', 'column', 'sort'
+   'user', @CurrentUser, 'table', 't_rights_menu', 'column', 'sort'
 
 end
 
@@ -419,18 +419,18 @@ end
 select @CurrentUser = user_name()
 execute sp_addextendedproperty 'MS_Description', 
    '菜单排序',
-   'user', @CurrentUser, 'table', 't_sys_rights_menu', 'column', 'sort'
+   'user', @CurrentUser, 'table', 't_rights_menu', 'column', 'sort'
 go
 
 if exists(select 1 from sys.extended_properties p where
-      p.major_id = object_id('t_sys_rights_menu')
+      p.major_id = object_id('t_rights_menu')
   and p.minor_id = (select c.column_id from sys.columns c where c.object_id = p.major_id and c.name = 'created_by')
 )
 begin
    declare @CurrentUser sysname
 select @CurrentUser = user_name()
 execute sp_dropextendedproperty 'MS_Description', 
-   'user', @CurrentUser, 'table', 't_sys_rights_menu', 'column', 'created_by'
+   'user', @CurrentUser, 'table', 't_rights_menu', 'column', 'created_by'
 
 end
 
@@ -438,18 +438,18 @@ end
 select @CurrentUser = user_name()
 execute sp_addextendedproperty 'MS_Description', 
    '创建人id',
-   'user', @CurrentUser, 'table', 't_sys_rights_menu', 'column', 'created_by'
+   'user', @CurrentUser, 'table', 't_rights_menu', 'column', 'created_by'
 go
 
 if exists(select 1 from sys.extended_properties p where
-      p.major_id = object_id('t_sys_rights_menu')
+      p.major_id = object_id('t_rights_menu')
   and p.minor_id = (select c.column_id from sys.columns c where c.object_id = p.major_id and c.name = 'created_time')
 )
 begin
    declare @CurrentUser sysname
 select @CurrentUser = user_name()
 execute sp_dropextendedproperty 'MS_Description', 
-   'user', @CurrentUser, 'table', 't_sys_rights_menu', 'column', 'created_time'
+   'user', @CurrentUser, 'table', 't_rights_menu', 'column', 'created_time'
 
 end
 
@@ -457,18 +457,18 @@ end
 select @CurrentUser = user_name()
 execute sp_addextendedproperty 'MS_Description', 
    '创建时间',
-   'user', @CurrentUser, 'table', 't_sys_rights_menu', 'column', 'created_time'
+   'user', @CurrentUser, 'table', 't_rights_menu', 'column', 'created_time'
 go
 
 if exists(select 1 from sys.extended_properties p where
-      p.major_id = object_id('t_sys_rights_menu')
+      p.major_id = object_id('t_rights_menu')
   and p.minor_id = (select c.column_id from sys.columns c where c.object_id = p.major_id and c.name = 'last_updated_by')
 )
 begin
    declare @CurrentUser sysname
 select @CurrentUser = user_name()
 execute sp_dropextendedproperty 'MS_Description', 
-   'user', @CurrentUser, 'table', 't_sys_rights_menu', 'column', 'last_updated_by'
+   'user', @CurrentUser, 'table', 't_rights_menu', 'column', 'last_updated_by'
 
 end
 
@@ -476,18 +476,18 @@ end
 select @CurrentUser = user_name()
 execute sp_addextendedproperty 'MS_Description', 
    '最后更新人id',
-   'user', @CurrentUser, 'table', 't_sys_rights_menu', 'column', 'last_updated_by'
+   'user', @CurrentUser, 'table', 't_rights_menu', 'column', 'last_updated_by'
 go
 
 if exists(select 1 from sys.extended_properties p where
-      p.major_id = object_id('t_sys_rights_menu')
+      p.major_id = object_id('t_rights_menu')
   and p.minor_id = (select c.column_id from sys.columns c where c.object_id = p.major_id and c.name = 'last_updated_time')
 )
 begin
    declare @CurrentUser sysname
 select @CurrentUser = user_name()
 execute sp_dropextendedproperty 'MS_Description', 
-   'user', @CurrentUser, 'table', 't_sys_rights_menu', 'column', 'last_updated_time'
+   'user', @CurrentUser, 'table', 't_rights_menu', 'column', 'last_updated_time'
 
 end
 
@@ -495,27 +495,27 @@ end
 select @CurrentUser = user_name()
 execute sp_addextendedproperty 'MS_Description', 
    '最后更新时间',
-   'user', @CurrentUser, 'table', 't_sys_rights_menu', 'column', 'last_updated_time'
+   'user', @CurrentUser, 'table', 't_rights_menu', 'column', 'last_updated_time'
 go
 
 /*==============================================================*/
-/* Table: t_sys_rights_menu_button                              */
+/* Table: t_rights_menu_button                                  */
 /*==============================================================*/
-create table t_sys_rights_menu_button (
+create table t_rights_menu_button (
    id                   int                  not null,
    menu_id              int                  null,
    button_id            int                  null,
-   constraint PK_T_SYS_RIGHTS_MENU_BUTTON primary key (id)
+   constraint PK_T_RIGHTS_MENU_BUTTON primary key (id)
 )
 go
 
 if exists (select 1 from  sys.extended_properties
-           where major_id = object_id('t_sys_rights_menu_button') and minor_id = 0)
+           where major_id = object_id('t_rights_menu_button') and minor_id = 0)
 begin 
    declare @CurrentUser sysname 
 select @CurrentUser = user_name() 
 execute sp_dropextendedproperty 'MS_Description',  
-   'user', @CurrentUser, 'table', 't_sys_rights_menu_button' 
+   'user', @CurrentUser, 'table', 't_rights_menu_button' 
  
 end 
 
@@ -523,18 +523,18 @@ end
 select @CurrentUser = user_name() 
 execute sp_addextendedproperty 'MS_Description',  
    '菜单-按钮表', 
-   'user', @CurrentUser, 'table', 't_sys_rights_menu_button'
+   'user', @CurrentUser, 'table', 't_rights_menu_button'
 go
 
 if exists(select 1 from sys.extended_properties p where
-      p.major_id = object_id('t_sys_rights_menu_button')
+      p.major_id = object_id('t_rights_menu_button')
   and p.minor_id = (select c.column_id from sys.columns c where c.object_id = p.major_id and c.name = 'menu_id')
 )
 begin
    declare @CurrentUser sysname
 select @CurrentUser = user_name()
 execute sp_dropextendedproperty 'MS_Description', 
-   'user', @CurrentUser, 'table', 't_sys_rights_menu_button', 'column', 'menu_id'
+   'user', @CurrentUser, 'table', 't_rights_menu_button', 'column', 'menu_id'
 
 end
 
@@ -542,18 +542,18 @@ end
 select @CurrentUser = user_name()
 execute sp_addextendedproperty 'MS_Description', 
    '菜单id',
-   'user', @CurrentUser, 'table', 't_sys_rights_menu_button', 'column', 'menu_id'
+   'user', @CurrentUser, 'table', 't_rights_menu_button', 'column', 'menu_id'
 go
 
 if exists(select 1 from sys.extended_properties p where
-      p.major_id = object_id('t_sys_rights_menu_button')
+      p.major_id = object_id('t_rights_menu_button')
   and p.minor_id = (select c.column_id from sys.columns c where c.object_id = p.major_id and c.name = 'button_id')
 )
 begin
    declare @CurrentUser sysname
 select @CurrentUser = user_name()
 execute sp_dropextendedproperty 'MS_Description', 
-   'user', @CurrentUser, 'table', 't_sys_rights_menu_button', 'column', 'button_id'
+   'user', @CurrentUser, 'table', 't_rights_menu_button', 'column', 'button_id'
 
 end
 
@@ -561,13 +561,13 @@ end
 select @CurrentUser = user_name()
 execute sp_addextendedproperty 'MS_Description', 
    '按钮id',
-   'user', @CurrentUser, 'table', 't_sys_rights_menu_button', 'column', 'button_id'
+   'user', @CurrentUser, 'table', 't_rights_menu_button', 'column', 'button_id'
 go
 
 /*==============================================================*/
-/* Table: t_sys_rights_organization                             */
+/* Table: t_rights_organization                                 */
 /*==============================================================*/
-create table t_sys_rights_organization (
+create table t_rights_organization (
    id                   int                  identity,
    name                 nvarchar(128)        not null,
    parent_id            int                  not null,
@@ -579,17 +579,17 @@ create table t_sys_rights_organization (
    created_time         datetime             not null,
    last_updated_by      int                  null,
    last_updated_time    datetime             null,
-   constraint PK_T_SYS_RIGHTS_ORGANIZATION primary key (id)
+   constraint PK_T_RIGHTS_ORGANIZATION primary key (id)
 )
 go
 
 if exists (select 1 from  sys.extended_properties
-           where major_id = object_id('t_sys_rights_organization') and minor_id = 0)
+           where major_id = object_id('t_rights_organization') and minor_id = 0)
 begin 
    declare @CurrentUser sysname 
 select @CurrentUser = user_name() 
 execute sp_dropextendedproperty 'MS_Description',  
-   'user', @CurrentUser, 'table', 't_sys_rights_organization' 
+   'user', @CurrentUser, 'table', 't_rights_organization' 
  
 end 
 
@@ -597,18 +597,18 @@ end
 select @CurrentUser = user_name() 
 execute sp_addextendedproperty 'MS_Description',  
    '组织机构表，树形结构数据。', 
-   'user', @CurrentUser, 'table', 't_sys_rights_organization'
+   'user', @CurrentUser, 'table', 't_rights_organization'
 go
 
 if exists(select 1 from sys.extended_properties p where
-      p.major_id = object_id('t_sys_rights_organization')
+      p.major_id = object_id('t_rights_organization')
   and p.minor_id = (select c.column_id from sys.columns c where c.object_id = p.major_id and c.name = 'name')
 )
 begin
    declare @CurrentUser sysname
 select @CurrentUser = user_name()
 execute sp_dropextendedproperty 'MS_Description', 
-   'user', @CurrentUser, 'table', 't_sys_rights_organization', 'column', 'name'
+   'user', @CurrentUser, 'table', 't_rights_organization', 'column', 'name'
 
 end
 
@@ -616,18 +616,18 @@ end
 select @CurrentUser = user_name()
 execute sp_addextendedproperty 'MS_Description', 
    '机构名称',
-   'user', @CurrentUser, 'table', 't_sys_rights_organization', 'column', 'name'
+   'user', @CurrentUser, 'table', 't_rights_organization', 'column', 'name'
 go
 
 if exists(select 1 from sys.extended_properties p where
-      p.major_id = object_id('t_sys_rights_organization')
+      p.major_id = object_id('t_rights_organization')
   and p.minor_id = (select c.column_id from sys.columns c where c.object_id = p.major_id and c.name = 'parent_id')
 )
 begin
    declare @CurrentUser sysname
 select @CurrentUser = user_name()
 execute sp_dropextendedproperty 'MS_Description', 
-   'user', @CurrentUser, 'table', 't_sys_rights_organization', 'column', 'parent_id'
+   'user', @CurrentUser, 'table', 't_rights_organization', 'column', 'parent_id'
 
 end
 
@@ -635,18 +635,18 @@ end
 select @CurrentUser = user_name()
 execute sp_addextendedproperty 'MS_Description', 
    '上级机构id',
-   'user', @CurrentUser, 'table', 't_sys_rights_organization', 'column', 'parent_id'
+   'user', @CurrentUser, 'table', 't_rights_organization', 'column', 'parent_id'
 go
 
 if exists(select 1 from sys.extended_properties p where
-      p.major_id = object_id('t_sys_rights_organization')
+      p.major_id = object_id('t_rights_organization')
   and p.minor_id = (select c.column_id from sys.columns c where c.object_id = p.major_id and c.name = 'code')
 )
 begin
    declare @CurrentUser sysname
 select @CurrentUser = user_name()
 execute sp_dropextendedproperty 'MS_Description', 
-   'user', @CurrentUser, 'table', 't_sys_rights_organization', 'column', 'code'
+   'user', @CurrentUser, 'table', 't_rights_organization', 'column', 'code'
 
 end
 
@@ -654,18 +654,18 @@ end
 select @CurrentUser = user_name()
 execute sp_addextendedproperty 'MS_Description', 
    '机构编码',
-   'user', @CurrentUser, 'table', 't_sys_rights_organization', 'column', 'code'
+   'user', @CurrentUser, 'table', 't_rights_organization', 'column', 'code'
 go
 
 if exists(select 1 from sys.extended_properties p where
-      p.major_id = object_id('t_sys_rights_organization')
+      p.major_id = object_id('t_rights_organization')
   and p.minor_id = (select c.column_id from sys.columns c where c.object_id = p.major_id and c.name = 'organization_type')
 )
 begin
    declare @CurrentUser sysname
 select @CurrentUser = user_name()
 execute sp_dropextendedproperty 'MS_Description', 
-   'user', @CurrentUser, 'table', 't_sys_rights_organization', 'column', 'organization_type'
+   'user', @CurrentUser, 'table', 't_rights_organization', 'column', 'organization_type'
 
 end
 
@@ -673,18 +673,18 @@ end
 select @CurrentUser = user_name()
 execute sp_addextendedproperty 'MS_Description', 
    '机构类型，总公司，分公司，部门等。',
-   'user', @CurrentUser, 'table', 't_sys_rights_organization', 'column', 'organization_type'
+   'user', @CurrentUser, 'table', 't_rights_organization', 'column', 'organization_type'
 go
 
 if exists(select 1 from sys.extended_properties p where
-      p.major_id = object_id('t_sys_rights_organization')
+      p.major_id = object_id('t_rights_organization')
   and p.minor_id = (select c.column_id from sys.columns c where c.object_id = p.major_id and c.name = 'sort')
 )
 begin
    declare @CurrentUser sysname
 select @CurrentUser = user_name()
 execute sp_dropextendedproperty 'MS_Description', 
-   'user', @CurrentUser, 'table', 't_sys_rights_organization', 'column', 'sort'
+   'user', @CurrentUser, 'table', 't_rights_organization', 'column', 'sort'
 
 end
 
@@ -692,18 +692,18 @@ end
 select @CurrentUser = user_name()
 execute sp_addextendedproperty 'MS_Description', 
    '排序',
-   'user', @CurrentUser, 'table', 't_sys_rights_organization', 'column', 'sort'
+   'user', @CurrentUser, 'table', 't_rights_organization', 'column', 'sort'
 go
 
 if exists(select 1 from sys.extended_properties p where
-      p.major_id = object_id('t_sys_rights_organization')
+      p.major_id = object_id('t_rights_organization')
   and p.minor_id = (select c.column_id from sys.columns c where c.object_id = p.major_id and c.name = 'enable_flag')
 )
 begin
    declare @CurrentUser sysname
 select @CurrentUser = user_name()
 execute sp_dropextendedproperty 'MS_Description', 
-   'user', @CurrentUser, 'table', 't_sys_rights_organization', 'column', 'enable_flag'
+   'user', @CurrentUser, 'table', 't_rights_organization', 'column', 'enable_flag'
 
 end
 
@@ -711,18 +711,18 @@ end
 select @CurrentUser = user_name()
 execute sp_addextendedproperty 'MS_Description', 
    '是否启用标识，Y表示启用N表示禁用，默认启用。',
-   'user', @CurrentUser, 'table', 't_sys_rights_organization', 'column', 'enable_flag'
+   'user', @CurrentUser, 'table', 't_rights_organization', 'column', 'enable_flag'
 go
 
 if exists(select 1 from sys.extended_properties p where
-      p.major_id = object_id('t_sys_rights_organization')
+      p.major_id = object_id('t_rights_organization')
   and p.minor_id = (select c.column_id from sys.columns c where c.object_id = p.major_id and c.name = 'created_by')
 )
 begin
    declare @CurrentUser sysname
 select @CurrentUser = user_name()
 execute sp_dropextendedproperty 'MS_Description', 
-   'user', @CurrentUser, 'table', 't_sys_rights_organization', 'column', 'created_by'
+   'user', @CurrentUser, 'table', 't_rights_organization', 'column', 'created_by'
 
 end
 
@@ -730,18 +730,18 @@ end
 select @CurrentUser = user_name()
 execute sp_addextendedproperty 'MS_Description', 
    '创建人id',
-   'user', @CurrentUser, 'table', 't_sys_rights_organization', 'column', 'created_by'
+   'user', @CurrentUser, 'table', 't_rights_organization', 'column', 'created_by'
 go
 
 if exists(select 1 from sys.extended_properties p where
-      p.major_id = object_id('t_sys_rights_organization')
+      p.major_id = object_id('t_rights_organization')
   and p.minor_id = (select c.column_id from sys.columns c where c.object_id = p.major_id and c.name = 'created_time')
 )
 begin
    declare @CurrentUser sysname
 select @CurrentUser = user_name()
 execute sp_dropextendedproperty 'MS_Description', 
-   'user', @CurrentUser, 'table', 't_sys_rights_organization', 'column', 'created_time'
+   'user', @CurrentUser, 'table', 't_rights_organization', 'column', 'created_time'
 
 end
 
@@ -749,18 +749,18 @@ end
 select @CurrentUser = user_name()
 execute sp_addextendedproperty 'MS_Description', 
    '创建时间',
-   'user', @CurrentUser, 'table', 't_sys_rights_organization', 'column', 'created_time'
+   'user', @CurrentUser, 'table', 't_rights_organization', 'column', 'created_time'
 go
 
 if exists(select 1 from sys.extended_properties p where
-      p.major_id = object_id('t_sys_rights_organization')
+      p.major_id = object_id('t_rights_organization')
   and p.minor_id = (select c.column_id from sys.columns c where c.object_id = p.major_id and c.name = 'last_updated_by')
 )
 begin
    declare @CurrentUser sysname
 select @CurrentUser = user_name()
 execute sp_dropextendedproperty 'MS_Description', 
-   'user', @CurrentUser, 'table', 't_sys_rights_organization', 'column', 'last_updated_by'
+   'user', @CurrentUser, 'table', 't_rights_organization', 'column', 'last_updated_by'
 
 end
 
@@ -768,18 +768,18 @@ end
 select @CurrentUser = user_name()
 execute sp_addextendedproperty 'MS_Description', 
    '最后修改人id',
-   'user', @CurrentUser, 'table', 't_sys_rights_organization', 'column', 'last_updated_by'
+   'user', @CurrentUser, 'table', 't_rights_organization', 'column', 'last_updated_by'
 go
 
 if exists(select 1 from sys.extended_properties p where
-      p.major_id = object_id('t_sys_rights_organization')
+      p.major_id = object_id('t_rights_organization')
   and p.minor_id = (select c.column_id from sys.columns c where c.object_id = p.major_id and c.name = 'last_updated_time')
 )
 begin
    declare @CurrentUser sysname
 select @CurrentUser = user_name()
 execute sp_dropextendedproperty 'MS_Description', 
-   'user', @CurrentUser, 'table', 't_sys_rights_organization', 'column', 'last_updated_time'
+   'user', @CurrentUser, 'table', 't_rights_organization', 'column', 'last_updated_time'
 
 end
 
@@ -787,13 +787,13 @@ end
 select @CurrentUser = user_name()
 execute sp_addextendedproperty 'MS_Description', 
    '最后修改时间',
-   'user', @CurrentUser, 'table', 't_sys_rights_organization', 'column', 'last_updated_time'
+   'user', @CurrentUser, 'table', 't_rights_organization', 'column', 'last_updated_time'
 go
 
 /*==============================================================*/
-/* Table: t_sys_rights_role                                     */
+/* Table: t_rights_role                                         */
 /*==============================================================*/
-create table t_sys_rights_role (
+create table t_rights_role (
    id                   int                  identity,
    name                 nvarchar(64)         not null,
    description          nvarchar(246)        null,
@@ -802,17 +802,17 @@ create table t_sys_rights_role (
    created_time         datetime             not null,
    last_updated_by      int                  null,
    last_updated_time    datetime             null,
-   constraint PK_T_SYS_RIGHTS_ROLE primary key (id)
+   constraint PK_T_RIGHTS_ROLE primary key (id)
 )
 go
 
 if exists (select 1 from  sys.extended_properties
-           where major_id = object_id('t_sys_rights_role') and minor_id = 0)
+           where major_id = object_id('t_rights_role') and minor_id = 0)
 begin 
    declare @CurrentUser sysname 
 select @CurrentUser = user_name() 
 execute sp_dropextendedproperty 'MS_Description',  
-   'user', @CurrentUser, 'table', 't_sys_rights_role' 
+   'user', @CurrentUser, 'table', 't_rights_role' 
  
 end 
 
@@ -820,18 +820,18 @@ end
 select @CurrentUser = user_name() 
 execute sp_addextendedproperty 'MS_Description',  
    '角色表', 
-   'user', @CurrentUser, 'table', 't_sys_rights_role'
+   'user', @CurrentUser, 'table', 't_rights_role'
 go
 
 if exists(select 1 from sys.extended_properties p where
-      p.major_id = object_id('t_sys_rights_role')
+      p.major_id = object_id('t_rights_role')
   and p.minor_id = (select c.column_id from sys.columns c where c.object_id = p.major_id and c.name = 'name')
 )
 begin
    declare @CurrentUser sysname
 select @CurrentUser = user_name()
 execute sp_dropextendedproperty 'MS_Description', 
-   'user', @CurrentUser, 'table', 't_sys_rights_role', 'column', 'name'
+   'user', @CurrentUser, 'table', 't_rights_role', 'column', 'name'
 
 end
 
@@ -839,18 +839,18 @@ end
 select @CurrentUser = user_name()
 execute sp_addextendedproperty 'MS_Description', 
    '角色名称',
-   'user', @CurrentUser, 'table', 't_sys_rights_role', 'column', 'name'
+   'user', @CurrentUser, 'table', 't_rights_role', 'column', 'name'
 go
 
 if exists(select 1 from sys.extended_properties p where
-      p.major_id = object_id('t_sys_rights_role')
+      p.major_id = object_id('t_rights_role')
   and p.minor_id = (select c.column_id from sys.columns c where c.object_id = p.major_id and c.name = 'description')
 )
 begin
    declare @CurrentUser sysname
 select @CurrentUser = user_name()
 execute sp_dropextendedproperty 'MS_Description', 
-   'user', @CurrentUser, 'table', 't_sys_rights_role', 'column', 'description'
+   'user', @CurrentUser, 'table', 't_rights_role', 'column', 'description'
 
 end
 
@@ -858,18 +858,18 @@ end
 select @CurrentUser = user_name()
 execute sp_addextendedproperty 'MS_Description', 
    '角色描述',
-   'user', @CurrentUser, 'table', 't_sys_rights_role', 'column', 'description'
+   'user', @CurrentUser, 'table', 't_rights_role', 'column', 'description'
 go
 
 if exists(select 1 from sys.extended_properties p where
-      p.major_id = object_id('t_sys_rights_role')
+      p.major_id = object_id('t_rights_role')
   and p.minor_id = (select c.column_id from sys.columns c where c.object_id = p.major_id and c.name = 'organization_id')
 )
 begin
    declare @CurrentUser sysname
 select @CurrentUser = user_name()
 execute sp_dropextendedproperty 'MS_Description', 
-   'user', @CurrentUser, 'table', 't_sys_rights_role', 'column', 'organization_id'
+   'user', @CurrentUser, 'table', 't_rights_role', 'column', 'organization_id'
 
 end
 
@@ -877,18 +877,18 @@ end
 select @CurrentUser = user_name()
 execute sp_addextendedproperty 'MS_Description', 
    '所属机构id，角色有所属机构的。',
-   'user', @CurrentUser, 'table', 't_sys_rights_role', 'column', 'organization_id'
+   'user', @CurrentUser, 'table', 't_rights_role', 'column', 'organization_id'
 go
 
 if exists(select 1 from sys.extended_properties p where
-      p.major_id = object_id('t_sys_rights_role')
+      p.major_id = object_id('t_rights_role')
   and p.minor_id = (select c.column_id from sys.columns c where c.object_id = p.major_id and c.name = 'created_by')
 )
 begin
    declare @CurrentUser sysname
 select @CurrentUser = user_name()
 execute sp_dropextendedproperty 'MS_Description', 
-   'user', @CurrentUser, 'table', 't_sys_rights_role', 'column', 'created_by'
+   'user', @CurrentUser, 'table', 't_rights_role', 'column', 'created_by'
 
 end
 
@@ -896,18 +896,18 @@ end
 select @CurrentUser = user_name()
 execute sp_addextendedproperty 'MS_Description', 
    '创建人id',
-   'user', @CurrentUser, 'table', 't_sys_rights_role', 'column', 'created_by'
+   'user', @CurrentUser, 'table', 't_rights_role', 'column', 'created_by'
 go
 
 if exists(select 1 from sys.extended_properties p where
-      p.major_id = object_id('t_sys_rights_role')
+      p.major_id = object_id('t_rights_role')
   and p.minor_id = (select c.column_id from sys.columns c where c.object_id = p.major_id and c.name = 'created_time')
 )
 begin
    declare @CurrentUser sysname
 select @CurrentUser = user_name()
 execute sp_dropextendedproperty 'MS_Description', 
-   'user', @CurrentUser, 'table', 't_sys_rights_role', 'column', 'created_time'
+   'user', @CurrentUser, 'table', 't_rights_role', 'column', 'created_time'
 
 end
 
@@ -915,18 +915,18 @@ end
 select @CurrentUser = user_name()
 execute sp_addextendedproperty 'MS_Description', 
    '创建时间',
-   'user', @CurrentUser, 'table', 't_sys_rights_role', 'column', 'created_time'
+   'user', @CurrentUser, 'table', 't_rights_role', 'column', 'created_time'
 go
 
 if exists(select 1 from sys.extended_properties p where
-      p.major_id = object_id('t_sys_rights_role')
+      p.major_id = object_id('t_rights_role')
   and p.minor_id = (select c.column_id from sys.columns c where c.object_id = p.major_id and c.name = 'last_updated_by')
 )
 begin
    declare @CurrentUser sysname
 select @CurrentUser = user_name()
 execute sp_dropextendedproperty 'MS_Description', 
-   'user', @CurrentUser, 'table', 't_sys_rights_role', 'column', 'last_updated_by'
+   'user', @CurrentUser, 'table', 't_rights_role', 'column', 'last_updated_by'
 
 end
 
@@ -934,18 +934,18 @@ end
 select @CurrentUser = user_name()
 execute sp_addextendedproperty 'MS_Description', 
    '最后更新人id',
-   'user', @CurrentUser, 'table', 't_sys_rights_role', 'column', 'last_updated_by'
+   'user', @CurrentUser, 'table', 't_rights_role', 'column', 'last_updated_by'
 go
 
 if exists(select 1 from sys.extended_properties p where
-      p.major_id = object_id('t_sys_rights_role')
+      p.major_id = object_id('t_rights_role')
   and p.minor_id = (select c.column_id from sys.columns c where c.object_id = p.major_id and c.name = 'last_updated_time')
 )
 begin
    declare @CurrentUser sysname
 select @CurrentUser = user_name()
 execute sp_dropextendedproperty 'MS_Description', 
-   'user', @CurrentUser, 'table', 't_sys_rights_role', 'column', 'last_updated_time'
+   'user', @CurrentUser, 'table', 't_rights_role', 'column', 'last_updated_time'
 
 end
 
@@ -953,28 +953,28 @@ end
 select @CurrentUser = user_name()
 execute sp_addextendedproperty 'MS_Description', 
    '最后更新时间',
-   'user', @CurrentUser, 'table', 't_sys_rights_role', 'column', 'last_updated_time'
+   'user', @CurrentUser, 'table', 't_rights_role', 'column', 'last_updated_time'
 go
 
 /*==============================================================*/
-/* Table: t_sys_rights_role_menu_button                         */
+/* Table: t_rights_role_menu_button                             */
 /*==============================================================*/
-create table t_sys_rights_role_menu_button (
+create table t_rights_role_menu_button (
    id                   int                  not null,
    role_id              int                  null,
    menu_id              int                  null,
    button_id            int                  null,
-   constraint PK_T_SYS_RIGHTS_ROLE_MENU_BUTT primary key (id)
+   constraint PK_T_RIGHTS_ROLE_MENU_BUTTON primary key (id)
 )
 go
 
 if exists (select 1 from  sys.extended_properties
-           where major_id = object_id('t_sys_rights_role_menu_button') and minor_id = 0)
+           where major_id = object_id('t_rights_role_menu_button') and minor_id = 0)
 begin 
    declare @CurrentUser sysname 
 select @CurrentUser = user_name() 
 execute sp_dropextendedproperty 'MS_Description',  
-   'user', @CurrentUser, 'table', 't_sys_rights_role_menu_button' 
+   'user', @CurrentUser, 'table', 't_rights_role_menu_button' 
  
 end 
 
@@ -982,18 +982,18 @@ end
 select @CurrentUser = user_name() 
 execute sp_addextendedproperty 'MS_Description',  
    '角色-菜单-按钮', 
-   'user', @CurrentUser, 'table', 't_sys_rights_role_menu_button'
+   'user', @CurrentUser, 'table', 't_rights_role_menu_button'
 go
 
 if exists(select 1 from sys.extended_properties p where
-      p.major_id = object_id('t_sys_rights_role_menu_button')
+      p.major_id = object_id('t_rights_role_menu_button')
   and p.minor_id = (select c.column_id from sys.columns c where c.object_id = p.major_id and c.name = 'role_id')
 )
 begin
    declare @CurrentUser sysname
 select @CurrentUser = user_name()
 execute sp_dropextendedproperty 'MS_Description', 
-   'user', @CurrentUser, 'table', 't_sys_rights_role_menu_button', 'column', 'role_id'
+   'user', @CurrentUser, 'table', 't_rights_role_menu_button', 'column', 'role_id'
 
 end
 
@@ -1001,18 +1001,18 @@ end
 select @CurrentUser = user_name()
 execute sp_addextendedproperty 'MS_Description', 
    '角色id',
-   'user', @CurrentUser, 'table', 't_sys_rights_role_menu_button', 'column', 'role_id'
+   'user', @CurrentUser, 'table', 't_rights_role_menu_button', 'column', 'role_id'
 go
 
 if exists(select 1 from sys.extended_properties p where
-      p.major_id = object_id('t_sys_rights_role_menu_button')
+      p.major_id = object_id('t_rights_role_menu_button')
   and p.minor_id = (select c.column_id from sys.columns c where c.object_id = p.major_id and c.name = 'menu_id')
 )
 begin
    declare @CurrentUser sysname
 select @CurrentUser = user_name()
 execute sp_dropextendedproperty 'MS_Description', 
-   'user', @CurrentUser, 'table', 't_sys_rights_role_menu_button', 'column', 'menu_id'
+   'user', @CurrentUser, 'table', 't_rights_role_menu_button', 'column', 'menu_id'
 
 end
 
@@ -1020,18 +1020,18 @@ end
 select @CurrentUser = user_name()
 execute sp_addextendedproperty 'MS_Description', 
    '菜单id',
-   'user', @CurrentUser, 'table', 't_sys_rights_role_menu_button', 'column', 'menu_id'
+   'user', @CurrentUser, 'table', 't_rights_role_menu_button', 'column', 'menu_id'
 go
 
 if exists(select 1 from sys.extended_properties p where
-      p.major_id = object_id('t_sys_rights_role_menu_button')
+      p.major_id = object_id('t_rights_role_menu_button')
   and p.minor_id = (select c.column_id from sys.columns c where c.object_id = p.major_id and c.name = 'button_id')
 )
 begin
    declare @CurrentUser sysname
 select @CurrentUser = user_name()
 execute sp_dropextendedproperty 'MS_Description', 
-   'user', @CurrentUser, 'table', 't_sys_rights_role_menu_button', 'column', 'button_id'
+   'user', @CurrentUser, 'table', 't_rights_role_menu_button', 'column', 'button_id'
 
 end
 
@@ -1039,13 +1039,13 @@ end
 select @CurrentUser = user_name()
 execute sp_addextendedproperty 'MS_Description', 
    '按钮id',
-   'user', @CurrentUser, 'table', 't_sys_rights_role_menu_button', 'column', 'button_id'
+   'user', @CurrentUser, 'table', 't_rights_role_menu_button', 'column', 'button_id'
 go
 
 /*==============================================================*/
-/* Table: t_sys_rights_user                                     */
+/* Table: t_rights_user                                         */
 /*==============================================================*/
-create table t_sys_rights_user (
+create table t_rights_user (
    id                   int                  identity,
    user_id              nvarchar(64)         not null,
    password             nvarchar(64)         not null,
@@ -1056,17 +1056,17 @@ create table t_sys_rights_user (
    created_time         datetime             not null,
    last_updated_by      int                  null,
    last_updated_time    datetime             null,
-   constraint PK_T_SYS_RIGHTS_USER primary key (id)
+   constraint PK_T_RIGHTS_USER primary key (id)
 )
 go
 
 if exists (select 1 from  sys.extended_properties
-           where major_id = object_id('t_sys_rights_user') and minor_id = 0)
+           where major_id = object_id('t_rights_user') and minor_id = 0)
 begin 
    declare @CurrentUser sysname 
 select @CurrentUser = user_name() 
 execute sp_dropextendedproperty 'MS_Description',  
-   'user', @CurrentUser, 'table', 't_sys_rights_user' 
+   'user', @CurrentUser, 'table', 't_rights_user' 
  
 end 
 
@@ -1074,18 +1074,18 @@ end
 select @CurrentUser = user_name() 
 execute sp_addextendedproperty 'MS_Description',  
    '用户表', 
-   'user', @CurrentUser, 'table', 't_sys_rights_user'
+   'user', @CurrentUser, 'table', 't_rights_user'
 go
 
 if exists(select 1 from sys.extended_properties p where
-      p.major_id = object_id('t_sys_rights_user')
+      p.major_id = object_id('t_rights_user')
   and p.minor_id = (select c.column_id from sys.columns c where c.object_id = p.major_id and c.name = 'user_id')
 )
 begin
    declare @CurrentUser sysname
 select @CurrentUser = user_name()
 execute sp_dropextendedproperty 'MS_Description', 
-   'user', @CurrentUser, 'table', 't_sys_rights_user', 'column', 'user_id'
+   'user', @CurrentUser, 'table', 't_rights_user', 'column', 'user_id'
 
 end
 
@@ -1093,18 +1093,18 @@ end
 select @CurrentUser = user_name()
 execute sp_addextendedproperty 'MS_Description', 
    '用户id',
-   'user', @CurrentUser, 'table', 't_sys_rights_user', 'column', 'user_id'
+   'user', @CurrentUser, 'table', 't_rights_user', 'column', 'user_id'
 go
 
 if exists(select 1 from sys.extended_properties p where
-      p.major_id = object_id('t_sys_rights_user')
+      p.major_id = object_id('t_rights_user')
   and p.minor_id = (select c.column_id from sys.columns c where c.object_id = p.major_id and c.name = 'password')
 )
 begin
    declare @CurrentUser sysname
 select @CurrentUser = user_name()
 execute sp_dropextendedproperty 'MS_Description', 
-   'user', @CurrentUser, 'table', 't_sys_rights_user', 'column', 'password'
+   'user', @CurrentUser, 'table', 't_rights_user', 'column', 'password'
 
 end
 
@@ -1112,18 +1112,18 @@ end
 select @CurrentUser = user_name()
 execute sp_addextendedproperty 'MS_Description', 
    '密码',
-   'user', @CurrentUser, 'table', 't_sys_rights_user', 'column', 'password'
+   'user', @CurrentUser, 'table', 't_rights_user', 'column', 'password'
 go
 
 if exists(select 1 from sys.extended_properties p where
-      p.major_id = object_id('t_sys_rights_user')
+      p.major_id = object_id('t_rights_user')
   and p.minor_id = (select c.column_id from sys.columns c where c.object_id = p.major_id and c.name = 'user_name')
 )
 begin
    declare @CurrentUser sysname
 select @CurrentUser = user_name()
 execute sp_dropextendedproperty 'MS_Description', 
-   'user', @CurrentUser, 'table', 't_sys_rights_user', 'column', 'user_name'
+   'user', @CurrentUser, 'table', 't_rights_user', 'column', 'user_name'
 
 end
 
@@ -1131,18 +1131,18 @@ end
 select @CurrentUser = user_name()
 execute sp_addextendedproperty 'MS_Description', 
    '用户名',
-   'user', @CurrentUser, 'table', 't_sys_rights_user', 'column', 'user_name'
+   'user', @CurrentUser, 'table', 't_rights_user', 'column', 'user_name'
 go
 
 if exists(select 1 from sys.extended_properties p where
-      p.major_id = object_id('t_sys_rights_user')
+      p.major_id = object_id('t_rights_user')
   and p.minor_id = (select c.column_id from sys.columns c where c.object_id = p.major_id and c.name = 'is_change_pwd')
 )
 begin
    declare @CurrentUser sysname
 select @CurrentUser = user_name()
 execute sp_dropextendedproperty 'MS_Description', 
-   'user', @CurrentUser, 'table', 't_sys_rights_user', 'column', 'is_change_pwd'
+   'user', @CurrentUser, 'table', 't_rights_user', 'column', 'is_change_pwd'
 
 end
 
@@ -1150,18 +1150,18 @@ end
 select @CurrentUser = user_name()
 execute sp_addextendedproperty 'MS_Description', 
    '是否首次登陆改密',
-   'user', @CurrentUser, 'table', 't_sys_rights_user', 'column', 'is_change_pwd'
+   'user', @CurrentUser, 'table', 't_rights_user', 'column', 'is_change_pwd'
 go
 
 if exists(select 1 from sys.extended_properties p where
-      p.major_id = object_id('t_sys_rights_user')
+      p.major_id = object_id('t_rights_user')
   and p.minor_id = (select c.column_id from sys.columns c where c.object_id = p.major_id and c.name = 'enable_flag')
 )
 begin
    declare @CurrentUser sysname
 select @CurrentUser = user_name()
 execute sp_dropextendedproperty 'MS_Description', 
-   'user', @CurrentUser, 'table', 't_sys_rights_user', 'column', 'enable_flag'
+   'user', @CurrentUser, 'table', 't_rights_user', 'column', 'enable_flag'
 
 end
 
@@ -1169,18 +1169,18 @@ end
 select @CurrentUser = user_name()
 execute sp_addextendedproperty 'MS_Description', 
    '是否启用标识',
-   'user', @CurrentUser, 'table', 't_sys_rights_user', 'column', 'enable_flag'
+   'user', @CurrentUser, 'table', 't_rights_user', 'column', 'enable_flag'
 go
 
 if exists(select 1 from sys.extended_properties p where
-      p.major_id = object_id('t_sys_rights_user')
+      p.major_id = object_id('t_rights_user')
   and p.minor_id = (select c.column_id from sys.columns c where c.object_id = p.major_id and c.name = 'created_by')
 )
 begin
    declare @CurrentUser sysname
 select @CurrentUser = user_name()
 execute sp_dropextendedproperty 'MS_Description', 
-   'user', @CurrentUser, 'table', 't_sys_rights_user', 'column', 'created_by'
+   'user', @CurrentUser, 'table', 't_rights_user', 'column', 'created_by'
 
 end
 
@@ -1188,18 +1188,18 @@ end
 select @CurrentUser = user_name()
 execute sp_addextendedproperty 'MS_Description', 
    '创建人id',
-   'user', @CurrentUser, 'table', 't_sys_rights_user', 'column', 'created_by'
+   'user', @CurrentUser, 'table', 't_rights_user', 'column', 'created_by'
 go
 
 if exists(select 1 from sys.extended_properties p where
-      p.major_id = object_id('t_sys_rights_user')
+      p.major_id = object_id('t_rights_user')
   and p.minor_id = (select c.column_id from sys.columns c where c.object_id = p.major_id and c.name = 'created_time')
 )
 begin
    declare @CurrentUser sysname
 select @CurrentUser = user_name()
 execute sp_dropextendedproperty 'MS_Description', 
-   'user', @CurrentUser, 'table', 't_sys_rights_user', 'column', 'created_time'
+   'user', @CurrentUser, 'table', 't_rights_user', 'column', 'created_time'
 
 end
 
@@ -1207,18 +1207,18 @@ end
 select @CurrentUser = user_name()
 execute sp_addextendedproperty 'MS_Description', 
    '创建时间',
-   'user', @CurrentUser, 'table', 't_sys_rights_user', 'column', 'created_time'
+   'user', @CurrentUser, 'table', 't_rights_user', 'column', 'created_time'
 go
 
 if exists(select 1 from sys.extended_properties p where
-      p.major_id = object_id('t_sys_rights_user')
+      p.major_id = object_id('t_rights_user')
   and p.minor_id = (select c.column_id from sys.columns c where c.object_id = p.major_id and c.name = 'last_updated_by')
 )
 begin
    declare @CurrentUser sysname
 select @CurrentUser = user_name()
 execute sp_dropextendedproperty 'MS_Description', 
-   'user', @CurrentUser, 'table', 't_sys_rights_user', 'column', 'last_updated_by'
+   'user', @CurrentUser, 'table', 't_rights_user', 'column', 'last_updated_by'
 
 end
 
@@ -1226,18 +1226,18 @@ end
 select @CurrentUser = user_name()
 execute sp_addextendedproperty 'MS_Description', 
    '最后修改人id',
-   'user', @CurrentUser, 'table', 't_sys_rights_user', 'column', 'last_updated_by'
+   'user', @CurrentUser, 'table', 't_rights_user', 'column', 'last_updated_by'
 go
 
 if exists(select 1 from sys.extended_properties p where
-      p.major_id = object_id('t_sys_rights_user')
+      p.major_id = object_id('t_rights_user')
   and p.minor_id = (select c.column_id from sys.columns c where c.object_id = p.major_id and c.name = 'last_updated_time')
 )
 begin
    declare @CurrentUser sysname
 select @CurrentUser = user_name()
 execute sp_dropextendedproperty 'MS_Description', 
-   'user', @CurrentUser, 'table', 't_sys_rights_user', 'column', 'last_updated_time'
+   'user', @CurrentUser, 'table', 't_rights_user', 'column', 'last_updated_time'
 
 end
 
@@ -1245,27 +1245,27 @@ end
 select @CurrentUser = user_name()
 execute sp_addextendedproperty 'MS_Description', 
    '最后修改时间',
-   'user', @CurrentUser, 'table', 't_sys_rights_user', 'column', 'last_updated_time'
+   'user', @CurrentUser, 'table', 't_rights_user', 'column', 'last_updated_time'
 go
 
 /*==============================================================*/
-/* Table: t_sys_rights_user_organization                        */
+/* Table: t_rights_user_organization                            */
 /*==============================================================*/
-create table t_sys_rights_user_organization (
+create table t_rights_user_organization (
    id                   int                  not null,
    user_id              int                  null,
    organization_id      int                  null,
-   constraint PK_T_SYS_RIGHTS_USER_ORGANIZAT primary key (id)
+   constraint PK_T_RIGHTS_USER_ORGANIZATION primary key (id)
 )
 go
 
 if exists (select 1 from  sys.extended_properties
-           where major_id = object_id('t_sys_rights_user_organization') and minor_id = 0)
+           where major_id = object_id('t_rights_user_organization') and minor_id = 0)
 begin 
    declare @CurrentUser sysname 
 select @CurrentUser = user_name() 
 execute sp_dropextendedproperty 'MS_Description',  
-   'user', @CurrentUser, 'table', 't_sys_rights_user_organization' 
+   'user', @CurrentUser, 'table', 't_rights_user_organization' 
  
 end 
 
@@ -1273,18 +1273,18 @@ end
 select @CurrentUser = user_name() 
 execute sp_addextendedproperty 'MS_Description',  
    '用户-机构表', 
-   'user', @CurrentUser, 'table', 't_sys_rights_user_organization'
+   'user', @CurrentUser, 'table', 't_rights_user_organization'
 go
 
 if exists(select 1 from sys.extended_properties p where
-      p.major_id = object_id('t_sys_rights_user_organization')
+      p.major_id = object_id('t_rights_user_organization')
   and p.minor_id = (select c.column_id from sys.columns c where c.object_id = p.major_id and c.name = 'id')
 )
 begin
    declare @CurrentUser sysname
 select @CurrentUser = user_name()
 execute sp_dropextendedproperty 'MS_Description', 
-   'user', @CurrentUser, 'table', 't_sys_rights_user_organization', 'column', 'id'
+   'user', @CurrentUser, 'table', 't_rights_user_organization', 'column', 'id'
 
 end
 
@@ -1292,18 +1292,18 @@ end
 select @CurrentUser = user_name()
 execute sp_addextendedproperty 'MS_Description', 
    '主键',
-   'user', @CurrentUser, 'table', 't_sys_rights_user_organization', 'column', 'id'
+   'user', @CurrentUser, 'table', 't_rights_user_organization', 'column', 'id'
 go
 
 if exists(select 1 from sys.extended_properties p where
-      p.major_id = object_id('t_sys_rights_user_organization')
+      p.major_id = object_id('t_rights_user_organization')
   and p.minor_id = (select c.column_id from sys.columns c where c.object_id = p.major_id and c.name = 'user_id')
 )
 begin
    declare @CurrentUser sysname
 select @CurrentUser = user_name()
 execute sp_dropextendedproperty 'MS_Description', 
-   'user', @CurrentUser, 'table', 't_sys_rights_user_organization', 'column', 'user_id'
+   'user', @CurrentUser, 'table', 't_rights_user_organization', 'column', 'user_id'
 
 end
 
@@ -1311,18 +1311,18 @@ end
 select @CurrentUser = user_name()
 execute sp_addextendedproperty 'MS_Description', 
    '用户id',
-   'user', @CurrentUser, 'table', 't_sys_rights_user_organization', 'column', 'user_id'
+   'user', @CurrentUser, 'table', 't_rights_user_organization', 'column', 'user_id'
 go
 
 if exists(select 1 from sys.extended_properties p where
-      p.major_id = object_id('t_sys_rights_user_organization')
+      p.major_id = object_id('t_rights_user_organization')
   and p.minor_id = (select c.column_id from sys.columns c where c.object_id = p.major_id and c.name = 'organization_id')
 )
 begin
    declare @CurrentUser sysname
 select @CurrentUser = user_name()
 execute sp_dropextendedproperty 'MS_Description', 
-   'user', @CurrentUser, 'table', 't_sys_rights_user_organization', 'column', 'organization_id'
+   'user', @CurrentUser, 'table', 't_rights_user_organization', 'column', 'organization_id'
 
 end
 
@@ -1330,27 +1330,27 @@ end
 select @CurrentUser = user_name()
 execute sp_addextendedproperty 'MS_Description', 
    '机构id',
-   'user', @CurrentUser, 'table', 't_sys_rights_user_organization', 'column', 'organization_id'
+   'user', @CurrentUser, 'table', 't_rights_user_organization', 'column', 'organization_id'
 go
 
 /*==============================================================*/
-/* Table: t_sys_rights_user_role                                */
+/* Table: t_rights_user_role                                    */
 /*==============================================================*/
-create table t_sys_rights_user_role (
+create table t_rights_user_role (
    id                   int                  not null,
    user_id              int                  null,
    role_id              int                  null,
-   constraint PK_T_SYS_RIGHTS_USER_ROLE primary key (id)
+   constraint PK_T_RIGHTS_USER_ROLE primary key (id)
 )
 go
 
 if exists (select 1 from  sys.extended_properties
-           where major_id = object_id('t_sys_rights_user_role') and minor_id = 0)
+           where major_id = object_id('t_rights_user_role') and minor_id = 0)
 begin 
    declare @CurrentUser sysname 
 select @CurrentUser = user_name() 
 execute sp_dropextendedproperty 'MS_Description',  
-   'user', @CurrentUser, 'table', 't_sys_rights_user_role' 
+   'user', @CurrentUser, 'table', 't_rights_user_role' 
  
 end 
 
@@ -1358,18 +1358,18 @@ end
 select @CurrentUser = user_name() 
 execute sp_addextendedproperty 'MS_Description',  
    '用户-角色表', 
-   'user', @CurrentUser, 'table', 't_sys_rights_user_role'
+   'user', @CurrentUser, 'table', 't_rights_user_role'
 go
 
 if exists(select 1 from sys.extended_properties p where
-      p.major_id = object_id('t_sys_rights_user_role')
+      p.major_id = object_id('t_rights_user_role')
   and p.minor_id = (select c.column_id from sys.columns c where c.object_id = p.major_id and c.name = 'id')
 )
 begin
    declare @CurrentUser sysname
 select @CurrentUser = user_name()
 execute sp_dropextendedproperty 'MS_Description', 
-   'user', @CurrentUser, 'table', 't_sys_rights_user_role', 'column', 'id'
+   'user', @CurrentUser, 'table', 't_rights_user_role', 'column', 'id'
 
 end
 
@@ -1377,18 +1377,18 @@ end
 select @CurrentUser = user_name()
 execute sp_addextendedproperty 'MS_Description', 
    '主键',
-   'user', @CurrentUser, 'table', 't_sys_rights_user_role', 'column', 'id'
+   'user', @CurrentUser, 'table', 't_rights_user_role', 'column', 'id'
 go
 
 if exists(select 1 from sys.extended_properties p where
-      p.major_id = object_id('t_sys_rights_user_role')
+      p.major_id = object_id('t_rights_user_role')
   and p.minor_id = (select c.column_id from sys.columns c where c.object_id = p.major_id and c.name = 'user_id')
 )
 begin
    declare @CurrentUser sysname
 select @CurrentUser = user_name()
 execute sp_dropextendedproperty 'MS_Description', 
-   'user', @CurrentUser, 'table', 't_sys_rights_user_role', 'column', 'user_id'
+   'user', @CurrentUser, 'table', 't_rights_user_role', 'column', 'user_id'
 
 end
 
@@ -1396,18 +1396,18 @@ end
 select @CurrentUser = user_name()
 execute sp_addextendedproperty 'MS_Description', 
    '用户id',
-   'user', @CurrentUser, 'table', 't_sys_rights_user_role', 'column', 'user_id'
+   'user', @CurrentUser, 'table', 't_rights_user_role', 'column', 'user_id'
 go
 
 if exists(select 1 from sys.extended_properties p where
-      p.major_id = object_id('t_sys_rights_user_role')
+      p.major_id = object_id('t_rights_user_role')
   and p.minor_id = (select c.column_id from sys.columns c where c.object_id = p.major_id and c.name = 'role_id')
 )
 begin
    declare @CurrentUser sysname
 select @CurrentUser = user_name()
 execute sp_dropextendedproperty 'MS_Description', 
-   'user', @CurrentUser, 'table', 't_sys_rights_user_role', 'column', 'role_id'
+   'user', @CurrentUser, 'table', 't_rights_user_role', 'column', 'role_id'
 
 end
 
@@ -1415,6 +1415,6 @@ end
 select @CurrentUser = user_name()
 execute sp_addextendedproperty 'MS_Description', 
    '角色id',
-   'user', @CurrentUser, 'table', 't_sys_rights_user_role', 'column', 'role_id'
+   'user', @CurrentUser, 'table', 't_rights_user_role', 'column', 'role_id'
 go
 
