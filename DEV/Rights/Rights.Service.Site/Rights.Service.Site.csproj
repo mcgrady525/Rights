@@ -79,6 +79,10 @@
     <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Rights.Dao\Rights.Dao.csproj">
+      <Project>{0d753218-c0a3-4bc7-8575-1160fa61c05f}</Project>
+      <Name>Rights.Dao</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Rights.Service\Rights.Service.csproj">
       <Project>{0decfd77-920f-4f8a-baf0-b2c741ca4631}</Project>
       <Name>Rights.Service</Name>
