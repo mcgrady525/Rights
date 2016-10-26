@@ -1,6 +1,6 @@
 /*==============================================================*/
 /* DBMS name:      Microsoft SQL Server 2008                    */
-/* Created on:     2016/10/26 11:55:42                          */
+/* Created on:     2016/10/26 17:51:15                          */
 /*==============================================================*/
 
 
@@ -502,7 +502,7 @@ go
 /* Table: t_rights_menu_button                                  */
 /*==============================================================*/
 create table t_rights_menu_button (
-   id                   int                  not null,
+   id                   int                  identity,
    menu_id              int                  null,
    button_id            int                  null,
    constraint PK_T_RIGHTS_MENU_BUTTON primary key (id)
@@ -960,7 +960,7 @@ go
 /* Table: t_rights_role_menu_button                             */
 /*==============================================================*/
 create table t_rights_role_menu_button (
-   id                   int                  not null,
+   id                   int                  identity,
    role_id              int                  null,
    menu_id              int                  null,
    button_id            int                  null,
@@ -1252,7 +1252,7 @@ go
 /* Table: t_rights_user_organization                            */
 /*==============================================================*/
 create table t_rights_user_organization (
-   id                   int                  not null,
+   id                   int                  identity,
    user_id              int                  null,
    organization_id      int                  null,
    constraint PK_T_RIGHTS_USER_ORGANIZATION primary key (id)
@@ -1337,7 +1337,7 @@ go
 /* Table: t_rights_user_role                                    */
 /*==============================================================*/
 create table t_rights_user_role (
-   id                   int                  not null,
+   id                   int                  identity,
    user_id              int                  null,
    role_id              int                  null,
    constraint PK_T_RIGHTS_USER_ROLE primary key (id)
