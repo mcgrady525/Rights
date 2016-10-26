@@ -42,20 +42,12 @@
   <ItemGroup>
     <Compile Include="Attributes\ColumnAttribute.cs" />
     <Compile Include="Attributes\TableAttribute.cs" />
-    <Compile Include="Db\TSysRightsButton.cs" />
-    <Compile Include="Db\TSysRightsMenu.cs" />
-    <Compile Include="Db\TSysRightsMenuButton.cs" />
-    <Compile Include="Db\TSysRightsOrganization.cs" />
-    <Compile Include="Db\TSysRightsRole.cs" />
-    <Compile Include="Db\TSysRightsRoleMenuButton.cs" />
-    <Compile Include="Db\TSysRightsUser.cs" />
-    <Compile Include="Db\TSysRightsUserOrganization.cs" />
-    <Compile Include="Db\TSysRightsUserRole.cs" />
     <Compile Include="Enum\Enums.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Common\" />
+    <Folder Include="Db\" />
     <Folder Include="ViewModel\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
