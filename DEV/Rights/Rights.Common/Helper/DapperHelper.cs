@@ -18,7 +18,7 @@ namespace Rights.Common.Helper
         /// <returns></returns>
         public static IDbConnection CreateConnection()
         {
-            IDbConnection conn = new SqlConnection(ConfigHelper.GetConnectionString("ConnStr"));
+            IDbConnection conn = new SqlConnection(ConfigHelper.GetConnectionString("RightsDB"));
             return conn;
         }
     }
