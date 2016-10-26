@@ -42,12 +42,20 @@
   <ItemGroup>
     <Compile Include="Attributes\ColumnAttribute.cs" />
     <Compile Include="Attributes\TableAttribute.cs" />
+    <Compile Include="Db\TRightsButton.cs" />
+    <Compile Include="Db\TRightsMenu.cs" />
+    <Compile Include="Db\TRightsMenuButton.cs" />
+    <Compile Include="Db\TRightsOrganization.cs" />
+    <Compile Include="Db\TRightsRole.cs" />
+    <Compile Include="Db\TRightsRoleMenuButton.cs" />
+    <Compile Include="Db\TRightsUser.cs" />
+    <Compile Include="Db\TRightsUserOrganization.cs" />
+    <Compile Include="Db\TRightsUserRole.cs" />
     <Compile Include="Enum\Enums.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Common\" />
-    <Folder Include="Db\" />
     <Folder Include="ViewModel\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
