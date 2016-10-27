@@ -69,6 +69,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Global.asax" />
+    <Content Include="RightsAccountService.svc" />
     <Content Include="RightsOrganizationService.svc" />
     <Content Include="Web.config" />
   </ItemGroup>

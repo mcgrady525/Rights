@@ -1672,6 +1672,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -1687,6 +1688,7 @@
     <Content Include="Content\easyui\bootstrap\images\Thumbs.db" />
     <Content Include="Content\easyui\default\images\Thumbs.db" />
     <Content Include="Content\easyui\gray\images\Thumbs.db" />
+    <Content Include="Views\Home\Index.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

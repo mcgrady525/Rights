@@ -45,5 +45,14 @@ namespace Rights.DaoFactory
             return GetInstance("RightsOrganizationDao", "Rights") as IRightsOrganizationDao;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public static IRightsAccountDao GetRightsAccountDao()
+        {
+            return GetInstance("RightsAccountDao", "Rights") as IRightsAccountDao;
+        }
+
     }
 }

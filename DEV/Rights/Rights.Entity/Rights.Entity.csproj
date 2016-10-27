@@ -42,6 +42,9 @@
   <ItemGroup>
     <Compile Include="Attributes\ColumnAttribute.cs" />
     <Compile Include="Attributes\TableAttribute.cs" />
+    <Compile Include="Common\OpenApiResult.cs" />
+    <Compile Include="Common\ReturnCodeType.cs" />
+    <Compile Include="Common\ServiceResult.cs" />
     <Compile Include="Db\TRightsButton.cs" />
     <Compile Include="Db\TRightsMenu.cs" />
     <Compile Include="Db\TRightsMenuButton.cs" />
@@ -53,10 +56,10 @@
     <Compile Include="Db\TRightsUserRole.cs" />
     <Compile Include="Enum\Enums.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewModel\CheckLoginRequest.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Common\" />
-    <Folder Include="ViewModel\" />
+    <Folder Include="Rights\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
