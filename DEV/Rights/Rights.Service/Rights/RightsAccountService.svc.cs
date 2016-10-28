@@ -59,5 +59,26 @@ namespace Rights.Service.Rights
             return result;
         }
 
+        /// <summary>
+        /// 首次登录初始化密码
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public ServiceResult<bool> InitUserPwd(FirstLoginRequest request, TRightsUser loginInfo)
+        {
+            var result = new ServiceResult<bool> 
+            {
+                ReturnCode= ReturnCodeType.Error
+            };
+
+            if (accountDao.InitUserPwd(request, loginInfo))
+            {
+                result.ReturnCode = ReturnCodeType.Success;
+                result.Content = true;
+            }
+
+            return result;
+        }
+
     }
 }

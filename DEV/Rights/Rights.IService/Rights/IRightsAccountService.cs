@@ -33,5 +33,13 @@ namespace Rights.IService.Rights
         [OperationContract]
         ServiceResult<List<TRightsMenu>> GetAllChildrenMenu(int userId, int menuParentId);
 
+        /// <summary>
+        /// 首次登录初始化密码
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [OperationContract]
+        ServiceResult<bool> InitUserPwd(FirstLoginRequest request, TRightsUser LoginInfo);
+
     }
 }

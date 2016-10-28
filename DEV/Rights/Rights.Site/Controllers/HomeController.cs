@@ -11,6 +11,8 @@ using Tracy.Frameworks.Common.Extends;
 using Rights.Entity.Rights;
 using System.Text;
 using Rights.Site.Filters;
+using Rights.Entity.ViewModel;
+using System.Web.Security;
 
 namespace Rights.Site.Controllers
 {
@@ -29,83 +31,84 @@ namespace Rights.Site.Controllers
             return View();
         }
 
-        ///// <summary>
-        ///// 首次登录,需修改密码
-        ///// </summary>
-        ///// <returns></returns>
-        ////[LoginAuthorization]
-        //public ActionResult FirstLogin()
-        //{
-        //    return View();
-        //}
+        /// <summary>
+        /// 首次登录,需修改密码
+        /// </summary>
+        /// <returns></returns>
+        [LoginAuthorization]
+        public ActionResult FirstLogin()
+        {
+            return View();
+        }
 
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        ///// <param name="request"></param>
-        ///// <returns></returns>
-        //[HttpPost]
-        //public ActionResult FirstLogin(FirstLoginRequest request)
-        //{
-        //    var flag = false;
-        //    var msg = string.Empty;
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult FirstLogin(FirstLoginRequest request)
+        {
+            var flag = false;
+            var msg = string.Empty;
 
-        //    //只能修改当前登录用户的密码
-        //    //新密码不能和原密码一样
-        //    //修改成功需要重新生成cookie
-        //    if (LoginInfo == null || LoginInfo.Id != request.Id)
-        //    {
-        //        msg = "未知错误,重置密码失败";
-        //        return Json(new { success = flag, msg = msg }, JsonRequestBehavior.AllowGet);
-        //    }
+            //只能修改当前登录用户的密码
+            //新密码不能和原密码一样
+            //修改成功需要重新生成cookie
+            if (loginInfo == null || loginInfo.Id != request.Id)
+            {
+                msg = "未知错误,重置密码失败";
+                return Json(new { success = flag, msg = msg }, JsonRequestBehavior.AllowGet);
+            }
 
-        //    if (LoginInfo.UserPwd.Equals(request.NewPwd.To32bitMD5()))
-        //    {
-        //        msg = "新密码不能和默认密码一样!";
-        //        return Json(new { success = flag, msg = msg }, JsonRequestBehavior.AllowGet);
-        //    }
+            request.NewPwd = request.NewPwd.To32bitMD5();
+            if (loginInfo.Password.Equals(request.NewPwd.To32bitMD5()))
+            {
+                msg = "新密码不能和默认密码一样!";
+                return Json(new { success = flag, msg = msg }, JsonRequestBehavior.AllowGet);
+            }
 
-        //    using (var factory = new ChannelFactory<IWebFxsCommonService>("*"))
-        //    {
-        //        var client = factory.CreateChannel();
-        //        var result = client.InitUserPwd(request);
-        //        if (result.ReturnCode == ReturnCodeType.Success && result.Content == true)
-        //        {
-        //            //更新cookie
-        //            FormsIdentity id = (FormsIdentity)HttpContext.User.Identity;
-        //            FormsAuthenticationTicket ticketOld = id.Ticket;
-        //            LoginInfo.UserPwd = request.NewPwd.To32bitMD5();
-        //            LoginInfo.IsChangePwd = true;
+            using (var factory = new ChannelFactory<IRightsAccountService>("*"))
+            {
+                var client = factory.CreateChannel();
+                var result = client.InitUserPwd(request, loginInfo);
+                if (result.ReturnCode == ReturnCodeType.Success && result.Content == true)
+                {
+                    //更新cookie
+                    FormsIdentity id = (FormsIdentity)HttpContext.User.Identity;
+                    FormsAuthenticationTicket ticketOld = id.Ticket;
+                    loginInfo.Password = request.NewPwd.To32bitMD5();
+                    loginInfo.IsChangePwd = true;
 
-        //            FormsAuthentication.SignOut();
-        //            FormsAuthenticationTicket ticket = new FormsAuthenticationTicket
-        //            (
-        //                2,
-        //                LoginInfo.UserId,
-        //                DateTime.Now,
-        //                ticketOld.Expiration,
-        //                false,
-        //                LoginInfo.ToJson()
-        //            );
-        //            HttpCookie cookie = new HttpCookie(FormsAuthentication.FormsCookieName, FormsAuthentication.Encrypt(ticket));
-        //            if (ticket.Expiration != new DateTime(9999, 12, 31))
-        //            {
-        //                cookie.Expires = ticketOld.Expiration;
-        //            }
-        //            HttpContext.Response.Cookies.Add(cookie);
+                    FormsAuthentication.SignOut();
+                    FormsAuthenticationTicket ticket = new FormsAuthenticationTicket
+                    (
+                        2,
+                        loginInfo.UserId,
+                        DateTime.Now,
+                        ticketOld.Expiration,
+                        false,
+                        loginInfo.ToJson()
+                    );
+                    HttpCookie cookie = new HttpCookie(FormsAuthentication.FormsCookieName, FormsAuthentication.Encrypt(ticket));
+                    if (ticket.Expiration != new DateTime(9999, 12, 31))
+                    {
+                        cookie.Expires = ticketOld.Expiration;
+                    }
+                    HttpContext.Response.Cookies.Add(cookie);
 
-        //            flag = true;
-        //            msg = "重置密码成功";
-        //        }
-        //        else
-        //        {
-        //            msg = "重置密码失败!";
-        //            return Json(new { success = flag, msg = msg }, JsonRequestBehavior.AllowGet);
-        //        }
-        //    }
+                    flag = true;
+                    msg = "重置密码成功";
+                }
+                else
+                {
+                    msg = "重置密码失败!";
+                    return Json(new { success = flag, msg = msg }, JsonRequestBehavior.AllowGet);
+                }
+            }
 
-        //    return Json(new { success = flag, msg = msg }, JsonRequestBehavior.AllowGet);
-        //}
+            return Json(new { success = flag, msg = msg }, JsonRequestBehavior.AllowGet);
+        }
 
         ///// <summary>
         ///// 修改密码
@@ -189,7 +192,7 @@ namespace Rights.Site.Controllers
             using (var factory = new ChannelFactory<IRightsAccountService>("*"))
             {
                 var client = factory.CreateChannel();
-                var result = client.GetAllChildrenMenu(LoginInfo.Id, id);
+                var result = client.GetAllChildrenMenu(loginInfo.Id, id);
                 if (result.ReturnCode == ReturnCodeType.Success)
                 {
                     var childMenus = result.Content;
@@ -221,7 +224,7 @@ namespace Rights.Site.Controllers
             using (var factory = new ChannelFactory<IRightsAccountService>("*"))
             {
                 var client = factory.CreateChannel();
-                var rs = client.GetAllChildrenMenu(LoginInfo.Id, id);
+                var rs = client.GetAllChildrenMenu(loginInfo.Id, id);
                 if (rs.ReturnCode == ReturnCodeType.Success)
                 {
                     var childMenus = rs.Content;
@@ -243,26 +246,26 @@ namespace Rights.Site.Controllers
             return Content(result);
         }
 
-        ///// <summary>
-        ///// 获取该用户的信息并再次验证cookie
-        ///// </summary>
-        ///// <returns></returns>
-        //public ActionResult GetCurrentUser()
-        //{
-        //    var flag = false;
-        //    var msg = "";
+        /// <summary>
+        /// 获取该用户的信息并再次验证cookie
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult GetCurrentUser()
+        {
+            var flag = false;
+            var msg = "";
 
-        //    //已登录并且cookie验证通过，所以直接从cookie中取就可以
-        //    FormsIdentity id = (FormsIdentity)HttpContext.User.Identity;
-        //    FormsAuthenticationTicket ticket = id.Ticket;
-        //    msg = ticket.UserData;
-        //    if (!msg.IsNullOrEmpty())
-        //    {
-        //        flag = true;
-        //    }
+            //已登录并且cookie验证通过，所以直接从cookie中取就可以
+            FormsIdentity id = (FormsIdentity)HttpContext.User.Identity;
+            FormsAuthenticationTicket ticket = id.Ticket;
+            msg = ticket.UserData;
+            if (!msg.IsNullOrEmpty())
+            {
+                flag = true;
+            }
 
-        //    return Json(new { success = flag, msg = msg }, JsonRequestBehavior.AllowGet);
-        //}
+            return Json(new { success = flag, msg = msg }, JsonRequestBehavior.AllowGet);
+        }
 
         ///// <summary>
         ///// 我的信息

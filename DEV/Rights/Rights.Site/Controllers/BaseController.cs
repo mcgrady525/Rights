@@ -17,7 +17,7 @@ namespace Rights.Site.Controllers
         /// <summary>
         /// 保存当前登录用户会话
         /// </summary>
-        public TRightsUser LoginInfo { get; set; }
+        public TRightsUser loginInfo { get; set; }
 
         /// <summary>
         /// Action执行前调用
@@ -32,7 +32,7 @@ namespace Rights.Site.Controllers
                 FormsIdentity id = (FormsIdentity)filterContext.HttpContext.User.Identity;
                 FormsAuthenticationTicket tickets = id.Ticket;
 
-                LoginInfo = tickets.UserData.FromJson<TRightsUser>();
+                loginInfo = tickets.UserData.FromJson<TRightsUser>();
             }
         }
 	}

@@ -28,5 +28,12 @@ namespace Rights.IDao.Rights
         /// <returns></returns>
         List<TRightsMenu> GetAllChildrenMenu(int userId, int menuParentId);
 
+        /// <summary>
+        /// 首次登录初始化密码
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        bool InitUserPwd(FirstLoginRequest request, TRightsUser loginInfo);
+
     }
 }

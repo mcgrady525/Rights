@@ -66,7 +66,41 @@ namespace Rights.Dao.Rights
                 UserMenus = query.ToList();
             }
 
-            return GetAllChildrenMenuRecursion(menuParentId).ToList();
+            return RecursionAllChildrenMenu(menuParentId).ToList();
+        }
+
+        /// <summary>
+        /// 首次登录初始化密码
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public bool InitUserPwd(FirstLoginRequest request, TRightsUser loginInfo)
+        {
+            using (var conn = DapperHelper.CreateConnection())
+            {
+                //查询
+                var user = conn.Query<TRightsUser>(@"SELECT u.user_id AS UserId, u.user_name AS UserName, u.is_change_pwd AS IsChangePwd, u.enable_flag AS EnableFlag, u.created_by AS CreatedBy,
+                u.created_time AS CreatedTime, u.last_updated_by AS LastUpdatedBy, u.last_updated_time AS LastUpdatedTime,* 
+                FROM dbo.t_rights_user AS u
+                WHERE u.id= @Id;", new { @Id = request.Id }).FirstOrDefault();
+                if (user != null)
+                {
+                    //更新
+                    var effectRows = conn.Execute(@"UPDATE dbo.t_rights_user SET is_change_pwd= 1, password= @Password, last_updated_by= @LastUpdatedBy, last_updated_time= @LastUpdatedTime WHERE id= @Id;", 
+                        new 
+                        { 
+                            @Password = request.NewPwd, @Id = request.Id,
+                            @LastUpdatedBy= loginInfo.Id,
+                            @LastUpdatedTime= DateTime.Now
+                        });
+                    if (effectRows > 0)
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
         }
 
         /// <summary>
@@ -74,7 +108,7 @@ namespace Rights.Dao.Rights
         /// </summary>
         /// <param name="menuParentId"></param>
         /// <returns></returns>
-        public IEnumerable<TRightsMenu> GetAllChildrenMenuRecursion(int menuParentId)
+        public IEnumerable<TRightsMenu> RecursionAllChildrenMenu(int menuParentId)
         {
             var query = from item in UserMenus
                         where item.ParentId == menuParentId
@@ -84,7 +118,7 @@ namespace Rights.Dao.Rights
                 return query;
             }
 
-            return query.ToList().Concat(query.ToList().SelectMany(p => GetAllChildrenMenuRecursion(p.Id)));
+            return query.ToList().Concat(query.ToList().SelectMany(p => RecursionAllChildrenMenu(p.Id)));
         }
 
     }
