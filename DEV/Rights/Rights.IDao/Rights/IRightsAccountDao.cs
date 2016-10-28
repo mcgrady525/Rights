@@ -20,5 +20,13 @@ namespace Rights.IDao.Rights
         /// <returns>成功返回实体对象，失败返回null</returns>
         TRightsUser CheckLogin(CheckLoginRequest request);
 
+        /// <summary>
+        /// 获取指定父菜单下的所有子菜单
+        /// </summary>
+        /// <param name="userId">用户id</param>
+        /// <param name="menuParentId">菜单parentId</param>
+        /// <returns></returns>
+        List<TRightsMenu> GetAllChildrenMenu(int userId, int menuParentId);
+
     }
 }

@@ -38,5 +38,26 @@ namespace Rights.Service.Rights
             return result;
         }
 
+        /// <summary>
+        /// 获取指定父菜单下的所有子菜单
+        /// </summary>
+        /// <param name="userId">用户id</param>
+        /// <param name="menuParentId">菜单parentId</param>
+        /// <returns></returns>
+        public ServiceResult<List<TRightsMenu>> GetAllChildrenMenu(int userId, int menuParentId)
+        {
+            var result = new ServiceResult<List<TRightsMenu>>
+            {
+                ReturnCode = ReturnCodeType.Error,
+                Content = new List<TRightsMenu>()
+            };
+
+            var menus = accountDao.GetAllChildrenMenu(userId, menuParentId);
+            result.ReturnCode = ReturnCodeType.Success;
+            result.Content = menus;
+
+            return result;
+        }
+
     }
 }

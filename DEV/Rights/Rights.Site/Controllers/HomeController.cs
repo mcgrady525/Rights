@@ -5,6 +5,12 @@ using System.Linq;
 using System.ServiceModel;
 using System.Web;
 using System.Web.Mvc;
+using Rights.IService.Rights;
+using Rights.Entity.Db;
+using Tracy.Frameworks.Common.Extends;
+using Rights.Entity.Rights;
+using System.Text;
+using Rights.Site.Filters;
 
 namespace Rights.Site.Controllers
 {
@@ -13,15 +19,15 @@ namespace Rights.Site.Controllers
     /// </summary>
     public class HomeController : BaseController
     {
-        ///// <summary>
-        ///// 首页
-        ///// </summary>
-        ///// <returns></returns>
-        ////[LoginAuthorization]
-        //public ActionResult Index()
-        //{
-        //    return View();
-        //}
+        /// <summary>
+        /// 首页
+        /// </summary>
+        /// <returns></returns>
+        [LoginAuthorization]
+        public ActionResult Index()
+        {
+            return View();
+        }
 
         ///// <summary>
         ///// 首次登录,需修改密码
@@ -47,13 +53,13 @@ namespace Rights.Site.Controllers
         //    //只能修改当前登录用户的密码
         //    //新密码不能和原密码一样
         //    //修改成功需要重新生成cookie
-        //    if (CurrentUserInfo == null || CurrentUserInfo.Id != request.Id)
+        //    if (LoginInfo == null || LoginInfo.Id != request.Id)
         //    {
         //        msg = "未知错误,重置密码失败";
         //        return Json(new { success = flag, msg = msg }, JsonRequestBehavior.AllowGet);
         //    }
 
-        //    if (CurrentUserInfo.UserPwd.Equals(request.NewPwd.To32bitMD5()))
+        //    if (LoginInfo.UserPwd.Equals(request.NewPwd.To32bitMD5()))
         //    {
         //        msg = "新密码不能和默认密码一样!";
         //        return Json(new { success = flag, msg = msg }, JsonRequestBehavior.AllowGet);
@@ -68,18 +74,18 @@ namespace Rights.Site.Controllers
         //            //更新cookie
         //            FormsIdentity id = (FormsIdentity)HttpContext.User.Identity;
         //            FormsAuthenticationTicket ticketOld = id.Ticket;
-        //            CurrentUserInfo.UserPwd = request.NewPwd.To32bitMD5();
-        //            CurrentUserInfo.IsChangePwd = true;
+        //            LoginInfo.UserPwd = request.NewPwd.To32bitMD5();
+        //            LoginInfo.IsChangePwd = true;
 
         //            FormsAuthentication.SignOut();
         //            FormsAuthenticationTicket ticket = new FormsAuthenticationTicket
         //            (
         //                2,
-        //                CurrentUserInfo.UserId,
+        //                LoginInfo.UserId,
         //                DateTime.Now,
         //                ticketOld.Expiration,
         //                false,
-        //                CurrentUserInfo.ToJson()
+        //                LoginInfo.ToJson()
         //            );
         //            HttpCookie cookie = new HttpCookie(FormsAuthentication.FormsCookieName, FormsAuthentication.Encrypt(ticket));
         //            if (ticket.Expiration != new DateTime(9999, 12, 31))
@@ -125,7 +131,7 @@ namespace Rights.Site.Controllers
 
         //    var originalPwd = request.OriginalPwd.To32bitMD5();
         //    var newPwd = request.NewPwd.To32bitMD5();
-        //    if (!originalPwd.Equals(CurrentUserInfo.UserPwd))
+        //    if (!originalPwd.Equals(LoginInfo.UserPwd))
         //    {
         //        msg = "原密码不正确!";
         //        return Json(new { success = flag, msg = msg }, JsonRequestBehavior.AllowGet);
@@ -134,7 +140,7 @@ namespace Rights.Site.Controllers
         //    using (var factory = new ChannelFactory<IWebFxsCommonService>("*"))
         //    {
         //        var client = factory.CreateChannel();
-        //        request.UserId = CurrentUserInfo.Id;
+        //        request.UserId = LoginInfo.Id;
         //        request.NewPwd = newPwd;
         //        var result = client.ChangePwd(request);
         //        if (result.ReturnCode == ReturnCodeType.Success && result.Content == true)
@@ -163,52 +169,79 @@ namespace Rights.Site.Controllers
         //    using (var factory = new ChannelFactory<IWebFxsCommonService>("*"))
         //    {
         //        var client = factory.CreateChannel();
-        //        var result = client.GetUserMenu(CurrentUserInfo.Id);
+        //        var result = client.GetUserMenu(LoginInfo.Id);
         //        return Content(result.Content);
         //    }
         //}
 
-        ///// <summary>
-        ///// 左侧导航菜单
-        ///// accordition+ tree
-        ///// </summary>
-        ///// <param name="parentId"></param>
-        ///// <returns></returns>
-        //[HttpPost]
-        //public ContentResult GetLeftMenuAccordion(int id)
-        //{
-        //    var outPut = string.Empty;
+        /// <summary>
+        /// 左侧导航菜单
+        /// accordition+ tree
+        /// </summary>
+        /// <param name="parentId"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public ContentResult GetLeftMenuAccordion(int id)
+        {
+            var outPut = string.Empty;
+            var leftMenus = new List<LeftMenu>();
 
-        //    using (var factory = new ChannelFactory<IWebFxsCommonService>("*"))
-        //    {
-        //        var client = factory.CreateChannel();
-        //        var result = client.GetLeftMenuAccordion(CurrentUserInfo.Id, id);
-        //        if (result.ReturnCode == ReturnCodeType.Success)
-        //        {
-        //            outPut = result.Content;
-        //        }
-        //    }
+            using (var factory = new ChannelFactory<IRightsAccountService>("*"))
+            {
+                var client = factory.CreateChannel();
+                var result = client.GetAllChildrenMenu(LoginInfo.Id, id);
+                if (result.ReturnCode == ReturnCodeType.Success)
+                {
+                    var childMenus = result.Content;
+                    if (childMenus.HasValue())
+                    {
+                        foreach (var item in childMenus)
+                        {
+                            leftMenus.Add(new LeftMenu
+                            {
+                                id = item.Id,
+                                text = item.Name,
+                                iconCls = item.Icon
+                            });
+                        }
+                    }
+                    outPut = leftMenus.ToJson();
+                }
+            }
 
-        //    return Content(outPut);
-        //}
+            return Content(outPut);
+        }
 
-        //[HttpPost]
-        //public ContentResult GetLeftMenuTree(int id)
-        //{
-        //    var outPut = string.Empty;
+        [HttpPost]
+        public ContentResult GetLeftMenuTree(int id)
+        {
+            var result = string.Empty;
+            StringBuilder sb = new StringBuilder();
 
-        //    using (var factory = new ChannelFactory<IWebFxsCommonService>("*"))
-        //    {
-        //        var client = factory.CreateChannel();
-        //        var result = client.GetLeftMenuTree(CurrentUserInfo.Id, id);
-        //        if (result.ReturnCode == ReturnCodeType.Success)
-        //        {
-        //            outPut = result.Content;
-        //        }
-        //    }
+            using (var factory = new ChannelFactory<IRightsAccountService>("*"))
+            {
+                var client = factory.CreateChannel();
+                var rs = client.GetAllChildrenMenu(LoginInfo.Id, id);
+                if (rs.ReturnCode == ReturnCodeType.Success)
+                {
+                    var childMenus = rs.Content;
+                    if (childMenus.HasValue())
+                    {
+                        sb.Append(RecursionMenu(childMenus, id));
+                        sb = sb.Remove(sb.Length - 2, 2);
+                        result = sb.ToString();
+                    }
+                    else
+                    {
+                        result = "[]";
+                    }
+                }
 
-        //    return Content(outPut);
-        //}
+
+            }
+
+            return Content(result);
+        }
 
         ///// <summary>
         ///// 获取该用户的信息并再次验证cookie
@@ -255,7 +288,7 @@ namespace Rights.Site.Controllers
         //    using (var factory = new ChannelFactory<IWebFxsCommonService>("*"))
         //    {
         //        var client = factory.CreateChannel();
-        //        var result = client.GetMyInfo(CurrentUserInfo.Id);
+        //        var result = client.GetMyInfo(LoginInfo.Id);
         //        if (result.ReturnCode == ReturnCodeType.Success)
         //        {
         //            flag = true;
@@ -278,5 +311,39 @@ namespace Rights.Site.Controllers
         //{
         //    return Content("");
         //}
-	}
+
+
+        #region Private method
+
+        private string RecursionMenu(List<TRightsMenu> list, int menuParentId)
+        {
+            StringBuilder sb = new StringBuilder();
+            var childMenus = list.Where(p => p.ParentId == menuParentId).ToList();
+            if (childMenus.HasValue())
+            {
+                sb.Append("[");
+                for (int i = 0; i < childMenus.Count; i++)
+                {
+                    var childMenuStr = RecursionMenu(list, childMenus[i].Id);
+                    if (!childMenuStr.IsNullOrEmpty())
+                    {
+                        sb.Append("{\"id\":\"" + childMenus[i].Id.ToString() + "\",\"text\":\"" + childMenus[i].Name + "\",\"iconCls\":\"" + childMenus[i].Icon + "\",\"state\":\"closed\",\"children\":");
+                        sb.Append(childMenuStr);
+                    }
+                    else
+                    {
+                        sb.Append("{\"id\":\"" + childMenus[i].Id.ToString() + "\",\"text\":\"" + childMenus[i].Name + "\",\"iconCls\":\"" + childMenus[i].Icon + "\",\"state\":\"open\",\"attributes\":{\"url\":\"" + childMenus[i].Url + "\"}},");
+                    }
+
+                }
+                sb.Remove(sb.Length - 1, 1);
+                sb.Append("]},");
+            }
+
+            return sb.ToString();
+        }
+
+        #endregion
+
+    }
 }
