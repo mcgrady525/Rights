@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Rights.IDao.Rights;
 using Rights.DaoFactory;
+using Rights.Entity.Rights;
 
 namespace Rights.Service.Rights
 {
@@ -75,6 +76,29 @@ namespace Rights.Service.Rights
             {
                 result.ReturnCode = ReturnCodeType.Success;
                 result.Content = true;
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// 首页我的信息
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public ServiceResult<GetMyInfoResponse> GetMyInfo(int id)
+        {
+            var result = new ServiceResult<GetMyInfoResponse> 
+            {
+                ReturnCode = ReturnCodeType.Error,
+                Content= new GetMyInfoResponse()
+            };
+
+            var myInfo = accountDao.GetMyInfo(id);
+            if (myInfo!= null)
+            {
+                result.ReturnCode = ReturnCodeType.Success;
+                result.Content = myInfo;
             }
 
             return result;

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Rights.Entity.Db;
 using Rights.Entity.ViewModel;
 using Rights.Entity.Common;
+using Rights.Entity.Rights;
 
 namespace Rights.IService.Rights
 {
@@ -40,6 +41,14 @@ namespace Rights.IService.Rights
         /// <returns></returns>
         [OperationContract]
         ServiceResult<bool> InitUserPwd(FirstLoginRequest request, TRightsUser LoginInfo);
+
+        /// <summary>
+        /// 首页我的信息
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [OperationContract]
+        ServiceResult<GetMyInfoResponse> GetMyInfo(int id);
 
     }
 }

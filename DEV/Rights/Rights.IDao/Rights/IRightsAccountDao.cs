@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Rights.Entity.Db;
 using Rights.Entity.ViewModel;
+using Rights.Entity.Rights;
 
 namespace Rights.IDao.Rights
 {
@@ -34,6 +35,13 @@ namespace Rights.IDao.Rights
         /// <param name="request"></param>
         /// <returns></returns>
         bool InitUserPwd(FirstLoginRequest request, TRightsUser loginInfo);
+
+        /// <summary>
+        /// 首页我的信息
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        GetMyInfoResponse GetMyInfo(int id);
 
     }
 }

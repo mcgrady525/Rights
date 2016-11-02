@@ -267,53 +267,53 @@ namespace Rights.Site.Controllers
             return Json(new { success = flag, msg = msg }, JsonRequestBehavior.AllowGet);
         }
 
-        ///// <summary>
-        ///// 我的信息
-        ///// </summary>
-        ///// <returns></returns>
-        ////[LoginAuthorization]
-        //public ActionResult GetMyInfo()
-        //{
-        //    return View();
-        //}
+        /// <summary>
+        /// 我的信息
+        /// </summary>
+        /// <returns></returns>
+        [LoginAuthorization]
+        public ActionResult GetMyInfo()
+        {
+            return View();
+        }
 
-        ///// <summary>
-        ///// 我的信息
-        ///// </summary>
-        ///// <returns></returns>
-        //[HttpPost]
-        //public ActionResult GetMyInfoPost()
-        //{
-        //    var flag = false;
-        //    var msg = string.Empty;
-        //    var data = new GetMyInfoResponse();
+        /// <summary>
+        /// 我的信息
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult GetMyInfoPost()
+        {
+            var flag = false;
+            var msg = string.Empty;
+            var data = new GetMyInfoResponse();
 
-        //    using (var factory = new ChannelFactory<IWebFxsCommonService>("*"))
-        //    {
-        //        var client = factory.CreateChannel();
-        //        var result = client.GetMyInfo(LoginInfo.Id);
-        //        if (result.ReturnCode == ReturnCodeType.Success)
-        //        {
-        //            flag = true;
-        //            data = result.Content;
-        //        }
-        //        else
-        //        {
-        //            msg = result.Message;
-        //        }
-        //    }
+            using (var factory = new ChannelFactory<IRightsAccountService>("*"))
+            {
+                var client = factory.CreateChannel();
+                var result = client.GetMyInfo(base.loginInfo.Id);
+                if (result.ReturnCode == ReturnCodeType.Success)
+                {
+                    flag = true;
+                    data = result.Content;
+                }
+                else
+                {
+                    msg = result.Message;
+                }
+            }
 
-        //    return Json(new { success = flag, msg = msg, data = data }, JsonRequestBehavior.AllowGet);
-        //}
+            return Json(new { success = flag, msg = msg, data = data }, JsonRequestBehavior.AllowGet);
+        }
 
-        ///// <summary>
-        ///// 我的权限
-        ///// </summary>
-        ///// <returns></returns>
-        //public ActionResult GetMyAuthority()
-        //{
-        //    return Content("");
-        //}
+        /// <summary>
+        /// 我的权限
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult GetMyAuthority()
+        {
+            throw new NotImplementedException();
+        }
 
 
         #region Private method

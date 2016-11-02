@@ -1692,6 +1692,7 @@
     <Content Include="Content\easyui\gray\images\Thumbs.db" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Home\FirstLogin.cshtml" />
+    <Content Include="Views\Home\GetMyInfo.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -8,6 +8,9 @@ using Rights.Entity.Db;
 using Rights.Entity.ViewModel;
 using Rights.Common.Helper;
 using Dapper;
+using Rights.Entity.Rights;
+using Tracy.Frameworks.Common.Extends;
+using Tracy.Frameworks.Common.Const;
 
 namespace Rights.Dao.Rights
 {
@@ -70,40 +73,6 @@ namespace Rights.Dao.Rights
         }
 
         /// <summary>
-        /// 首次登录初始化密码
-        /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
-        public bool InitUserPwd(FirstLoginRequest request, TRightsUser loginInfo)
-        {
-            using (var conn = DapperHelper.CreateConnection())
-            {
-                //查询
-                var user = conn.Query<TRightsUser>(@"SELECT u.user_id AS UserId, u.user_name AS UserName, u.is_change_pwd AS IsChangePwd, u.enable_flag AS EnableFlag, u.created_by AS CreatedBy,
-                u.created_time AS CreatedTime, u.last_updated_by AS LastUpdatedBy, u.last_updated_time AS LastUpdatedTime,* 
-                FROM dbo.t_rights_user AS u
-                WHERE u.id= @Id;", new { @Id = request.Id }).FirstOrDefault();
-                if (user != null)
-                {
-                    //更新
-                    var effectRows = conn.Execute(@"UPDATE dbo.t_rights_user SET is_change_pwd= 1, password= @Password, last_updated_by= @LastUpdatedBy, last_updated_time= @LastUpdatedTime WHERE id= @Id;", 
-                        new 
-                        { 
-                            @Password = request.NewPwd, @Id = request.Id,
-                            @LastUpdatedBy= loginInfo.Id,
-                            @LastUpdatedTime= DateTime.Now
-                        });
-                    if (effectRows > 0)
-                    {
-                        return true;
-                    }
-                }
-            }
-
-            return false;
-        }
-
-        /// <summary>
         /// 递归获取所有子菜单
         /// </summary>
         /// <param name="menuParentId"></param>
@@ -120,6 +89,81 @@ namespace Rights.Dao.Rights
 
             return query.ToList().Concat(query.ToList().SelectMany(p => RecursionAllChildrenMenu(p.Id)));
         }
+
+        /// <summary>
+        /// 首次登录初始化密码
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public bool InitUserPwd(FirstLoginRequest request, TRightsUser loginInfo)
+        {
+            using (var conn = DapperHelper.CreateConnection())
+            {
+                //查询
+                var user = conn.Query<TRightsUser>(@"SELECT u.user_id AS UserId, u.user_name AS UserName, u.is_change_pwd AS IsChangePwd, u.enable_flag AS EnableFlag, u.created_by AS CreatedBy,
+                u.created_time AS CreatedTime, u.last_updated_by AS LastUpdatedBy, u.last_updated_time AS LastUpdatedTime,* 
+                FROM dbo.t_rights_user AS u
+                WHERE u.id= @Id;", new { @Id = request.Id }).FirstOrDefault();
+                if (user != null)
+                {
+                    //更新
+                    var effectRows = conn.Execute(@"UPDATE dbo.t_rights_user SET is_change_pwd= 1, password= @Password, last_updated_by= @LastUpdatedBy, last_updated_time= @LastUpdatedTime WHERE id= @Id;",
+                        new
+                        {
+                            @Password = request.NewPwd,
+                            @Id = request.Id,
+                            @LastUpdatedBy = loginInfo.Id,
+                            @LastUpdatedTime = DateTime.Now
+                        });
+                    if (effectRows > 0)
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// 首页我的信息
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public GetMyInfoResponse GetMyInfo(int id)
+        {
+            GetMyInfoResponse result = null;
+            using (var conn = DapperHelper.CreateConnection())
+            {
+                var users = conn.Query<TRightsUser, TRightsUserOrganization, TRightsOrganization, TRightsUserRole, TRightsRole, TRightsUser>(@"SELECT u.user_id AS UserId, u.user_name AS UserName, u.created_time AS CreatedTime,* 
+                    FROM dbo.t_rights_user AS u
+                    LEFT JOIN dbo.t_rights_user_organization AS userOrg ON u.id= userOrg.user_id
+                    LEFT JOIN dbo.t_rights_organization AS org ON userOrg.organization_id= org.id
+                    LEFT JOIN dbo.t_rights_user_role AS userRole ON u.id= userRole.user_id
+                    LEFT JOIN dbo.t_rights_role AS r ON userRole.role_id= r.id
+                    WHERE u.id= @Id;", (user, userOrg, org, userRole, role) =>
+                                     {
+                                         user.Organization = org;
+                                         user.Role = role;
+                                         return user;
+                                     }, new { @Id = id }).ToList();
+                if (users.HasValue())
+                {
+                    result = new GetMyInfoResponse
+                    {
+                        UserId = users.First().UserId,
+                        UserName = users.First().UserName,
+                        CreatedTime = users.First().CreatedTime.ToString(DateFormat.DATETIME),
+                        RolesName = users.First().Role != null ? string.Join(",", users.Select(p => p.Role.Name).Distinct()) : "",
+                        DepartmentsName = users.First().Organization != null ? string.Join(",", users.Select(p => p.Organization.Name).Distinct()) : ""
+                    };
+                }
+            }
+
+            return result;
+        }
+
+
 
     }
 }
