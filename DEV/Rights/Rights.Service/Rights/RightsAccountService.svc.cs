@@ -104,5 +104,26 @@ namespace Rights.Service.Rights
             return result;
         }
 
+        /// <summary>
+        /// 修改密码
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public ServiceResult<bool> ChangePwd(ChangePwdRequest request, TRightsUser loginInfo)
+        {
+            var result = new ServiceResult<bool> 
+            {
+                ReturnCode= ReturnCodeType.Error
+            };
+
+            if (accountDao.ChangePwd(request, loginInfo))
+            {
+                result.ReturnCode = ReturnCodeType.Success;
+                result.Content = true;
+            }
+
+            return result;
+        }
+
     }
 }

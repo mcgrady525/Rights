@@ -50,5 +50,13 @@ namespace Rights.IService.Rights
         [OperationContract]
         ServiceResult<GetMyInfoResponse> GetMyInfo(int id);
 
+        /// <summary>
+        /// 修改密码
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [OperationContract]
+        ServiceResult<bool> ChangePwd(ChangePwdRequest request, TRightsUser loginInfo);
+
     }
 }

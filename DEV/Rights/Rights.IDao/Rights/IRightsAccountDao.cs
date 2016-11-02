@@ -43,5 +43,12 @@ namespace Rights.IDao.Rights
         /// <returns></returns>
         GetMyInfoResponse GetMyInfo(int id);
 
+        /// <summary>
+        /// 修改密码
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        bool ChangePwd(ChangePwdRequest request, TRightsUser loginInfo);
+
     }
 }

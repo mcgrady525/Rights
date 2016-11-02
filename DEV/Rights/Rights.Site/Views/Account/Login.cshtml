@@ -142,7 +142,8 @@
                     }
                 }
             })
-            createCode();  //创建验证码
+            createCode();//创建验证码
+            $("#loginVerificationCode").val(code);//调试用，上线的时候去掉
         })
 
         function getiflogin() {
@@ -197,7 +198,7 @@
                     $("#msg").animate({ opacity: "hide" }, 2000);
                 });
                 $("#loginVerificationCode").val("").focus();
-                createCode();       //刷新验证码
+                createCode();//刷新验证码
                 return false;
             } else {
                 $('#loginBtn').linkbutton('disable');

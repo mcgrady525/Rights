@@ -163,6 +163,39 @@ namespace Rights.Dao.Rights
             return result;
         }
 
+        /// <summary>
+        /// 修改密码
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public bool ChangePwd(ChangePwdRequest request, TRightsUser loginInfo)
+        {
+            using (var conn = DapperHelper.CreateConnection())
+            {
+                var user = conn.Query<TRightsUser>(@"SELECT u.user_id AS UserId, u.user_name AS UserName, u.is_change_pwd AS IsChangePwd, u.enable_flag AS EnableFlag, u.created_by AS CreatedBy,
+                    u.created_time AS CreatedTime, u.last_updated_by AS LastUpdatedBy, u.last_updated_time AS LastUpdatedTime,* 
+                    FROM dbo.t_rights_user AS u
+                    WHERE u.id= @Id;", new { @Id = request.Id }).FirstOrDefault();
+                if (user != null)
+                {
+                    var effectRows = conn.Execute(@"UPDATE dbo.t_rights_user SET password= @NewPwd, last_updated_by= @LastUpdatedBy, last_updated_time= @LastUpdatedTime WHERE id= @Id;",
+                        new
+                        {
+                            @Id = request.Id,
+                            @NewPwd= request.NewPwd,
+                            @LastUpdatedBy = loginInfo.Id,
+                            @LastUpdatedTime = DateTime.Now
+                        });
+                    if (effectRows > 0)
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
 
 
     }

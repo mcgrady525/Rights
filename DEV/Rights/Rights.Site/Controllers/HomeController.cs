@@ -110,58 +110,58 @@ namespace Rights.Site.Controllers
             return Json(new { success = flag, msg = msg }, JsonRequestBehavior.AllowGet);
         }
 
-        ///// <summary>
-        ///// 修改密码
-        ///// </summary>
-        ///// <returns></returns>
-        ////[LoginAuthorization]
-        //public ActionResult ChangePwd()
-        //{
-        //    return View();
-        //}
+        /// <summary>
+        /// 修改密码
+        /// </summary>
+        /// <returns></returns>
+        [LoginAuthorization]
+        public ActionResult ChangePwd()
+        {
+            return View();
+        }
 
-        ///// <summary>
-        ///// 修改密码
-        ///// </summary>
-        ///// <returns></returns>
-        //[HttpPost]
-        //public ActionResult ChangePwd(ChangePwdRequest request)
-        //{
-        //    //更新密码
-        //    //更新密码成功后清除cookie，然后登录的时候会重写cookie
-        //    var flag = false;
-        //    var msg = string.Empty;
+        /// <summary>
+        /// 修改密码
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult ChangePwd(ChangePwdRequest request)
+        {
+            //更新密码
+            //更新密码成功后清除cookie，然后登录的时候会重写cookie
+            var flag = false;
+            var msg = string.Empty;
 
-        //    var originalPwd = request.OriginalPwd.To32bitMD5();
-        //    var newPwd = request.NewPwd.To32bitMD5();
-        //    if (!originalPwd.Equals(LoginInfo.UserPwd))
-        //    {
-        //        msg = "原密码不正确!";
-        //        return Json(new { success = flag, msg = msg }, JsonRequestBehavior.AllowGet);
-        //    }
+            var originalPwd = request.OriginalPwd.To32bitMD5();
+            var newPwd = request.NewPwd.To32bitMD5();
+            if (!originalPwd.Equals(loginInfo.Password))
+            {
+                msg = "原密码不正确!";
+                return Json(new { success = flag, msg = msg }, JsonRequestBehavior.AllowGet);
+            }
 
-        //    using (var factory = new ChannelFactory<IWebFxsCommonService>("*"))
-        //    {
-        //        var client = factory.CreateChannel();
-        //        request.UserId = LoginInfo.Id;
-        //        request.NewPwd = newPwd;
-        //        var result = client.ChangePwd(request);
-        //        if (result.ReturnCode == ReturnCodeType.Success && result.Content == true)
-        //        {
-        //            //修改成功要清除cookie然后到登录页面重写cookie
-        //            FormsAuthentication.SignOut();
-        //            flag = true;
-        //            msg = "修改成功,正在跳转到登陆页面！";
+            using (var factory = new ChannelFactory<IRightsAccountService>("*"))
+            {
+                var client = factory.CreateChannel();
+                request.Id = loginInfo.Id;
+                request.NewPwd = newPwd;
+                var result = client.ChangePwd(request, loginInfo);
+                if (result.ReturnCode == ReturnCodeType.Success && result.Content == true)
+                {
+                    //修改成功要清除cookie然后到登录页面重写cookie
+                    FormsAuthentication.SignOut();
+                    flag = true;
+                    msg = "修改成功,正在跳转到登陆页面！";
 
-        //        }
-        //        else
-        //        {
-        //            msg = "修改失败!";
-        //        }
-        //    }
+                }
+                else
+                {
+                    msg = "修改失败!";
+                }
+            }
 
-        //    return Json(new { success = flag, msg = msg }, JsonRequestBehavior.AllowGet);
-        //}
+            return Json(new { success = flag, msg = msg }, JsonRequestBehavior.AllowGet);
+        }
 
         ///// <summary>
         ///// 获取该用户所拥有的菜单权限

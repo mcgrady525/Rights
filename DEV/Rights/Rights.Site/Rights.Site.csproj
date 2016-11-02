@@ -1693,6 +1693,7 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Home\FirstLogin.cshtml" />
     <Content Include="Views\Home\GetMyInfo.cshtml" />
+    <Content Include="Views\Home\ChangePwd.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
