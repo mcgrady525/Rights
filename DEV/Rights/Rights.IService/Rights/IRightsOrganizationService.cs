@@ -5,6 +5,7 @@ using System.Linq;
 using System.ServiceModel;
 using System.Text;
 using System.Threading.Tasks;
+using Rights.Entity.Common;
 
 namespace Rights.IService.Rights
 {
@@ -19,7 +20,7 @@ namespace Rights.IService.Rights
         /// </summary>
         /// <param name="item">待插入的记录</param>
         [OperationContract]
-        void Insert(TRightsOrganization item);
+        ServiceResult<bool> Insert(TRightsOrganization item);
 
         /// <summary>
         /// 更新机构
@@ -27,7 +28,7 @@ namespace Rights.IService.Rights
         /// <param name="item">待更新的记录</param>
         /// <returns></returns>
         [OperationContract]
-        bool Update(TRightsOrganization item);
+        ServiceResult<bool> Update(TRightsOrganization item);
 
         /// <summary>
         /// 删除机构
@@ -35,7 +36,7 @@ namespace Rights.IService.Rights
         /// <param name="id">待删除记录的id</param>
         /// <returns></returns>
         [OperationContract]
-        bool Delete(int id);
+        ServiceResult<bool> Delete(int id);
 
         /// <summary>
         /// 依id查询机构
@@ -43,13 +44,33 @@ namespace Rights.IService.Rights
         /// <param name="id">id</param>
         /// <returns></returns>
         [OperationContract]
-        TRightsOrganization GetById(int id);
+        ServiceResult<TRightsOrganization> GetById(int id);
 
         /// <summary>
         /// 获取所有机构
         /// </summary>
         /// <returns></returns>
         [OperationContract]
-        List<TRightsOrganization> GetAll();
+        ServiceResult<List<TRightsOrganization>> GetAll();
+
+        /// <summary>
+        /// 获取当前用户当前页面可以访问的按钮列表
+        /// </summary>
+        /// <param name="menuCode">菜单code</param>
+        /// <param name="pageName"></param>
+        /// <param name="userId">用户id</param>
+        /// <returns></returns>
+        [OperationContract]
+        ServiceResult<List<TRightsButton>> GetButtonsByUserIdAndMenuCode(string menuCode, int userId);
+
+        /// <summary>
+        /// 获取指定机构的所有子机构，0表示获取所有
+        /// </summary>
+        /// <param name="orgId"></param>
+        /// <returns></returns>
+        [OperationContract]
+        ServiceResult<List<TRightsOrganization>> GetChildrenOrgs(int orgId);
+
+
     }
 }

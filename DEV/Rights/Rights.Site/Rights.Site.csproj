@@ -1674,6 +1674,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\OrganizationController.cs" />
     <Compile Include="Filters\LoginAuthorizationAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -1694,6 +1695,7 @@
     <Content Include="Views\Home\FirstLogin.cshtml" />
     <Content Include="Views\Home\GetMyInfo.cshtml" />
     <Content Include="Views\Home\ChangePwd.cshtml" />
+    <Content Include="Views\Organization\Index.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

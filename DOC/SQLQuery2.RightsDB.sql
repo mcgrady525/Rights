@@ -16,7 +16,7 @@ SELECT * FROM dbo.t_rights_user;
 --WHERE u.user_id= @UserId AND u.password= @Password;
 
 --用户-机构
---SELECT * FROM dbo.t_rights_user_organization;
+SELECT * FROM dbo.t_rights_user_organization;
 
 --角色
 SELECT * FROM dbo.t_rights_role;
@@ -56,5 +56,30 @@ WHERE u.id= @Id;
 UPDATE dbo.t_rights_user SET is_change_pwd= 1, password= @Password, last_updated_by= @LastUpdatedBy, last_updated_time= @LastUpdatedTime WHERE id= @Id;
 
 UPDATE dbo.t_rights_user SET password= 'e10adc3949ba59abbe56e057f20f883e', is_change_pwd= 0 WHERE id= 4;
+
+
+--我的信息
+--帐户信息，角色和所属机构
+SELECT u.user_id AS UserId, u.user_name AS UserName, u.created_time AS CreatedTime,* 
+FROM dbo.t_rights_user AS u
+LEFT JOIN dbo.t_rights_user_organization AS userOrg ON u.id= userOrg.user_id
+LEFT JOIN dbo.t_rights_organization AS org ON userOrg.organization_id= org.id
+LEFT JOIN dbo.t_rights_user_role AS userRole ON u.id= userRole.user_id
+LEFT JOIN dbo.t_rights_role AS r ON userRole.role_id= r.id
+WHERE u.id= @Id;
+
+--获取当前用户当前页面可以访问的按钮列表
+SELECT * FROM dbo.t_rights_button AS button
+LEFT JOIN dbo.t_rights_role_menu_button AS roleMenuButton ON button.id= roleMenuButton.button_id
+LEFT JOIN dbo.t_rights_menu AS menu ON roleMenuButton.menu_id= menu.id
+LEFT JOIN dbo.t_rights_user_role AS userRole ON userRole.role_id= roleMenuButton.role_id
+LEFT JOIN dbo.t_rights_user AS u ON u.id= userRole.user_id
+WHERE u.id= @UserId AND menu.code= @MenuCode;
+
+--获取指定机构的所有子机构
+SELECT org.parent_id AS ParentId,org.organization_type AS OrganizationType, org.enable_flag AS EnableFlag,
+org.created_by AS CreatedBy, org.created_time AS CreatedTime, org.last_updated_by AS LastUpdatedBy, org.last_updated_time AS LastUpdatedTime,* 
+FROM dbo.t_rights_organization AS org
+WHERE org.enable_flag= 1 AND org.parent_id= @ParentId;
 
 

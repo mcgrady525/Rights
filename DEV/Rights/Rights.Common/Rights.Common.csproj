@@ -46,6 +46,7 @@
     <Compile Include="Helper\ConfigHelper.cs" />
     <Compile Include="Helper\DapperHelper.cs" />
     <Compile Include="Helper\RightsHelper.cs" />
+    <Compile Include="Helper\ToolbarHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

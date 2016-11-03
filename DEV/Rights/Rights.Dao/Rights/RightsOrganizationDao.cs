@@ -20,25 +20,30 @@ namespace Rights.Dao.Rights
         /// 插入
         /// </summary>
         /// <param name="item">待插入的记录</param>
-        public void Insert(TRightsOrganization item)
+        public bool Insert(TRightsOrganization item)
         {
-            using (var conn= DapperHelper.CreateConnection())
+            using (var conn = DapperHelper.CreateConnection())
             {
-                var effectRows = conn.Execute(@"INSERT INTO dbo.t_rights_organization VALUES  ( @OrgName ,@ParentId ,@Code ,@OrganizationType ,@Sort ,@EnableFlag ,@CreatedBy ,@CreatedTime ,@LastUpdatedBy ,@LastUpdatedTime);", 
-                                new 
+                var effectRows = conn.Execute(@"INSERT INTO dbo.t_rights_organization VALUES  ( @OrgName ,@ParentId ,@Code ,@OrganizationType ,@Sort ,@EnableFlag ,@CreatedBy ,@CreatedTime ,@LastUpdatedBy ,@LastUpdatedTime);",
+                                new
                                 {
-                                    @OrgName= item.Name,
-                                    @ParentId= item.ParentId,
-                                    @Code= item.Code,
-                                    @OrganizationType= item.OrganizationType,
-                                    @Sort= item.Sort,
-                                    @EnableFlag= item.EnableFlag,
-                                    @CreatedBy= item.CreatedBy,
-                                    @CreatedTime= item.CreatedTime,
-                                    @LastUpdatedBy= item.LastUpdatedBy,
-                                    @LastUpdatedTime= item.LastUpdatedTime
+                                    @OrgName = item.Name,
+                                    @ParentId = item.ParentId,
+                                    @Code = item.Code,
+                                    @OrganizationType = item.OrganizationType,
+                                    @Sort = item.Sort,
+                                    @EnableFlag = item.EnableFlag,
+                                    @CreatedBy = item.CreatedBy,
+                                    @CreatedTime = item.CreatedTime,
+                                    @LastUpdatedBy = item.LastUpdatedBy,
+                                    @LastUpdatedTime = item.LastUpdatedTime
                                 });
+                if (effectRows > 0)
+                {
+                    return true;
+                }
             }
+            return false;
         }
 
         /// <summary>
@@ -122,5 +127,72 @@ namespace Rights.Dao.Rights
 
             return result;
         }
+
+        /// <summary>
+        /// 获取当前用户当前页面可以访问的按钮列表
+        /// </summary>
+        /// <param name="menuCode"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public List<TRightsButton> GetButtonsByUserIdAndMenuCode(string menuCode, int userId)
+        {
+            List<TRightsButton> result = null;
+            using (var conn = DapperHelper.CreateConnection())
+            {
+                var query = conn.Query<TRightsButton, TRightsRoleMenuButton, TRightsMenu, TRightsUserRole, TRightsUser, TRightsButton>(@"SELECT * FROM dbo.t_rights_button AS button
+                    LEFT JOIN dbo.t_rights_role_menu_button AS roleMenuButton ON button.id= roleMenuButton.button_id
+                    LEFT JOIN dbo.t_rights_menu AS menu ON roleMenuButton.menu_id= menu.id
+                    LEFT JOIN dbo.t_rights_user_role AS userRole ON userRole.role_id= roleMenuButton.role_id
+                    LEFT JOIN dbo.t_rights_user AS u ON u.id= userRole.user_id
+                    WHERE u.id= @UserId AND menu.code= @MenuCode;", (button, roleMenuButton, menu, userRole, user) =>
+                                                                  {
+                                                                      return button;
+                                                                  },
+                                                                  new
+                                                                  {
+                                                                      @UserId = userId,
+                                                                      @MenuCode = menuCode
+                                                                  }).ToList();
+                if (query.HasValue())
+                {
+                    result = query.DistinctBy(p => p.Id).OrderBy(p => p.Sort).ToList();
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// 获取指定机构的所有子机构
+        /// </summary>
+        /// <param name="orgId"></param>
+        /// <returns></returns>
+        public List<TRightsOrganization> GetChildrenOrgs(int orgId)
+        {
+            return RecursionChildrenOrgs(orgId).ToList();
+        }
+
+        #region Private method
+
+        /// <summary>
+        /// 递归获取指定机构的所有子机构
+        /// </summary>
+        /// <param name="parentId"></param>
+        /// <returns></returns>
+        public IEnumerable<TRightsOrganization> RecursionChildrenOrgs(int parentId)
+        {
+            using (var conn= DapperHelper.CreateConnection())
+            {
+                var parentOrgs = conn.Query<TRightsOrganization>(@"SELECT org.parent_id AS ParentId,org.organization_type AS OrganizationType, org.enable_flag AS EnableFlag,
+                    org.created_by AS CreatedBy, org.created_time AS CreatedTime, org.last_updated_by AS LastUpdatedBy, org.last_updated_time AS LastUpdatedTime,* 
+                    FROM dbo.t_rights_organization AS org
+                    WHERE org.enable_flag= 1 AND org.parent_id= @ParentId;", new { @ParentId= parentId });
+
+                return parentOrgs.ToList().Concat(parentOrgs.ToList().SelectMany(p => RecursionChildrenOrgs(p.Id)));
+            }
+        }
+
+        #endregion
+
     }
 }

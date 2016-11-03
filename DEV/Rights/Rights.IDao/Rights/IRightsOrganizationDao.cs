@@ -16,7 +16,7 @@ namespace Rights.IDao.Rights
         /// 插入
         /// </summary>
         /// <param name="item">待插入的记录</param>
-        void Insert(TRightsOrganization item);
+        bool Insert(TRightsOrganization item);
 
         /// <summary>
         /// 更新
@@ -45,7 +45,20 @@ namespace Rights.IDao.Rights
         /// <returns></returns>
         List<TRightsOrganization> GetAll();
 
+        /// <summary>
+        /// 获取当前用户当前页面可以访问的按钮列表
+        /// </summary>
+        /// <param name="menuCode"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        List<TRightsButton> GetButtonsByUserIdAndMenuCode(string menuCode, int userId);
 
+        /// <summary>
+        /// 获取指定机构的所有子机构
+        /// </summary>
+        /// <param name="orgId"></param>
+        /// <returns></returns>
+        List<TRightsOrganization> GetChildrenOrgs(int orgId);
 
     }
 }
