@@ -6,6 +6,7 @@ using System.ServiceModel;
 using System.Text;
 using System.Threading.Tasks;
 using Rights.Entity.Common;
+using Rights.Entity.ViewModel;
 
 namespace Rights.IService.Rights
 {
@@ -70,6 +71,14 @@ namespace Rights.IService.Rights
         /// <returns></returns>
         [OperationContract]
         ServiceResult<List<TRightsOrganization>> GetChildrenOrgs(int orgId);
+
+        /// <summary>
+        /// 新增机构
+        /// </summary>
+        /// <param name="request">request</param>
+        /// <returns></returns>
+        [OperationContract]
+        ServiceResult<bool> AddOrganization(AddOrganizationRequest request, TRightsUser loginInfo);
 
 
     }

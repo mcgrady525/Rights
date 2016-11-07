@@ -58,6 +58,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Rights\GetMyInfoResponse.cs" />
     <Compile Include="Rights\LeftMenu.cs" />
+    <Compile Include="ViewModel\AddOrganizationRequest.cs" />
     <Compile Include="ViewModel\ChangePwdRequest.cs" />
     <Compile Include="ViewModel\CheckLoginRequest.cs" />
     <Compile Include="ViewModel\FirstLoginRequest.cs" />

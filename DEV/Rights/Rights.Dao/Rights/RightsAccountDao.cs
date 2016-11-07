@@ -66,7 +66,7 @@ namespace Rights.Dao.Rights
                     return menu;
                 }, new { @UserId = userId });
 
-                UserMenus = query.ToList();
+                UserMenus = query.DistinctBy(p=> p.Id).ToList();
             }
 
             return RecursionAllChildrenMenu(menuParentId).ToList();

@@ -11,6 +11,7 @@ using Rights.IDao.Rights;
 using Rights.DaoFactory;
 using Rights.Entity.Common;
 using Tracy.Frameworks.Common.Extends;
+using Rights.Entity.ViewModel;
 
 namespace Rights.Service.Rights
 {
@@ -174,6 +175,38 @@ namespace Rights.Service.Rights
             var rs = orgDao.GetChildrenOrgs(orgId);
             result.Content = rs;
             result.ReturnCode = ReturnCodeType.Success;
+
+            return result;
+        }
+
+        /// <summary>
+        /// 新增机构
+        /// </summary>
+        /// <param name="request">request</param>
+        /// <returns></returns>
+        public ServiceResult<bool> AddOrganization(AddOrganizationRequest request, TRightsUser loginInfo)
+        {
+            var result = new ServiceResult<bool>
+            {
+                ReturnCode = ReturnCodeType.Error
+            };
+
+            var item = new TRightsOrganization
+            {
+                Name = request.Name,
+                ParentId = request.ParentId,
+                Code = request.Code,
+                Sort = request.Sort,
+                EnableFlag = true,
+                CreatedBy = loginInfo.Id,
+                CreatedTime = DateTime.Now
+            };
+            var rs = orgDao.Insert(item);
+            if (rs == true)
+            {
+                result.ReturnCode = ReturnCodeType.Success;
+                result.Content = true;
+            }
 
             return result;
         }

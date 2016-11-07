@@ -12,6 +12,7 @@ using Rights.Entity.Db;
 using Tracy.Frameworks.Common.Extends;
 using Tracy.Frameworks.Common.Const;
 using Rights.Common.Helper;
+using Rights.Entity.ViewModel;
 
 namespace Rights.Site.Controllers
 {
@@ -104,7 +105,7 @@ namespace Rights.Site.Controllers
             //先获取指定机构的所有子机构
             //然后递归生成JSON数据
             var result = string.Empty;
-            
+
             using (var factory = new ChannelFactory<IRightsOrganizationService>("*"))
             {
                 var client = factory.CreateChannel();
@@ -124,6 +125,41 @@ namespace Rights.Site.Controllers
             }
 
             return Content(result);
+        }
+
+        /// <summary>
+        /// 新增机构
+        /// </summary>
+        /// <returns></returns>
+        [LoginAuthorization]
+        public ActionResult Add()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult Add(AddOrganizationRequest request)
+        {
+            var flag = false;
+            var msg = string.Empty;
+
+            using (var factory = new ChannelFactory<IRightsOrganizationService>("*"))
+            {
+                var client = factory.CreateChannel();
+                var rs = client.AddOrganization(request, loginInfo);
+                if (rs.ReturnCode == ReturnCodeType.Success && rs.Content == true)
+                {
+                    flag = true;
+                    msg = "新增成功!";
+                }
+                else
+                {
+                    msg = "新增失败!";
+                }
+            }
+
+
+            return Json(new { success = flag, msg = msg }, JsonRequestBehavior.AllowGet);
         }
 
         #region Private method

@@ -17,7 +17,7 @@
 </head>
 <body>
     <div id="ui_org_layout" class="easyui-layout" data-options="fit:true,border:false">
-        <div data-options="region:'west',split:true,title:'组织机构'" style="width: 180px; padding: 10px;">
+        <div data-options="region:'west',split:true,title:'组织机构'" style="width: 200px; padding: 10px;">
             <div>
                 <ul id="treeOrg"></ul>
             </div>
@@ -25,7 +25,6 @@
         <div data-options="region:'center',border:false, title:'组织机构列表'">
             <table id="ui_org_tg" data-options="fit:true,border:false"></table>
         </div>
-        <input type="hidden" id="hidOrgId" value="0" />
     </div>
     @if (false)
     {
@@ -41,8 +40,6 @@
                 onClick: function (node) {
                     var centerPanel = $("#ui_org_layout").layout("panel", "center");
                     centerPanel.panel("setTitle", "组织机构列表 - " + node.text);
-                    $("#hidOrgId").val(node.id);
-
                     GetChildrenOrgs(node.id);
                 }
             });
@@ -70,8 +67,8 @@
                                 treeField: 'text',
                                 rownumbers: true,
                                 columns: [[
-                                            { field: 'text', title: '机构名称', width: 150 },
-                                            { field: 'Code', title: '编码', width: 80 },
+                                            { field: 'text', title: '机构名称', width: 200 },
+                                            { field: 'Code', title: '编码', width: 100 },
                                             {
                                                 field: 'Enabled', title: '启用', sortable: true, width: 60, align: 'center',
                                                 formatter: function (value, row, index) {
@@ -112,50 +109,42 @@
             }
         }
 
-        //添加部门
-        //必须先选择左边的公司然后才可以添加
-        function department_add() {
-            var nodeCorp = $('#treeOrg').tree('getSelected');
-            if (!nodeCorp) {
-                $.show_warning("提示", "请先选择左边的公司然后再添加!");
-                return false;
-            }
-
+        //添加机构
+        function organization_add() {
             $("<div/>").dialog({
-                id: "ui_department_add_dialog",
-                href: '@Url.Action("Add", "Department")',
-                title: "添加部门",
+                id: "ui_org_add_dialog",
+                href: '@Url.Action("Add", "Organization")',
+                title: "添加机构",
                 height: 350,
                 width: 460,
                 modal: true,
                 buttons: [{
-                    id: "ui_department_add_btn",
+                    id: "ui_org_add_btn",
                     text: '添 加',
                     handler: function () {
-                        $("#ui_department_addform").form("submit", {
-                            url: '@Url.Action("Add", "Department")',
+                        $("#ui_org_addform").form("submit", {
+                            url: '@Url.Action("Add", "Organization")',
                             onSubmit: function (param) {
-                                $('#ui_department_add_btn').linkbutton('disable');
+                                $('#ui_org_add_btn').linkbutton('disable');
                                 if ($(this).form('validate')) {
                                     var t = $("#comboParent").combotree('tree');
                                     var node = t.tree('getSelected');
-                                    param.CorpId = $("#hidOrgId").val();
                                     param.ParentId = node.id;
                                     return true;
                                 }
                                 else {
-                                    $('#ui_department_add_btn').linkbutton('enable');
+                                    $('#ui_org_add_btn').linkbutton('enable');
                                     return false;
                                 }
                             },
                             success: function (data) {
                                 var dataJson = eval('(' + data + ')');
                                 if (dataJson.success) {
-                                    $("#ui_department_add_dialog").dialog('destroy');
+                                    $("#ui_org_add_dialog").dialog('destroy');
                                     $.show_warning("提示", dataJson.msg);
                                     $("#ui_org_tg").treegrid("reload");
                                 } else {
-                                    $('#ui_department_add_btn').linkbutton('enable');
+                                    $('#ui_org_add_btn').linkbutton('enable');
                                     $.show_warning("提示", dataJson.msg);
                                 }
                             }
@@ -164,21 +153,15 @@
                 }],
                 onLoad: function () {
                     $("#Name").focus();
-
-                    var hidOrgId = $("#hidOrgId").val();
-                    $("#comboParent").combotree({
-                        url: '@Url.Action("GetDepartmentByCorp", "Department")' + "?corporationId=" + hidOrgId,
-                        lines: true
-                    });
                 },
                 onClose: function () {
-                    $("#ui_department_add_dialog").dialog('destroy');
+                    $("#ui_org_add_dialog").dialog('destroy');
                 }
             });
         };
 
-        //修改部门
-        function department_edit() {
+        //修改机构
+        function organization_edit() {
             var row = $("#ui_org_tg").treegrid("getSelected");
             if (!row) {
                 $.show_warning("提示", "请先选择要修改的部门");
@@ -231,8 +214,8 @@
             });
         }
 
-        //删除部门
-        function department_delete() {
+        //删除机构
+        function organization_delete() {
             var row = $("#ui_org_tg").datagrid("getSelected");
             if (!row) {
                 $.show_warning("提示", "请先勾选要删除的部门");
@@ -265,12 +248,12 @@
         };
 
         //全部展开
-        function department_expandall() {
+        function organization_expandall() {
             $("#ui_org_tg").treegrid("expandAll");
         };
 
         //全部折叠
-        function department_collapseall() {
+        function organization_collapseall() {
             $("#ui_org_tg").treegrid("collapseAll");
         };
 
