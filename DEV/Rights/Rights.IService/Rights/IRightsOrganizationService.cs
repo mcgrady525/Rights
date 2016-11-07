@@ -89,6 +89,14 @@ namespace Rights.IService.Rights
         [OperationContract]
         ServiceResult<bool> EditOrganization(EditOrganizationRequest request, TRightsUser loginInfo);
 
+        /// <summary>
+        /// 删除机构(支持批量删除)
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [OperationContract]
+        ServiceResult<bool> DeleteOrganization(DeleteOrganizationRequest request);
+
 
     }
 }

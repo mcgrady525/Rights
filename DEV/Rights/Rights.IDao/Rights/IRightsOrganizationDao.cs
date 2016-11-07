@@ -33,6 +33,13 @@ namespace Rights.IDao.Rights
         bool Delete(int id);
 
         /// <summary>
+        /// 批量删除
+        /// </summary>
+        /// <param name="ids">id列表</param>
+        /// <returns></returns>
+        bool BatchDelete(List<int> ids);
+
+        /// <summary>
         /// 依id查询
         /// </summary>
         /// <param name="id">id</param>

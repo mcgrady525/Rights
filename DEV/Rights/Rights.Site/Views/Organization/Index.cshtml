@@ -99,11 +99,11 @@
             })
         };
 
-        var deptIds = "";
+        var orgIds = "";
         function recursionGetIds(rows) {
             if (rows.children != undefined) {
                 $.each(rows.children, function (i, row) {
-                    deptIds += row.id + ",";
+                    orgIds += row.id + ",";
                     recursionGetIds(row);
                 });
             }
@@ -164,7 +164,7 @@
         function organization_edit() {
             var row = $("#ui_org_tg").treegrid("getSelected");
             if (!row) {
-                $.show_warning("提示", "请先选择要修改的组织机构!");
+                $.show_warning("提示", "请先选择要修改的机构!");
                 return;
             }
             $("<div/>").dialog({
@@ -223,24 +223,24 @@
         function organization_delete() {
             var row = $("#ui_org_tg").datagrid("getSelected");
             if (!row) {
-                $.show_warning("提示", "请先勾选要删除的部门");
+                $.show_warning("提示", "请先勾选要删除的机构");
                 return;
             }
-            $.messager.confirm('提示', '确定删除：' + row.text + '？如果有子部门也会同时删除！', function (r) {
+            $.messager.confirm('提示', '确定删除：' + row.text + '？如果有子机构也会同时删除！', function (r) {
                 if (r) {
-                    deptIds = "";
+                    orgIds = "";
                     recursionGetIds(row);
                     $.ajax({
-                        url: '@Url.Action("Delete", "Department")',
-                        data: { "deleteDeptIds": deptIds + row.id },
+                        url: '@Url.Action("Delete", "Organization")',
+                        data: { "deleteOrgIds": row.id +","+ orgIds },
                         type: "POST",
                         dataType: "JSON",
                         success: function (data) {
                             if (data.success) {
                                 $.show_warning("提示", data.msg);
                                 $("#ui_org_tg").treegrid("reload");
-                                if ($('#tabs').tabs('exists', '部门管理')) {
-                                    $('#tabs').tabs('getTab', '部门管理').panel('refresh');
+                                if ($('#tabs').tabs('exists', '组织机构')) {
+                                    $('#tabs').tabs('getTab', '组织机构').panel('refresh');
                                 }
                                 //$("#ui_org_layout").layout("collapse", "east");
                             } else {

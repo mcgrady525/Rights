@@ -88,6 +88,26 @@ namespace Rights.Dao.Rights
         }
 
         /// <summary>
+        /// 批量删除
+        /// </summary>
+        /// <param name="ids">id列表</param>
+        /// <returns></returns>
+        public bool BatchDelete(List<int> ids)
+        {
+            var result = false;
+            using (var conn = DapperHelper.CreateConnection())
+            {
+                var effectRows = conn.Execute(@"DELETE FROM dbo.t_rights_organization WHERE id IN @Ids;", new { @Ids = ids });
+                if (effectRows > 0)
+                {
+                    result = true;
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
         /// 依id查询
         /// </summary>
         /// <param name="id">id</param>

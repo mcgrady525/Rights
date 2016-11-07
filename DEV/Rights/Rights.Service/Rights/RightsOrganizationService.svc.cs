@@ -242,5 +242,31 @@ namespace Rights.Service.Rights
 
             return result;
         }
+
+        /// <summary>
+        /// 删除机构(支持批量删除)
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public ServiceResult<bool> DeleteOrganization(DeleteOrganizationRequest request)
+        {
+            var result = new ServiceResult<bool>
+            {
+                ReturnCode = ReturnCodeType.Error
+            };
+
+            var list = request.DeleteOrgIds.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries).Select(p => p.ToInt()).ToList();
+            if (list.HasValue())
+            {
+                var rs = orgDao.BatchDelete(list);
+                if (rs == true)
+                {
+                    result.ReturnCode = ReturnCodeType.Success;
+                    result.Content = true;
+                }
+            }
+
+            return result;
+        }
     }
 }

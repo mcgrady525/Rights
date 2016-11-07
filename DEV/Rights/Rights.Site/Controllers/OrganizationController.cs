@@ -192,6 +192,35 @@ namespace Rights.Site.Controllers
             return Json(new { success = flag, msg = msg }, JsonRequestBehavior.AllowGet);
         }
 
+        /// <summary>
+        /// 删除组织机构(支持批量删除)
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult Delete(DeleteOrganizationRequest request)
+        {
+            var flag = false;
+            var msg = string.Empty;
+
+            using (var factory = new ChannelFactory<IRightsOrganizationService>("*"))
+            {
+                var client = factory.CreateChannel();
+                var rs = client.DeleteOrganization(request);
+                if (rs.ReturnCode == ReturnCodeType.Success && rs.Content == true)
+                {
+                    flag = true;
+                    msg = "删除成功!";
+                }
+                else
+                {
+                    msg = "删除失败!";
+                }
+            }
+
+            return Json(new { success = flag, msg = msg }, JsonRequestBehavior.AllowGet);
+        }
+
         #region Private method
 
         /// <summary>

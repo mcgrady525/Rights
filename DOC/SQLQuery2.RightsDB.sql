@@ -36,6 +36,15 @@ SELECT * FROM dbo.t_rights_menu_button;
 --角色-菜单-按钮
 SELECT * FROM dbo.t_rights_role_menu_button;
 
+--INSERT INTO dbo.t_rights_role_menu_button
+--        ( role_id, menu_id, button_id )
+--VALUES  
+--( 1,5,2 ),
+--( 1,5,3 ),
+--( 1,5,4 ),
+--( 1,5,11 ),
+--( 1,5,12 );
+
 --当前用户可以访问的菜单
 SELECT menu.id, menu.name, menu.parent_id AS ParentId, menu.code, menu.url, menu.icon,menu.sort,
 menu.created_by AS CreatedBy, menu.created_time AS CreatedTime,
@@ -44,7 +53,8 @@ FROM dbo.t_rights_menu AS menu
 LEFT JOIN dbo.t_rights_role_menu_button AS roleMenuButton ON menu.id= roleMenuButton.menu_id
 LEFT JOIN dbo.t_rights_user_role AS userRole ON roleMenuButton.role_id = userRole.role_id
 LEFT JOIN dbo.t_rights_user AS u ON userRole.user_id = u.id
-WHERE u.id= @UserId
+--WHERE u.id= @UserId
+WHERE u.id= 4
 ORDER BY menu.parent_id, menu.sort;
 
 --查询用户
@@ -74,12 +84,16 @@ LEFT JOIN dbo.t_rights_role_menu_button AS roleMenuButton ON button.id= roleMenu
 LEFT JOIN dbo.t_rights_menu AS menu ON roleMenuButton.menu_id= menu.id
 LEFT JOIN dbo.t_rights_user_role AS userRole ON userRole.role_id= roleMenuButton.role_id
 LEFT JOIN dbo.t_rights_user AS u ON u.id= userRole.user_id
-WHERE u.id= @UserId AND menu.code= @MenuCode;
+--WHERE u.id= @UserId AND menu.code= @MenuCode;
+WHERE u.id= 4 AND menu.code= 'organization';
 
 --获取指定机构的所有子机构
 SELECT org.parent_id AS ParentId,org.organization_type AS OrganizationType, org.enable_flag AS EnableFlag,
 org.created_by AS CreatedBy, org.created_time AS CreatedTime, org.last_updated_by AS LastUpdatedBy, org.last_updated_time AS LastUpdatedTime,* 
 FROM dbo.t_rights_organization AS org
 WHERE org.enable_flag= 1 AND org.parent_id= @ParentId;
+
+--修改机构
+UPDATE dbo.t_rights_organization SET name= @OrgName, parent_id= @ParentId, sort= @Sort, last_updated_by= @LastUpdatedBy, last_updated_time= @LastUpdatedTime WHERE id= @Id;
 
 
