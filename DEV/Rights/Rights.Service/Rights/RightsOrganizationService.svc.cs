@@ -159,7 +159,7 @@ namespace Rights.Service.Rights
         }
 
         /// <summary>
-        /// 获取指定机构的所有子机构，0表示获取所有
+        /// 获取指定机构的所有子机构，0表示获取所有，包含当前机构
         /// </summary>
         /// <param name="orgId"></param>
         /// <returns></returns>

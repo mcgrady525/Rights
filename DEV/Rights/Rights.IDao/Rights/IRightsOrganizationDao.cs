@@ -54,7 +54,7 @@ namespace Rights.IDao.Rights
         List<TRightsButton> GetButtonsByUserIdAndMenuCode(string menuCode, int userId);
 
         /// <summary>
-        /// 获取指定机构的所有子机构
+        /// 获取指定机构的所有子机构，包含当前机构
         /// </summary>
         /// <param name="orgId"></param>
         /// <returns></returns>

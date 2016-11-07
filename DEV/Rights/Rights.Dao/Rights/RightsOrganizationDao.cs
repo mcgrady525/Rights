@@ -163,13 +163,27 @@ namespace Rights.Dao.Rights
         }
 
         /// <summary>
-        /// 获取指定机构的所有子机构
+        /// 获取指定机构的所有子机构，包含当前机构
         /// </summary>
         /// <param name="orgId"></param>
         /// <returns></returns>
         public List<TRightsOrganization> GetChildrenOrgs(int orgId)
         {
-            return RecursionChildrenOrgs(orgId).ToList();
+            List<TRightsOrganization> result = new List<TRightsOrganization>();
+            if (orgId == 0)//获取全部
+            {
+                result = RecursionChildrenOrgs(orgId).ToList();
+            }
+            else//当前机构+所有子机构
+            {
+                var currentOrg = GetById(orgId);
+                result.Add(currentOrg);
+
+                var childrenOrgs = RecursionChildrenOrgs(orgId);
+                result.AddRange(childrenOrgs);
+            }
+
+            return result;
         }
 
         #region Private method
@@ -181,12 +195,12 @@ namespace Rights.Dao.Rights
         /// <returns></returns>
         public IEnumerable<TRightsOrganization> RecursionChildrenOrgs(int parentId)
         {
-            using (var conn= DapperHelper.CreateConnection())
+            using (var conn = DapperHelper.CreateConnection())
             {
                 var parentOrgs = conn.Query<TRightsOrganization>(@"SELECT org.parent_id AS ParentId,org.organization_type AS OrganizationType, org.enable_flag AS EnableFlag,
                     org.created_by AS CreatedBy, org.created_time AS CreatedTime, org.last_updated_by AS LastUpdatedBy, org.last_updated_time AS LastUpdatedTime,* 
                     FROM dbo.t_rights_organization AS org
-                    WHERE org.enable_flag= 1 AND org.parent_id= @ParentId;", new { @ParentId= parentId });
+                    WHERE org.enable_flag= 1 AND org.parent_id= @ParentId;", new { @ParentId = parentId });
 
                 return parentOrgs.ToList().Concat(parentOrgs.ToList().SelectMany(p => RecursionChildrenOrgs(p.Id)));
             }

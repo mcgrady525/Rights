@@ -95,7 +95,7 @@ namespace Rights.Site.Controllers
         }
 
         /// <summary>
-        /// 获取指定机构的所有子机构，0表示获取所有
+        /// 获取指定机构的所有子机构，0表示获取所有，包含当前选择的机构
         /// </summary>
         /// <param name="orgId">机构id</param>
         /// <returns></returns>
@@ -104,8 +104,7 @@ namespace Rights.Site.Controllers
             //先获取指定机构的所有子机构
             //然后递归生成JSON数据
             var result = string.Empty;
-            StringBuilder sb = new StringBuilder();
-
+            
             using (var factory = new ChannelFactory<IRightsOrganizationService>("*"))
             {
                 var client = factory.CreateChannel();
@@ -115,9 +114,7 @@ namespace Rights.Site.Controllers
                     var orgs = rs.Content;
                     if (orgs.HasValue())
                     {
-                        sb.Append(RecursionOrg(orgs, orgId));
-                        sb = sb.Remove(sb.Length - 2, 2);
-                        result = sb.ToString();
+                        result = CreateChildrenOrgStr(orgs, orgId);
                     }
                     else
                     {
@@ -130,6 +127,39 @@ namespace Rights.Site.Controllers
         }
 
         #region Private method
+
+        /// <summary>
+        /// 获取指定机构的所有子机构json(包括当前机构)
+        /// </summary>
+        /// <param name="list"></param>
+        /// <param name="orgId"></param>
+        /// <returns></returns>
+        private string CreateChildrenOrgStr(List<TRightsOrganization> list, int orgId)
+        {
+            StringBuilder sb = new StringBuilder();
+            if (orgId == 0)
+            {
+                sb.Append(RecursionOrg(list, orgId));
+                sb = sb.Remove(sb.Length - 2, 2);
+            }
+            else
+            {
+                var currentOrg = list.First(p => p.Id == orgId);
+                sb.Append("[{");
+                sb.Append("\"id\":\"" + currentOrg.Id.ToString() + "\",\"Code\":\"" + currentOrg.Code + "\",\"Enabled\":\"" + currentOrg.EnableFlag.Value + "\",\"Sort\":\"" + currentOrg.Sort.Value + "\",\"CreatedTime\":\"" + currentOrg.CreatedTime.ToString(DateFormat.DATETIME) + "\",\"ParentId\":\"" + currentOrg.ParentId.ToString() + "\",\"text\":\"" + currentOrg.Name + "\"");
+
+                var childOrgs = list.Where(p => p.ParentId == orgId).ToList();
+                if (childOrgs.HasValue())
+                {
+                    sb.Append(",\"children\":");
+                    sb.Append(RecursionOrg(list, orgId));
+                    sb = sb.Remove(sb.Length - 2, 2);
+                }
+                sb.Append("}]");
+            }
+
+            return sb.ToString();
+        }
 
         private string RecursionOrg(List<TRightsOrganization> list, int parentId)
         {
