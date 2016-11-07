@@ -56,8 +56,8 @@ namespace Rights.Dao.Rights
             var result = false;
             using (var conn = DapperHelper.CreateConnection())
             {
-                var effectRows = conn.Execute(@"UPDATE dbo.t_rights_organization SET name= @OrgName, parent_id= @ParentId, sort= @Sort WHERE id= @Id;",
-                                             new { @Id = item.Id, @OrgName = item.Name, @ParentId = item.ParentId, @Sort = item.Sort });
+                var effectRows = conn.Execute(@"UPDATE dbo.t_rights_organization SET name= @OrgName, parent_id= @ParentId, sort= @Sort, last_updated_by= @LastUpdatedBy, last_updated_time= @LastUpdatedTime WHERE id= @Id;",
+                                             new { @Id = item.Id, @OrgName = item.Name, @ParentId = item.ParentId, @Sort = item.Sort, @LastUpdatedBy = item.LastUpdatedBy, @LastUpdatedTime= item.LastUpdatedTime });
                 if (effectRows > 0)
                 {
                     result = true;

@@ -162,6 +162,36 @@ namespace Rights.Site.Controllers
             return Json(new { success = flag, msg = msg }, JsonRequestBehavior.AllowGet);
         }
 
+        [LoginAuthorization]
+        public ActionResult Edit()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult Edit(EditOrganizationRequest request)
+        {
+            var flag = false;
+            var msg = string.Empty;
+
+            using (var factory = new ChannelFactory<IRightsOrganizationService>("*"))
+            {
+                var client = factory.CreateChannel();
+                var rs = client.EditOrganization(request, loginInfo);
+                if (rs.ReturnCode == ReturnCodeType.Success && rs.Content == true)
+                {
+                    flag = true;
+                    msg = "修改成功!";
+                }
+                else
+                {
+                    msg = "修改失败!";
+                }
+            }
+
+            return Json(new { success = flag, msg = msg }, JsonRequestBehavior.AllowGet);
+        }
+
         #region Private method
 
         /// <summary>

@@ -210,5 +210,37 @@ namespace Rights.Service.Rights
 
             return result;
         }
+
+        /// <summary>
+        /// 修改机构
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="loginInfo"></param>
+        /// <returns></returns>
+        public ServiceResult<bool> EditOrganization(EditOrganizationRequest request, TRightsUser loginInfo)
+        {
+            var result = new ServiceResult<bool>
+            {
+                ReturnCode = ReturnCodeType.Error
+            };
+
+            var item = new TRightsOrganization
+            {
+                Id = request.Id,
+                Name = request.Name,
+                Sort = request.Sort,
+                ParentId = request.ParentId,
+                LastUpdatedBy = loginInfo.Id,
+                LastUpdatedTime = DateTime.Now
+            };
+            var rs = orgDao.Update(item);
+            if (rs == true)
+            {
+                result.ReturnCode = ReturnCodeType.Success;
+                result.Content = true;
+            }
+
+            return result;
+        }
     }
 }

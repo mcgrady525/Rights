@@ -164,39 +164,43 @@
         function organization_edit() {
             var row = $("#ui_org_tg").treegrid("getSelected");
             if (!row) {
-                $.show_warning("提示", "请先选择要修改的部门");
+                $.show_warning("提示", "请先选择要修改的组织机构!");
                 return;
             }
             $("<div/>").dialog({
-                id: "ui_dept_edit_dialog",
-                href: '@Url.Action("Edit", "Department")',
-                title: "修改部门",
+                id: "ui_org_edit_dialog",
+                href: '@Url.Action("Edit", "Organization")',
+                title: "修改机构",
                 height: 350,
                 width: 460,
                 modal: true,
                 buttons: [{
-                    id: "ui_dept_edit_btn",
+                    id: "ui_org_edit_btn",
                     text: '修 改',
                     handler: function () {
-                        $("#ui_dept_editform").form("submit", {
-                            url: '@Url.Action("Edit", "Department")',
+                        $("#ui_org_editform").form("submit", {
+                            url: '@Url.Action("Edit", "Organization")',
                             onSubmit: function (param) {
-                                $('#ui_dept_edit_btn').linkbutton('disable');
-                                if ($(this).form('validate'))
+                                $('#ui_org_edit_btn').linkbutton('disable');
+                                if ($(this).form('validate')) {
+                                    var t = $("#comboParent").combotree('tree');
+                                    var node = t.tree('getSelected');
+                                    param.ParentId = node.id;
                                     return true;
+                                }
                                 else {
-                                    $('#ui_dept_edit_btn').linkbutton('enable');
+                                    $('#ui_org_edit_btn').linkbutton('enable');
                                     return false;
                                 }
                             },
                             success: function (data) {
                                 var dataJson = eval('(' + data + ')');
                                 if (dataJson.success) {
-                                    $("#ui_dept_edit_dialog").dialog('destroy');
+                                    $("#ui_org_edit_dialog").dialog('destroy');
                                     $.show_warning("提示", dataJson.msg);
                                     $("#ui_org_tg").treegrid("reload");
                                 } else {
-                                    $('#ui_dept_edit_btn').linkbutton('enable');
+                                    $('#ui_org_edit_btn').linkbutton('enable');
                                     $.show_warning("提示", dataJson.msg);
                                 }
                             }
@@ -207,9 +211,10 @@
                     $("#id").val(row.id);
                     $("#Name").val(row.text);
                     $('#Sort').numberspinner('setValue', row.Sort);
+                    $("#comboParent").combotree('setValue', row.ParentId);
                 },
                 onClose: function () {
-                    $("#ui_dept_edit_dialog").dialog('destroy');
+                    $("#ui_org_edit_dialog").dialog('destroy');
                 }
             });
         }

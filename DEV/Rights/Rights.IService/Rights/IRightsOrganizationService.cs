@@ -80,6 +80,15 @@ namespace Rights.IService.Rights
         [OperationContract]
         ServiceResult<bool> AddOrganization(AddOrganizationRequest request, TRightsUser loginInfo);
 
+        /// <summary>
+        /// 修改机构
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="loginInfo"></param>
+        /// <returns></returns>
+        [OperationContract]
+        ServiceResult<bool> EditOrganization(EditOrganizationRequest request, TRightsUser loginInfo);
+
 
     }
 }
