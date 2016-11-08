@@ -220,7 +220,8 @@ namespace Rights.Dao.Rights
                 var parentOrgs = conn.Query<TRightsOrganization>(@"SELECT org.parent_id AS ParentId,org.organization_type AS OrganizationType, org.enable_flag AS EnableFlag,
                     org.created_by AS CreatedBy, org.created_time AS CreatedTime, org.last_updated_by AS LastUpdatedBy, org.last_updated_time AS LastUpdatedTime,* 
                     FROM dbo.t_rights_organization AS org
-                    WHERE org.enable_flag= 1 AND org.parent_id= @ParentId;", new { @ParentId = parentId });
+                    WHERE org.enable_flag= 1 AND org.parent_id= @ParentId
+                    ORDER BY org.code, org.sort;", new { @ParentId = parentId });
 
                 return parentOrgs.ToList().Concat(parentOrgs.ToList().SelectMany(p => RecursionChildrenOrgs(p.Id)));
             }
