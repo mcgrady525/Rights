@@ -71,6 +71,7 @@
     <Content Include="Global.asax" />
     <Content Include="RightsAccountService.svc" />
     <Content Include="RightsOrganizationService.svc" />
+    <Content Include="RightsUserService.svc" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>

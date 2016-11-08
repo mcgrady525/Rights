@@ -40,11 +40,15 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="Tracy.Frameworks.Common">
+      <HintPath>..\..\..\DLL\Tracy.Frameworks.Common.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Rights\IRightsAccountDao.cs" />
     <Compile Include="Rights\IRightsOrganizationDao.cs" />
+    <Compile Include="Rights\IRightsUserDao.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Rights.Entity\Rights.Entity.csproj">

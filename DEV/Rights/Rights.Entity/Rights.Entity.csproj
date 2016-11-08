@@ -43,6 +43,7 @@
     <Compile Include="Attributes\ColumnAttribute.cs" />
     <Compile Include="Attributes\TableAttribute.cs" />
     <Compile Include="Common\OpenApiResult.cs" />
+    <Compile Include="Common\PagingBase.cs" />
     <Compile Include="Common\ReturnCodeType.cs" />
     <Compile Include="Common\ServiceResult.cs" />
     <Compile Include="Db\TRightsButton.cs" />
@@ -64,6 +65,8 @@
     <Compile Include="ViewModel\DeleteOrganizationRequest.cs" />
     <Compile Include="ViewModel\EditOrganizationRequest.cs" />
     <Compile Include="ViewModel\FirstLoginRequest.cs" />
+    <Compile Include="ViewModel\GetPagingUsersRequest.cs" />
+    <Compile Include="ViewModel\GetPagingUsersResponse.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

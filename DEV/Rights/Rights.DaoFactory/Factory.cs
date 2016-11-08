@@ -37,7 +37,7 @@ namespace Rights.DaoFactory
         }
 
         /// <summary>
-        /// 创建组织机构dao实例
+        /// 组织机构dao
         /// </summary>
         /// <returns></returns>
         public static IRightsOrganizationDao GetRightsOrganizationDao()
@@ -46,12 +46,21 @@ namespace Rights.DaoFactory
         }
 
         /// <summary>
-        /// 
+        /// 权限相关dao
         /// </summary>
         /// <returns></returns>
         public static IRightsAccountDao GetRightsAccountDao()
         {
             return GetInstance("RightsAccountDao", "Rights") as IRightsAccountDao;
+        }
+
+        /// <summary>
+        /// 用户dao
+        /// </summary>
+        /// <returns></returns>
+        public static IRightsUserDao GetRightsUserDao()
+        {
+            return GetInstance("RightsUserDao", "Rights") as IRightsUserDao;
         }
 
     }

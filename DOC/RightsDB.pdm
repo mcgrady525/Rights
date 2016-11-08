@@ -1709,8 +1709,8 @@ DESTINATION 0 新宋体,8,N</a:FontList>
 <o:ReferenceSymbol Id="o12">
 <a:CreationDate>1477380778</a:CreationDate>
 <a:ModificationDate>1477380780</a:ModificationDate>
-<a:Rect>((-23009,977), (-21657,10160))</a:Rect>
-<a:ListOfPoints>((-21785,977),(-21657,5439),(-22784,5439),(-22784,10160))</a:ListOfPoints>
+<a:Rect>((-23009,977), (-21785,10160))</a:Rect>
+<a:ListOfPoints>((-21785,977),(-21785,5439),(-22784,5439),(-22784,10160))</a:ListOfPoints>
 <a:CornerStyle>1</a:CornerStyle>
 <a:ArrowStyle>1</a:ArrowStyle>
 <a:LineColor>12615680</a:LineColor>
@@ -1731,8 +1731,8 @@ DESTINATION 0 新宋体,8,N</a:FontList>
 <o:ReferenceSymbol Id="o16">
 <a:CreationDate>1477380780</a:CreationDate>
 <a:ModificationDate>1477380780</a:ModificationDate>
-<a:Rect>((-23532,-9393), (-23068,-1303))</a:Rect>
-<a:ListOfPoints>((-23208,-1303),(-23319,-9393))</a:ListOfPoints>
+<a:Rect>((-23516,-9393), (-23066,-1303))</a:Rect>
+<a:ListOfPoints>((-23291,-1303),(-23291,-9393))</a:ListOfPoints>
 <a:CornerStyle>1</a:CornerStyle>
 <a:ArrowStyle>1</a:ArrowStyle>
 <a:LineColor>12615680</a:LineColor>
@@ -1753,8 +1753,8 @@ DESTINATION 0 新宋体,8,N</a:FontList>
 <o:ReferenceSymbol Id="o19">
 <a:CreationDate>1477380873</a:CreationDate>
 <a:ModificationDate>1477380876</a:ModificationDate>
-<a:Rect>((22421,16075), (22882,29148))</a:Rect>
-<a:ListOfPoints>((22531,16075),(22681,29148))</a:ListOfPoints>
+<a:Rect>((22418,16075), (22868,29148))</a:Rect>
+<a:ListOfPoints>((22643,16075),(22643,29148))</a:ListOfPoints>
 <a:CornerStyle>1</a:CornerStyle>
 <a:ArrowStyle>1</a:ArrowStyle>
 <a:LineColor>12615680</a:LineColor>
@@ -1776,7 +1776,7 @@ DESTINATION 0 新宋体,8,N</a:FontList>
 <a:CreationDate>1477380876</a:CreationDate>
 <a:ModificationDate>1477380928</a:ModificationDate>
 <a:Rect>((6066,15160), (20596,22060))</a:Rect>
-<a:ListOfPoints>((20596,15160),(20379,21835),(6066,21835))</a:ListOfPoints>
+<a:ListOfPoints>((20596,15160),(20596,21835),(6066,21835))</a:ListOfPoints>
 <a:CornerStyle>1</a:CornerStyle>
 <a:ArrowStyle>1</a:ArrowStyle>
 <a:LineColor>12615680</a:LineColor>

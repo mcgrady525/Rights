@@ -7,6 +7,22 @@ SELECT * FROM dbo.t_rights_organization;
 --用户
 SELECT * FROM dbo.t_rights_user;
 
+--用户-机构
+SELECT * FROM dbo.t_rights_user_organization;
+
+
+WITH cte_org AS
+(
+	SELECT o1.id, o1.name, o1.parent_id FROM dbo.t_rights_organization AS o1
+	UNION ALL
+	SELECT o2.id, o2.name, o3.parent_id FROM dbo.t_rights_organization AS o2
+	JOIN cte_org AS o3 ON o2.parent_id= o3.id
+	
+)
+
+SELECT c.* FROM cte_org AS c
+WHERE c.parent_id= 4;
+
 --UPDATE dbo.t_rights_user SET password= 'e10adc3949ba59abbe56e057f20f883e';
 
 --登陆检查
@@ -17,6 +33,16 @@ SELECT * FROM dbo.t_rights_user;
 
 --用户-机构
 SELECT * FROM dbo.t_rights_user_organization;
+
+--查询用户列表(分页)
+SELECT u.user_id AS UserId, u.user_name AS UserName, r.id,r.name,org.id,org.name,
+u.enable_flag AS EnableFlag, u.is_change_pwd AS IfChangePwd, u.created_time AS CreatedTime,* 
+FROM dbo.t_rights_user AS u
+LEFT JOIN dbo.t_rights_user_organization AS userOrg ON u.id= userOrg.user_id
+LEFT JOIN dbo.t_rights_organization AS org ON userOrg.organization_id= org.id
+LEFT JOIN dbo.t_rights_user_role AS userRole ON u.id= userRole.user_id
+LEFT JOIN dbo.t_rights_role AS r ON userRole.role_id= r.id
+WHERE org.id IN (6,7,24,25,26);
 
 --角色
 SELECT * FROM dbo.t_rights_role;
@@ -95,5 +121,30 @@ WHERE org.enable_flag= 1 AND org.parent_id= @ParentId;
 
 --修改机构
 UPDATE dbo.t_rights_organization SET name= @OrgName, parent_id= @ParentId, sort= @Sort, last_updated_by= @LastUpdatedBy, last_updated_time= @LastUpdatedTime WHERE id= @Id;
+
+SELECT org.parent_id AS ParentId,org.organization_type AS OrganizationType, org.enable_flag AS EnableFlag,
+org.created_by AS CreatedBy, org.created_time AS CreatedTime, org.last_updated_by AS LastUpdatedBy, org.last_updated_time AS LastUpdatedTime,* 
+FROM dbo.t_rights_organization AS org
+WHERE org.enable_flag= 1 AND org.parent_id= @ParentId
+ORDER BY org.code, org.sort;
+
+--新增用户
+INSERT INTO dbo.t_rights_user VALUES ( @UserId ,@Password ,@UserName ,@IsChangePwd ,@EnableFlag ,@CreatedBy ,@CreatedTime ,@LastUpdatedBy ,@LastUpdatedTime);
+
+--修改用户
+UPDATE dbo.t_rights_user SET user_id= @UserId, user_name= @UserName, enable_flag= @EnableFlag, is_change_pwd= @IsChangePwd, last_updated_by= @LastUpdatedBy, last_updated_time= @LastUpdatedTime WHERE id= @Id;
+
+--删除用户
+DELETE FROM dbo.t_rights_user WHERE id= @Id;
+
+--查询用户
+SELECT u.user_id AS UserId, u.user_name AS UserName, u.is_change_pwd AS IsChangePwd, u.enable_flag AS EnableFlag,
+u.created_by AS CreatedBy, u.created_time AS CreatedTime, u.last_updated_by AS LastUpdatedBy, u.last_updated_time AS LastUpdatedTime,* 
+FROM dbo.t_rights_user AS u WHERE u.id= @Id;
+
+
+
+
+
 
 

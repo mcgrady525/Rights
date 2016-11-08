@@ -1675,6 +1675,7 @@
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\OrganizationController.cs" />
+    <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Filters\LoginAuthorizationAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -1698,6 +1699,7 @@
     <Content Include="Views\Organization\Index.cshtml" />
     <Content Include="Views\Organization\Add.cshtml" />
     <Content Include="Views\Organization\Edit.cshtml" />
+    <Content Include="Views\User\Index.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
