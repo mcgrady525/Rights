@@ -12,6 +12,11 @@ namespace Rights.Entity.ViewModel
     public class GetPagingUsersResponse
     {
         /// <summary>
+        /// 用户id
+        /// </summary>
+        public int Id { get; set; }
+
+        /// <summary>
         /// 登录id
         /// </summary>
         public string UserId { get; set; }
@@ -22,20 +27,6 @@ namespace Rights.Entity.ViewModel
         public string UserName { get; set; }
 
         /// <summary>
-        /// 拥用角色，多个角色以','分隔
-        /// </summary>
-        public string RolesName { get; set; }
-
-        public string RolesId { get; set; }
-
-        /// <summary>
-        /// 所属机构，多个机构以','分隔
-        /// </summary>
-        public string OrgsName { get; set; }
-
-        public string OrgsId { get; set; }
-
-        /// <summary>
         /// 是否启用
         /// </summary>
         public bool EnableFlag { get; set; }
@@ -43,7 +34,7 @@ namespace Rights.Entity.ViewModel
         /// <summary>
         /// 是否改密
         /// </summary>
-        public bool IfChangePwd { get; set; }
+        public bool IsChangePwd { get; set; }
 
         /// <summary>
         /// 创建时间

@@ -44,7 +44,7 @@
                 }
             });
 
-            //默认加载所有用户
+            //默认加载所有机构的所有用户
             GetUserByOrgId(0);
         });
 
@@ -66,11 +66,11 @@
                                 striped: true,
                                 rownumbers: true,
                                 pagination: true,
-                                pageSize: 20,
+                                pageSize: 10,
                                 idField: 'id',
                                 sortName: 'CreatedTime',
                                 sortOrder: 'desc',
-                                pageList: [20, 40, 60, 80, 100],
+                                pageList: [10, 20, 40, 60, 80, 100],
                                 frozenColumns: [[
                                                  { field: 'ck', checkbox: true },
                                                  {
@@ -91,40 +91,32 @@
                                                      }
                                                  }]],
                                 columns: [[
+                                           //{
+                                           //    field: 'UserRole',
+                                           //    title: '角色',
+                                           //    width: 180,
+                                           //    formatter: function (value, row, index) {
+                                           //        return value.length > 12 ? '<span title="' + value + '">' + value + '</span>' : value;
+                                           //    }
+                                           //},
                                            {
-                                               field: 'UserRole',
-                                               title: '角色',
-                                               width: 180,
-                                               formatter: function (value, row, index) {
-                                                   return value.length > 12 ? '<span title="' + value + '">' + value + '</span>' : value;
-                                               }
-                                           },
-                                           {
-                                               field: 'UserOrg',
-                                               title: '机构',
-                                               width: 150,
-                                               formatter: function (value, row, index) {
-                                                   return value.length > 10 ? '<span title="' + value + '">' + value + '</span>' : value;
-                                               }
-                                           },
-                                           {
-                                               field: 'Enabled',
+                                               field: 'EnableFlag',
                                                title: '启用',
                                                sortable: true,
                                                width: 60,
                                                align: 'center',
                                                formatter: function (value, row, index) {
-                                                   return value ? '<img src="themes/icon/chk_checked.gif" alt="已启用" title="用户已启用" />' : '<img src="themes/icon/chk_unchecked.gif" alt="未启用" title="用户未启用" />';
+                                                   return value ? '<img src="@Url.Content("~/Content/easyui/icon/chk_checked.gif")" alt="已启用" title="用户已启用" />' : '<img src="@Url.Content("~/Content/easyui/icon/chk_unchecked.gif")" alt="未启用" title="用户未启用" />';
                                                }
                                            },
                                            {
-                                               field: 'IfChangePwd',
+                                               field: 'IsChangePwd',
                                                title: '改密',
                                                sortable: true,
                                                width: 60,
                                                align: 'center',
                                                formatter: function (value, row, index) {
-                                                   return value ? '<img src="themes/icon/chk_checked.gif" alt="已改密" title="用户已改密" />' : '<img src="themes/icon/chk_unchecked.gif" alt="未改密" title="用户未改密" />';
+                                                   return value ? '<img src="@Url.Content("~/Content/easyui/icon/chk_checked.gif")" alt="已改密" title="用户已改密" />' : '<img src="@Url.Content("~/Content/easyui/icon/chk_unchecked.gif")" alt="未改密" title="用户未改密" />';
                                                }
                                            },
                                            {

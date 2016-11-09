@@ -8,6 +8,7 @@ using Rights.Entity.Db;
 using Rights.Common.Helper;
 using Dapper;
 using Tracy.Frameworks.Common.Result;
+using Tracy.Frameworks.Common.Extends;
 using Rights.Entity.ViewModel;
 
 namespace Rights.Dao.Rights
@@ -134,14 +135,54 @@ namespace Rights.Dao.Rights
         /// <returns></returns>
         public PagingResult<GetPagingUsersResponse> GetPagingUsers(GetPagingUsersRequest request)
         {
+            //获取当前机构包括所有子机构(如果有子机构的话)id
+            //分页查询和获取总数
             PagingResult<GetPagingUsersResponse> result = null;
-            using (var conn= DapperHelper.CreateConnection())
+            List<int> orgIds = null;
+            var totalCount = 0;
+            var startIndex = (request.PageIndex - 1) * request.PageSize + 1;
+            var endIndex = request.PageIndex * request.PageSize;
+            var childrenOrgs = new RightsOrganizationDao().GetChildrenOrgs(request.OrgId);
+            if (childrenOrgs.HasValue())
             {
-                var query = conn.Query<GetPagingUsersResponse>(@"", new { });
-
-
+                orgIds = childrenOrgs.DistinctBy(p => p.Id).OrderBy(p => p.Id).Select(p => p.Id).ToList();
             }
 
+            using (var conn = DapperHelper.CreateConnection())
+            {
+                var multi = conn.QueryMultiple(@"--CTE,目的distinct
+                    WITH cte_paging_user AS
+                    (
+                        SELECT DISTINCT  u.id ,
+                                u.user_id AS UserId ,
+                                u.user_name AS UserName ,
+                                u.is_change_pwd AS IsChangePwd ,
+                                u.enable_flag AS EnableFlag ,
+                                u.created_time AS CreatedTime
+                        FROM    dbo.t_rights_user AS u
+                                LEFT JOIN dbo.t_rights_user_organization AS userOrg ON u.id = userOrg.user_id
+                        WHERE   userOrg.organization_id IN @OrgIds
+                    )
+
+                    --分页
+                    SELECT r.*
+                    FROM    ( 
+			                    SELECT ROW_NUMBER() OVER(ORDER BY cu.id) AS RowNum, cu.* FROM cte_paging_user AS cu
+                            ) AS r
+                    WHERE   r.RowNum BETWEEN @Start AND @End;
+
+                    --total
+                    SELECT COUNT(DISTINCT u.id)
+                    FROM    dbo.t_rights_user AS u
+                            LEFT JOIN dbo.t_rights_user_organization AS userOrg ON u.id = userOrg.user_id
+                    WHERE   userOrg.organization_id IN @OrgIds;", new { @OrgIds = orgIds, @Start = startIndex, @End = endIndex });
+
+                var query1 = multi.Read<GetPagingUsersResponse>();
+                var query2 = multi.Read<int>();
+                totalCount = query2.First();
+
+                result = new PagingResult<GetPagingUsersResponse>(totalCount, request.PageIndex, request.PageSize, query1);
+            }
 
             return result;
         }
