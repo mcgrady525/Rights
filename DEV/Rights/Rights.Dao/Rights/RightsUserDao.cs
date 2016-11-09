@@ -120,9 +120,17 @@ namespace Rights.Dao.Rights
             List<TRightsUser> result = null;
             using (var conn = DapperHelper.CreateConnection())
             {
-                result = conn.Query<TRightsUser>(@"SELECT u.user_id AS UserId, u.user_name AS UserName, u.is_change_pwd AS IsChangePwd, u.enable_flag AS EnableFlag,
-                    u.created_by AS CreatedBy, u.created_time AS CreatedTime, u.last_updated_by AS LastUpdatedBy, u.last_updated_time AS LastUpdatedTime,* 
-                    FROM dbo.t_rights_user AS u;").ToList();
+                result = conn.Query<TRightsUser>(@"SELECT  u.user_id AS UserId ,
+                                                            u.user_name AS UserName ,
+                                                            u.is_change_pwd AS IsChangePwd ,
+                                                            u.enable_flag AS EnableFlag ,
+                                                            u.created_by AS CreatedBy ,
+                                                            u.created_time AS CreatedTime ,
+                                                            u.last_updated_by AS LastUpdatedBy ,
+                                                            u.last_updated_time AS LastUpdatedTime ,
+                                                            *
+                                                    FROM    dbo.t_rights_user AS u
+                                                    ORDER BY u.id;").ToList();
             }
 
             return result;
@@ -142,15 +150,45 @@ namespace Rights.Dao.Rights
             var totalCount = 0;
             var startIndex = (request.PageIndex - 1) * request.PageSize + 1;
             var endIndex = request.PageIndex * request.PageSize;
-            var childrenOrgs = new RightsOrganizationDao().GetChildrenOrgs(request.OrgId);
-            if (childrenOrgs.HasValue())
-            {
-                orgIds = childrenOrgs.DistinctBy(p => p.Id).OrderBy(p => p.Id).Select(p => p.Id).ToList();
-            }
 
-            using (var conn = DapperHelper.CreateConnection())
+            //默认获取所有用户(不跟机构关联)
+            if (request.OrgId == 0)
             {
-                var multi = conn.QueryMultiple(@"--CTE,目的distinct
+                using (var conn = DapperHelper.CreateConnection())
+                {
+                    var multi = conn.QueryMultiple(@"--获取所有用户
+                        SELECT  r.*
+                        FROM    ( SELECT    ROW_NUMBER() OVER ( ORDER BY u.created_time DESC ) AS RowNum ,
+                                            u.id ,
+                                            u.user_id AS UserId ,
+                                            u.user_name AS UserName ,
+                                            u.is_change_pwd AS IsChangePwd ,
+                                            u.enable_flag AS EnableFlag ,
+                                            u.created_time AS CreatedTime
+                                  FROM      dbo.t_rights_user AS u
+                                ) AS r
+                        WHERE   r.RowNum BETWEEN @Start AND @End;
+
+                        --获取所有用户total
+                        SELECT COUNT(DISTINCT u.id) FROM dbo.t_rights_user AS u;", new { @Start = startIndex, @End = endIndex });
+                    var query1 = multi.Read<GetPagingUsersResponse>();
+                    var query2 = multi.Read<int>();
+                    totalCount = query2.First();
+
+                    result = new PagingResult<GetPagingUsersResponse>(totalCount, request.PageIndex, request.PageSize, query1);
+                }
+            }
+            else
+            {
+                var childrenOrgs = new RightsOrganizationDao().GetChildrenOrgs(request.OrgId);
+                if (childrenOrgs.HasValue())
+                {
+                    orgIds = childrenOrgs.DistinctBy(p => p.Id).OrderBy(p => p.Id).Select(p => p.Id).ToList();
+                }
+
+                using (var conn = DapperHelper.CreateConnection())
+                {
+                    var multi = conn.QueryMultiple(@"--CTE,目的distinct
                     WITH cte_paging_user AS
                     (
                         SELECT DISTINCT  u.id ,
@@ -177,11 +215,12 @@ namespace Rights.Dao.Rights
                             LEFT JOIN dbo.t_rights_user_organization AS userOrg ON u.id = userOrg.user_id
                     WHERE   userOrg.organization_id IN @OrgIds;", new { @OrgIds = orgIds, @Start = startIndex, @End = endIndex });
 
-                var query1 = multi.Read<GetPagingUsersResponse>();
-                var query2 = multi.Read<int>();
-                totalCount = query2.First();
+                    var query1 = multi.Read<GetPagingUsersResponse>();
+                    var query2 = multi.Read<int>();
+                    totalCount = query2.First();
 
-                result = new PagingResult<GetPagingUsersResponse>(totalCount, request.PageIndex, request.PageSize, query1);
+                    result = new PagingResult<GetPagingUsersResponse>(totalCount, request.PageIndex, request.PageSize, query1);
+                }
             }
 
             return result;

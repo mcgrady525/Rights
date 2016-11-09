@@ -27,5 +27,14 @@ namespace Rights.IService.Rights
         [OperationContract]
         ServiceResult<PagingResult<GetPagingUsersResponse>> GetPagingUsers(GetPagingUsersRequest request);
 
+        /// <summary>
+        /// 新增用户
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="loginInfo"></param>
+        /// <returns></returns>
+        [OperationContract]
+        ServiceResult<bool> AddUser(AddUserRequest request, TRightsUser loginInfo);
+
     }
 }

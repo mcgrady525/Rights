@@ -51,5 +51,41 @@ namespace Rights.Site.Controllers
 
             return Content(result);
         }
+
+        /// <summary>
+        /// 新增用户
+        /// </summary>
+        /// <returns></returns>
+        [LoginAuthorization]
+        public ActionResult Add()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult Add(AddUserRequest request)
+        {
+            var flag = false;
+            var msg = string.Empty;
+
+            using (var factory = new ChannelFactory<IRightsUserService>("*"))
+            {
+                var client = factory.CreateChannel();
+                var rs = client.AddUser(request, loginInfo);
+                if (rs.ReturnCode == ReturnCodeType.Success && rs.Content == true)
+                {
+                    flag = true;
+                    msg = "新增成功!";
+                }
+                else
+                {
+                    msg = "新增失败!";
+                }
+            }
+
+
+            return Json(new { success = flag, msg = msg }, JsonRequestBehavior.AllowGet);
+        }
+
     }
 }

@@ -44,7 +44,7 @@
                 }
             });
 
-            //默认加载所有机构的所有用户
+            //默认加载所有用户
             GetUserByOrgId(0);
         });
 
@@ -164,39 +164,36 @@
         //添加用户
         function user_add() {
             $("<div/>").dialog({
-                id: "ui_org_add_dialog",
+                id: "ui_user_add_dialog",
                 href: '@Url.Action("Add", "User")',
-                title: "添加机构",
+                title: "添加用户",
                 height: 350,
                 width: 460,
                 modal: true,
                 buttons: [{
-                    id: "ui_org_add_btn",
+                    id: "ui_user_add_btn",
                     text: '添 加',
                     handler: function () {
-                        $("#ui_org_addform").form("submit", {
+                        $("#ui_user_addform").form("submit", {
                             url: '@Url.Action("Add", "User")',
                             onSubmit: function (param) {
-                                $('#ui_org_add_btn').linkbutton('disable');
+                                $('#ui_user_add_btn').linkbutton('disable');
                                 if ($(this).form('validate')) {
-                                    var t = $("#comboParent").combotree('tree');
-                                    var node = t.tree('getSelected');
-                                    param.ParentId = node.id;
                                     return true;
                                 }
                                 else {
-                                    $('#ui_org_add_btn').linkbutton('enable');
+                                    $('#ui_user_add_btn').linkbutton('enable');
                                     return false;
                                 }
                             },
                             success: function (data) {
                                 var dataJson = eval('(' + data + ')');
                                 if (dataJson.success) {
-                                    $("#ui_org_add_dialog").dialog('destroy');
+                                    $("#ui_user_add_dialog").dialog('destroy');
                                     $.show_warning("提示", dataJson.msg);
-                                    //$("#ui_org_tg").treegrid("reload");
+                                    $('#ui_user_dg').datagrid('reload');
                                 } else {
-                                    $('#ui_org_add_btn').linkbutton('enable');
+                                    $('#ui_user_add_btn').linkbutton('enable');
                                     $.show_warning("提示", dataJson.msg);
                                 }
                             }
@@ -204,10 +201,10 @@
                     }
                 }],
                 onLoad: function () {
-                    $("#Name").focus();
+                    $("#UserId").focus();
                 },
                 onClose: function () {
-                    $("#ui_org_add_dialog").dialog('destroy');
+                    $("#ui_user_add_dialog").dialog('destroy');
                 }
             });
         };
