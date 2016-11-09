@@ -86,7 +86,44 @@ namespace Rights.Site.Controllers
                 }
                 else
                 {
-                    msg = "新增失败!";
+                    msg = rs.Message;
+                }
+            }
+
+            return Json(new { success = flag, msg = msg }, JsonRequestBehavior.AllowGet);
+        }
+
+        [LoginAuthorization]
+        public ActionResult Edit()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult Edit(EditUserRequest request, string enableFlag, string isChangePwd)
+        {
+            var flag = false;
+            var msg = string.Empty;
+
+            if (request == null)
+            {
+                request = new EditUserRequest();
+            }
+            request.EnableFlag = !enableFlag.IsNullOrEmpty() ? true : false;
+            request.IsChangePwd = !isChangePwd.IsNullOrEmpty() ? true : false;
+
+            using (var factory = new ChannelFactory<IRightsUserService>("*"))
+            {
+                var client = factory.CreateChannel();
+                var rs = client.EditUser(request, loginInfo);
+                if (rs.ReturnCode == ReturnCodeType.Success && rs.Content == true)
+                {
+                    flag = true;
+                    msg = "修改成功!";
+                }
+                else
+                {
+                    msg = rs.Message;
                 }
             }
 

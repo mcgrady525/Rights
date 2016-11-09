@@ -225,5 +225,22 @@ namespace Rights.Dao.Rights
 
             return result;
         }
+
+        /// <summary>
+        /// 依据userId获取用户
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns>存在则返回实体对象，不存在则返回null</returns>
+        public TRightsUser GetByUserId(string userId)
+        {
+            TRightsUser result = null;
+            using (var conn= DapperHelper.CreateConnection())
+            {
+                var query = conn.Query<TRightsUser>(@"SELECT TOP 1 * FROM dbo.t_rights_user AS u WHERE u.user_id= @UserId;", new { @UserId = userId }).ToList();
+                result = query.FirstOrDefault();
+            }
+
+            return result;
+        }
     }
 }

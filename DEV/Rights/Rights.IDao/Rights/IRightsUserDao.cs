@@ -60,5 +60,13 @@ namespace Rights.IDao.Rights
         /// <param name="request"></param>
         /// <returns></returns>
         PagingResult<GetPagingUsersResponse> GetPagingUsers(GetPagingUsersRequest request);
+
+        /// <summary>
+        /// 依据userId获取用户
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        TRightsUser GetByUserId(string userId);
+
     }
 }

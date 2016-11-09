@@ -67,7 +67,7 @@
                                 rownumbers: true,
                                 pagination: true,
                                 pageSize: 10,
-                                idField: 'id',
+                                idField: 'Id',
                                 sortName: 'CreatedTime',
                                 sortOrder: 'desc',
                                 pageList: [10, 20, 40, 60, 80, 100],
@@ -161,7 +161,7 @@
             }
         }
 
-        //添加用户
+        //新增用户
         function user_add() {
             $("<div/>").dialog({
                 id: "ui_user_add_dialog",
@@ -211,45 +211,47 @@
 
         //修改用户
         function user_edit() {
-            //var row = $("#ui_org_tg").treegrid("getSelected");
-            if (!row) {
-                $.show_warning("提示", "请先选择要修改的机构!");
+            var row = $('#ui_user_dg').datagrid('getChecked');
+            if (row.length<1) {
+                $.show_warning("提示", "请先勾选要修改的用户或者双击某个用户!");
                 return;
             }
+            if (row.length>1) {
+                $.show_warning("提示", "不支持批量修改!");
+                return;
+            }
+
             $("<div/>").dialog({
-                id: "ui_org_edit_dialog",
+                id: "ui_user_edit_dialog",
                 href: '@Url.Action("Edit", "User")',
-                title: "修改机构",
+                title: "修改用户",
                 height: 350,
                 width: 460,
                 modal: true,
                 buttons: [{
-                    id: "ui_org_edit_btn",
+                    id: "ui_user_edit_btn",
                     text: '修 改',
                     handler: function () {
-                        $("#ui_org_editform").form("submit", {
+                        $("#ui_user_editform").form("submit", {
                             url: '@Url.Action("Edit", "User")',
                             onSubmit: function (param) {
-                                $('#ui_org_edit_btn').linkbutton('disable');
+                                $('#ui_user_edit_btn').linkbutton('disable');
                                 if ($(this).form('validate')) {
-                                    var t = $("#comboParent").combotree('tree');
-                                    var node = t.tree('getSelected');
-                                    param.ParentId = node.id;
                                     return true;
                                 }
                                 else {
-                                    $('#ui_org_edit_btn').linkbutton('enable');
+                                    $('#ui_user_edit_btn').linkbutton('enable');
                                     return false;
                                 }
                             },
                             success: function (data) {
                                 var dataJson = eval('(' + data + ')');
                                 if (dataJson.success) {
-                                    $("#ui_org_edit_dialog").dialog('destroy');
+                                    $("#ui_user_edit_dialog").dialog('destroy');
                                     $.show_warning("提示", dataJson.msg);
-                                    //$("#ui_org_tg").treegrid("reload");
+                                    $("#ui_user_dg").datagrid("reload").datagrid('clearSelections').datagrid('clearChecked');//刷新和清除已选择
                                 } else {
-                                    $('#ui_org_edit_btn').linkbutton('enable');
+                                    $('#ui_user_edit_btn').linkbutton('enable');
                                     $.show_warning("提示", dataJson.msg);
                                 }
                             }
@@ -257,13 +259,20 @@
                     }
                 }],
                 onLoad: function () {
-                    $("#id").val(row.id);
-                    $("#Name").val(row.text);
-                    $('#Sort').numberspinner('setValue', row.Sort);
-                    $("#comboParent").combotree('setValue', row.ParentId);
+                    //初始化
+                    $("#id").val(row[0].Id);
+                    $("#OriginalUserId").val(row[0].UserId);
+                    $("#NewUserId").val(row[0].UserId);
+                    $("#NewUserName").val(row[0].UserName);
+                    if (row[0].EnableFlag) {
+                        $("#EnableFlag").attr("checked", "checked");
+                    }
+                    if (row[0].IsChangePwd) {
+                        $("#IsChangePwd").attr("checked", "checked");
+                    }
                 },
                 onClose: function () {
-                    $("#ui_org_edit_dialog").dialog('destroy');
+                    $("#ui_user_edit_dialog").dialog('destroy');
                 }
             });
         }

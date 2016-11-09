@@ -55,10 +55,18 @@ namespace Rights.Service.Rights
         /// <returns></returns>
         public ServiceResult<bool> AddUser(AddUserRequest request, TRightsUser loginInfo)
         {
+            //新增用户前需要检查userId是否存在
             var result = new ServiceResult<bool>
             {
                 ReturnCode = ReturnCodeType.Error
             };
+
+            var existUser = userDao.GetByUserId(request.UserId);
+            if (existUser != null)
+            {
+                result.Message = "已存在该用户,请更换其它用户id!";
+                return result;
+            }
 
             var item = new TRightsUser
             {
@@ -71,6 +79,47 @@ namespace Rights.Service.Rights
                 CreatedTime = DateTime.Now
             };
             var rs = userDao.Insert(item);
+            if (rs == true)
+            {
+                result.ReturnCode = ReturnCodeType.Success;
+                result.Content = true;
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// 修改用户
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="loginInfo"></param>
+        /// <returns></returns>
+        public ServiceResult<bool> EditUser(EditUserRequest request, TRightsUser loginInfo)
+        {
+            //先要检查新的userId是否已经存在，不存在才能继续修改
+            var result = new ServiceResult<bool>
+            {
+                ReturnCode = ReturnCodeType.Error
+            };
+
+            var user = userDao.GetByUserId(request.NewUserId);
+            if (request.NewUserId != request.OriginalUserId && user != null)
+            {
+                result.Message = "已存在该用户,请更换其它用户id!";
+                return result;
+            }
+
+            var item = new TRightsUser
+            {
+                Id = request.Id,
+                UserId = request.NewUserId,
+                UserName = request.NewUserName,
+                EnableFlag = request.EnableFlag,
+                IsChangePwd = request.IsChangePwd,
+                LastUpdatedBy = loginInfo.Id,
+                LastUpdatedTime = DateTime.Now
+            };
+            var rs = userDao.Update(item);
             if (rs == true)
             {
                 result.ReturnCode = ReturnCodeType.Success;
