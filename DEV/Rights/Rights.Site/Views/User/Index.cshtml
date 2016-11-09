@@ -284,30 +284,7 @@
                 $.show_warning("提示", "请先勾选要删除的用户");
                 return;
             }
-            @*$.messager.confirm('提示', '确定删除勾选的这' + rows.length + '个用户？', function (r) {
-                if (r) {
-                    orgIds = "";
-                    recursionGetIds(row);
-                    $.ajax({
-                        url: '@Url.Action("Delete", "User")',
-                        data: { "deleteOrgIds": row.id +","+ orgIds },
-                        type: "POST",
-                        dataType: "JSON",
-                        success: function (data) {
-                            if (data.success) {
-                                $.show_warning("提示", data.msg);
-                                //$("#ui_org_tg").treegrid("reload");
-                                if ($('#tabs').tabs('exists', '组织机构')) {
-                                    $('#tabs').tabs('getTab', '组织机构').panel('refresh');
-                                }
-                                //$("#ui_org_layout").layout("collapse", "east");
-                            } else {
-                                $.show_warning("提示", data.msg);
-                            }
-                        }
-                    });
-                }
-            });*@
+
             $.messager.confirm('提示', '确定删除勾选的这' + rows.length + '个用户？', function (r) {
                 if (r) {
                     para = {};

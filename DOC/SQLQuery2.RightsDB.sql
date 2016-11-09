@@ -10,45 +10,107 @@ SELECT * FROM dbo.t_rights_user;
 --用户-机构
 SELECT * FROM dbo.t_rights_user_organization;
 
+--INSERT INTO dbo.t_rights_user_organization
+--        ( user_id, organization_id )
+--VALUES  ( 1, -- user_id - int
+--          2  -- organization_id - int
+--          ),(3,2);
 
-WITH cte_org AS
+
+WITH cte_org(Id, N,ParentId) AS
 (
-	SELECT o1.id, o1.name, o1.parent_id FROM dbo.t_rights_organization AS o1
+	SELECT o1.id AS Id, o1.name AS N, o1.parent_id AS ParentId FROM dbo.t_rights_organization AS o1
 	UNION ALL
-	SELECT o2.id, o2.name, o3.parent_id FROM dbo.t_rights_organization AS o2
-	JOIN cte_org AS o3 ON o2.parent_id= o3.id
-	
+	SELECT o1.id AS Id, o1.name AS N, o1.parent_id AS ParentId FROM dbo.t_rights_organization AS o1
+	JOIN cte_org AS o2 ON o1.parent_id= o2.Id
 )
 
-SELECT c.* FROM cte_org AS c
-WHERE c.parent_id= 4;
+SELECT DISTINCT * FROM cte_org AS c
+WHERE c.ParentId= 4;
 
---UPDATE dbo.t_rights_user SET password= 'e10adc3949ba59abbe56e057f20f883e';
+SELECT DISTINCT u.id, u.user_id AS UserId, u.user_name AS UserName,
+u.is_change_pwd AS IsChangePwd, u.enable_flag AS EnableFlag, u.created_time AS CreatedTime
+FROM dbo.t_rights_user AS u
+LEFT JOIN dbo.t_rights_user_organization AS userOrg ON u.id= userOrg.user_id
+LEFT JOIN cte_org AS c ON c.Id= userOrg.organization_id
+WHERE c.ParentId= 4;
 
---登陆检查
---SELECT u.id, u.user_id AS UserId, u.password, u.user_name AS UserName, u.is_change_pwd AS IsChangePwd, u.enable_flag AS EnableFlag,
---u.created_by AS CreatedBy, u.created_time AS CreatedTime, u.last_updated_by AS LastUpdatedBy, u.last_updated_time AS LastUpdatedTime
---FROM dbo.t_rights_user AS u
---WHERE u.user_id= @UserId AND u.password= @Password;
+
+--查询用户列表(分页)
+SELECT u.id, u.user_id AS UserId, u.user_name AS UserName,
+u.is_change_pwd AS IsChangePwd, u.enable_flag AS EnableFlag, u.created_time AS CreatedTime
+FROM dbo.t_rights_user AS u
+LEFT JOIN dbo.t_rights_user_organization AS userOrg ON u.id= userOrg.user_id
+WHERE userOrg.organization_id IN (4,6,7,24,25,26);
+--WHERE userOrg.organization_id IN @OrgIds
+
+--CTE,目的distinct
+WITH cte_paging_user AS
+(
+    SELECT DISTINCT  u.id ,
+            u.user_id AS UserId ,
+            u.user_name AS UserName ,
+            u.is_change_pwd AS IsChangePwd ,
+            u.enable_flag AS EnableFlag ,
+            u.created_time AS CreatedTime
+    FROM    dbo.t_rights_user AS u
+            LEFT JOIN dbo.t_rights_user_organization AS userOrg ON u.id = userOrg.user_id
+    WHERE   userOrg.organization_id IN @OrgIds
+)
+
+--分页
+SELECT r.*
+FROM    ( 
+			SELECT ROW_NUMBER() OVER(ORDER BY cu.id) AS RowNum, cu.* FROM cte_paging_user AS cu
+        ) AS r
+WHERE   r.RowNum BETWEEN @Start AND @End;
+
+--total
+SELECT COUNT(DISTINCT u.id)
+FROM    dbo.t_rights_user AS u
+        LEFT JOIN dbo.t_rights_user_organization AS userOrg ON u.id = userOrg.user_id
+WHERE   userOrg.organization_id IN @OrgIds;
+
+
+--获取所有用户
+SELECT  r.*
+FROM    ( SELECT    ROW_NUMBER() OVER ( ORDER BY u.created_time DESC ) AS RowNum ,
+                    u.id ,
+                    u.user_id AS UserId ,
+                    u.user_name AS UserName ,
+                    u.is_change_pwd AS IsChangePwd ,
+                    u.enable_flag AS EnableFlag ,
+                    u.created_time AS CreatedTime
+          FROM      dbo.t_rights_user AS u
+        ) AS r
+WHERE   r.RowNum BETWEEN @Start AND @End;
+
+--获取所有用户total
+SELECT COUNT(DISTINCT u.id) FROM dbo.t_rights_user AS u;
+
+
 
 --用户-机构
 SELECT * FROM dbo.t_rights_user_organization;
 
---查询用户列表(分页)
-SELECT u.user_id AS UserId, u.user_name AS UserName, r.id,r.name,org.id,org.name,
-u.enable_flag AS EnableFlag, u.is_change_pwd AS IfChangePwd, u.created_time AS CreatedTime,* 
-FROM dbo.t_rights_user AS u
-LEFT JOIN dbo.t_rights_user_organization AS userOrg ON u.id= userOrg.user_id
-LEFT JOIN dbo.t_rights_organization AS org ON userOrg.organization_id= org.id
-LEFT JOIN dbo.t_rights_user_role AS userRole ON u.id= userRole.user_id
-LEFT JOIN dbo.t_rights_role AS r ON userRole.role_id= r.id
-WHERE org.id IN (6,7,24,25,26);
+--INSERT INTO dbo.t_rights_user_organization
+--        ( user_id, organization_id )
+--VALUES  
+--( 17,2),
+--( 16,2);
+
 
 --角色
 SELECT * FROM dbo.t_rights_role;
 
 --用户-角色
 SELECT * FROM dbo.t_rights_user_role;
+
+--INSERT INTO dbo.t_rights_user_role
+--        ( user_id, role_id )
+--VALUES  
+--( 17,1),
+--( 16,1);
 
 --菜单
 SELECT * FROM dbo.t_rights_menu;
@@ -59,17 +121,26 @@ SELECT * FROM dbo.t_rights_button;
 --菜单-按钮
 SELECT * FROM dbo.t_rights_menu_button;
 
+--INSERT INTO dbo.t_rights_menu_button
+--        ( menu_id, button_id )
+--VALUES  
+--( 6,2),
+--( 6,3),
+--( 6,4),
+--( 6,7),
+--( 6,8);
+
 --角色-菜单-按钮
 SELECT * FROM dbo.t_rights_role_menu_button;
 
 --INSERT INTO dbo.t_rights_role_menu_button
 --        ( role_id, menu_id, button_id )
 --VALUES  
---( 1,5,2 ),
---( 1,5,3 ),
---( 1,5,4 ),
---( 1,5,11 ),
---( 1,5,12 );
+--( 1,6,2 ),
+--( 1,6,3 ),
+--( 1,6,4 ),
+--( 1,6,7 ),
+--( 1,6,8 );
 
 --当前用户可以访问的菜单
 SELECT menu.id, menu.name, menu.parent_id AS ParentId, menu.code, menu.url, menu.icon,menu.sort,
@@ -141,6 +212,32 @@ DELETE FROM dbo.t_rights_user WHERE id= @Id;
 SELECT u.user_id AS UserId, u.user_name AS UserName, u.is_change_pwd AS IsChangePwd, u.enable_flag AS EnableFlag,
 u.created_by AS CreatedBy, u.created_time AS CreatedTime, u.last_updated_by AS LastUpdatedBy, u.last_updated_time AS LastUpdatedTime,* 
 FROM dbo.t_rights_user AS u WHERE u.id= @Id;
+
+
+SELECT  u.user_id AS UserId ,
+        u.user_name AS UserName ,
+        u.is_change_pwd AS IsChangePwd ,
+        u.enable_flag AS EnableFlag ,
+        u.created_by AS CreatedBy ,
+        u.created_time AS CreatedTime ,
+        u.last_updated_by AS LastUpdatedBy ,
+        u.last_updated_time AS LastUpdatedTime ,
+        *
+FROM    dbo.t_rights_user AS u
+ORDER BY u.id;
+
+
+--依据userId获取用户
+SELECT TOP 1 * FROM dbo.t_rights_user AS u WHERE u.user_id= @UserId;
+
+--删除用户
+DELETE FROM dbo.t_rights_user WHERE id IN @Ids;
+
+--解除用户-机构
+DELETE FROM dbo.t_rights_user_organization WHERE user_id IN @Ids;
+
+--解除用户-角色
+DELETE FROM dbo.t_rights_user_role WHERE user_id IN @Ids;
 
 
 
