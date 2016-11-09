@@ -128,5 +128,32 @@ namespace Rights.Service.Rights
 
             return result;
         }
+
+        /// <summary>
+        /// 删除用户
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public ServiceResult<bool> DeleteUser(DeleteUserRequest request)
+        {
+            //删除用户表数据
+            //解除用户-机构的关系
+            //解除用户-角色的关系
+            //需要使用事务
+
+            var result = new ServiceResult<bool>
+            {
+                ReturnCode = ReturnCodeType.Error
+            };
+
+            var rs = userDao.DeleteUser(request);
+            if (rs == true)
+            {
+                result.ReturnCode = ReturnCodeType.Success;
+                result.Content = true;
+            }
+
+            return result;
+        }
     }
 }

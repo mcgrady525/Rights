@@ -234,10 +234,46 @@ namespace Rights.Dao.Rights
         public TRightsUser GetByUserId(string userId)
         {
             TRightsUser result = null;
-            using (var conn= DapperHelper.CreateConnection())
+            using (var conn = DapperHelper.CreateConnection())
             {
                 var query = conn.Query<TRightsUser>(@"SELECT TOP 1 * FROM dbo.t_rights_user AS u WHERE u.user_id= @UserId;", new { @UserId = userId }).ToList();
                 result = query.FirstOrDefault();
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// 删除用户
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public bool DeleteUser(DeleteUserRequest request)
+        {
+            //删除用户表数据
+            //解除用户-机构的关系
+            //解除用户-角色的关系
+            //需要使用事务
+            var result = false;
+            List<int> ids = request.Ids.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries).Select(p => p.ToInt()).ToList();
+            using (var conn = DapperHelper.CreateConnection())
+            {
+                var trans = conn.BeginTransaction();
+                try
+                {
+                    conn.Execute(@"DELETE FROM dbo.t_rights_user WHERE id IN @Ids;", new { @Ids = ids }, trans);
+
+                    conn.Execute(@"DELETE FROM dbo.t_rights_user_organization WHERE user_id IN @Ids;", new { @Ids = ids }, trans);
+
+                    conn.Execute(@"DELETE FROM dbo.t_rights_user_role WHERE user_id IN @Ids;", new { @Ids = ids }, trans);
+
+                    trans.Commit();
+                    result = true;
+                }
+                catch
+                {
+                    trans.Rollback();
+                }
             }
 
             return result;

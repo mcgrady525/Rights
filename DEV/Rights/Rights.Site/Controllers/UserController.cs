@@ -130,5 +130,30 @@ namespace Rights.Site.Controllers
             return Json(new { success = flag, msg = msg }, JsonRequestBehavior.AllowGet);
         }
 
+        [HttpPost]
+        public ActionResult Delete(DeleteUserRequest request)
+        {
+            var flag = false;
+            var msg = string.Empty;
+
+            using (var factory = new ChannelFactory<IRightsUserService>("*"))
+            {
+                var client = factory.CreateChannel();
+                var rs = client.DeleteUser(request);
+                if (rs.ReturnCode == ReturnCodeType.Success && rs.Content == true)
+                {
+                    flag = true;
+                    msg = "删除成功!";
+                }
+                else
+                {
+                    msg = "删除失败!";
+                }
+            }
+
+            return Json(new { success = flag, msg = msg }, JsonRequestBehavior.AllowGet);
+
+        }
+
     }
 }

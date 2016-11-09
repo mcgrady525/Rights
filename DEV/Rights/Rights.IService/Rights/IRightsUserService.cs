@@ -45,5 +45,13 @@ namespace Rights.IService.Rights
         [OperationContract]
         ServiceResult<bool> EditUser(EditUserRequest request, TRightsUser loginInfo);
 
+        /// <summary>
+        /// 删除用户
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [OperationContract]
+        ServiceResult<bool> DeleteUser(DeleteUserRequest request);
+
     }
 }

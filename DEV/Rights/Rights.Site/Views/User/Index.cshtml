@@ -211,12 +211,12 @@
 
         //修改用户
         function user_edit() {
-            var row = $('#ui_user_dg').datagrid('getChecked');
-            if (row.length<1) {
+            var rows = $('#ui_user_dg').datagrid('getChecked');
+            if (rows.length<1) {
                 $.show_warning("提示", "请先勾选要修改的用户或者双击某个用户!");
                 return;
             }
-            if (row.length>1) {
+            if (rows.length>1) {
                 $.show_warning("提示", "不支持批量修改!");
                 return;
             }
@@ -260,14 +260,14 @@
                 }],
                 onLoad: function () {
                     //初始化
-                    $("#id").val(row[0].Id);
-                    $("#OriginalUserId").val(row[0].UserId);
-                    $("#NewUserId").val(row[0].UserId);
-                    $("#NewUserName").val(row[0].UserName);
-                    if (row[0].EnableFlag) {
+                    $("#id").val(rows[0].Id);
+                    $("#OriginalUserId").val(rows[0].UserId);
+                    $("#NewUserId").val(rows[0].UserId);
+                    $("#NewUserName").val(rows[0].UserName);
+                    if (rows[0].EnableFlag) {
                         $("#EnableFlag").attr("checked", "checked");
                     }
-                    if (row[0].IsChangePwd) {
+                    if (rows[0].IsChangePwd) {
                         $("#IsChangePwd").attr("checked", "checked");
                     }
                 },
@@ -277,14 +277,14 @@
             });
         }
 
-        //删除用户
+        //删除用户(支持批量)
         function user_delete() {
-            //var row = $("#ui_org_tg").datagrid("getSelected");
-            if (!row) {
-                $.show_warning("提示", "请先勾选要删除的机构");
+            var rows = $('#ui_user_dg').datagrid('getChecked');
+            if (rows.length < 1) {
+                $.show_warning("提示", "请先勾选要删除的用户");
                 return;
             }
-            $.messager.confirm('提示', '确定删除：' + row.text + '？如果有子机构也会同时删除！', function (r) {
+            @*$.messager.confirm('提示', '确定删除勾选的这' + rows.length + '个用户？', function (r) {
                 if (r) {
                     orgIds = "";
                     recursionGetIds(row);
@@ -301,6 +301,31 @@
                                     $('#tabs').tabs('getTab', '组织机构').panel('refresh');
                                 }
                                 //$("#ui_org_layout").layout("collapse", "east");
+                            } else {
+                                $.show_warning("提示", data.msg);
+                            }
+                        }
+                    });
+                }
+            });*@
+            $.messager.confirm('提示', '确定删除勾选的这' + rows.length + '个用户？', function (r) {
+                if (r) {
+                    para = {};
+                    para.action = "delete";
+                    para.timespan = new Date().getTime();
+                    para.ids = "";
+                    $.each(rows, function (i, row) {
+                        para.ids += row.Id + ",";
+                    });
+                    $.ajax({
+                        url: '@Url.Action("Delete", "User")',
+                        data: para,
+                        type: "POST",
+                        dataType: "json",
+                        success: function (data) {
+                            if (data.success) {
+                                $.show_warning("提示", data.msg);
+                                $("#ui_user_dg").datagrid("reload").datagrid('clearSelections').datagrid('clearChecked');
                             } else {
                                 $.show_warning("提示", data.msg);
                             }

@@ -68,5 +68,12 @@ namespace Rights.IDao.Rights
         /// <returns></returns>
         TRightsUser GetByUserId(string userId);
 
+        /// <summary>
+        /// 删除用户
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        bool DeleteUser(DeleteUserRequest request);
+
     }
 }
