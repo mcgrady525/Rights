@@ -63,10 +63,17 @@ namespace Rights.Site.Controllers
         }
 
         [HttpPost]
-        public ActionResult Add(AddUserRequest request)
+        public ActionResult Add(AddUserRequest request, string enableFlag, string isChangePwd)
         {
             var flag = false;
             var msg = string.Empty;
+
+            if (request == null)
+            {
+                request = new AddUserRequest();
+            }
+            request.EnableFlag = !enableFlag.IsNullOrEmpty() ? true : false;
+            request.IsChangePwd = !isChangePwd.IsNullOrEmpty() ? true : false;
 
             using (var factory = new ChannelFactory<IRightsUserService>("*"))
             {
@@ -82,7 +89,6 @@ namespace Rights.Site.Controllers
                     msg = "新增失败!";
                 }
             }
-
 
             return Json(new { success = flag, msg = msg }, JsonRequestBehavior.AllowGet);
         }
