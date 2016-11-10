@@ -239,6 +239,25 @@ DELETE FROM dbo.t_rights_user_organization WHERE user_id IN @Ids;
 --解除用户-角色
 DELETE FROM dbo.t_rights_user_role WHERE user_id IN @Ids;
 
+--获取用户所属机构
+SELECT org.parent_id AS ParentId, org.organization_type AS OrganizationType, org.enable_flag AS EnableFlag,
+org.created_by AS CreatedBy, org.created_time AS CreatedTime, org.last_updated_by AS LastUpdatedBy, org.last_updated_time AS LastUpdatedTime,*
+FROM dbo.t_rights_organization AS org
+LEFT JOIN dbo.t_rights_user_organization AS userOrg ON org.id= userOrg.organization_id
+LEFT JOIN dbo.t_rights_user AS u ON userOrg.user_id= u.id
+WHERE u.id= @UserId;
+
+--获取用户拥有角色
+SELECT r.organization_id AS OrganizationId, r.created_by AS CreatedBy, r.created_time AS CreatedTime, r.last_updated_by AS LastUpdatedBy,
+r.last_updated_time AS LastUpdatedTime,* 
+FROM dbo.t_rights_role AS r
+LEFT JOIN dbo.t_rights_user_role AS userRole ON r.id= userRole.role_id
+LEFT JOIN dbo.t_rights_user AS u ON userRole.user_id= u.id
+WHERE u.id= @UserId;
+
+--用户设置机构
+--先删除所选用户原来的所属机构
+DELETE FROM dbo.t_rights_user_organization WHERE user_id IN @UserIds;
 
 
 
