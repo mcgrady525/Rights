@@ -223,6 +223,34 @@ namespace Rights.Dao.Rights
                 }
             }
 
+            //获取每个用户所属机构和所拥有的角色
+            using (var conn = DapperHelper.CreateConnection())
+            {
+                List<TRightsOrganization> userOrgs = null;
+                List<TRightsRole> userRoles = null;
+                foreach (var user in result.Entities)
+                {
+                    userOrgs = conn.Query<TRightsOrganization, TRightsUserOrganization, TRightsUser, TRightsOrganization>(@"SELECT org.parent_id AS ParentId, org.organization_type AS OrganizationType, org.enable_flag AS EnableFlag,
+                        org.created_by AS CreatedBy, org.created_time AS CreatedTime, org.last_updated_by AS LastUpdatedBy, org.last_updated_time AS LastUpdatedTime,*
+                        FROM dbo.t_rights_organization AS org
+                        LEFT JOIN dbo.t_rights_user_organization AS userOrg ON org.id= userOrg.organization_id
+                        LEFT JOIN dbo.t_rights_user AS u ON userOrg.user_id= u.id
+                        WHERE u.id= @UserId;", (org, userOrg, u) => { return org; }, new { @UserId = user.Id }).ToList();
+
+                    userRoles = conn.Query<TRightsRole, TRightsUserRole, TRightsUser, TRightsRole>(@"SELECT r.organization_id AS OrganizationId, r.created_by AS CreatedBy, r.created_time AS CreatedTime, r.last_updated_by AS LastUpdatedBy,
+                        r.last_updated_time AS LastUpdatedTime,* 
+                        FROM dbo.t_rights_role AS r
+                        LEFT JOIN dbo.t_rights_user_role AS userRole ON r.id= userRole.role_id
+                        LEFT JOIN dbo.t_rights_user AS u ON userRole.user_id= u.id
+                        WHERE u.id= @UserId;", (role, userRole, u) => { return role; }, new { @UserId = user.Id }).ToList();
+
+                    user.UserOrgIds = string.Join(",", userOrgs.Select(p => p.Id).ToList());
+                    user.UserOrgNames = string.Join(",", userOrgs.Select(p => p.Name).ToList());
+                    user.UserRoleIds = string.Join(",", userRoles.Select(p => p.Id).ToList());
+                    user.UserRoleNames = string.Join(",", userRoles.Select(p => p.Name).ToList());
+                }
+            }
+
             return result;
         }
 
@@ -271,6 +299,58 @@ namespace Rights.Dao.Rights
                     result = true;
                 }
                 catch
+                {
+                    trans.Rollback();
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// 为所选用户设置机构
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public bool SetOrg(SetOrgRequest request)
+        {
+            //先删除所选用户原来的所属机构
+            //再新增所选用户选择的所属机构
+            //一定要先删除再添加，而且要使用事务
+            var result = false;
+            var userIds = request.UserIds.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries).Select(p => p.ToInt()).OrderBy(p => p).ToList();
+            var orgIds = request.OrgIds.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries).Select(p => p.ToInt()).OrderBy(p => p).ToList();
+            var addUserOrgs = new List<TRightsUserOrganization>();//待添加的用户机构
+
+            foreach (var userId in userIds)
+            {
+                foreach (var orgId in orgIds)
+                {
+                    var addUserOrg = new TRightsUserOrganization()
+                    {
+                        UserId = userId,
+                        OrganizationId = orgId
+                    };
+                    addUserOrgs.Add(addUserOrg);
+                }
+            }
+
+            using (var conn = DapperHelper.CreateConnection())
+            {
+                var trans = conn.BeginTransaction();
+
+                try
+                {
+                    //先删除
+                    conn.Execute(@"DELETE FROM dbo.t_rights_user_organization WHERE user_id IN @UserIds;", new { @UserIds = userIds }, trans);
+
+                    //后添加
+                    conn.Execute(@"INSERT INTO dbo.t_rights_user_organization VALUES  (@UserId,@OrganizationId);", addUserOrgs, trans);
+
+                    trans.Commit();
+                    result = true;
+                }
+                catch (Exception ex)
                 {
                     trans.Rollback();
                 }

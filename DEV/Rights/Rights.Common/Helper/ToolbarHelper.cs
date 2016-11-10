@@ -22,34 +22,34 @@ namespace Rights.Common.Helper
             {
                 switch (dt.Rows[i]["Code"].ToString())
                 {
-                    case "add":
+                    case "add"://新增
                         sb.Append("{\"text\": \"" + dt.Rows[i]["Name"] + "\",\"iconCls\":\"" + dt.Rows[i]["Icon"] + "\",\"handler\":\"" + pageName + "_add();\"},");
                         break;
-                    case "edit":
+                    case "edit"://修改
                         sb.Append("{\"text\": \"" + dt.Rows[i]["Name"] + "\",\"iconCls\":\"" + dt.Rows[i]["Icon"] + "\",\"handler\":\"" + pageName + "_edit();\"},");
                         break;
-                    case "delete":
+                    case "delete"://删除
                         sb.Append("{\"text\": \"" + dt.Rows[i]["Name"] + "\",\"iconCls\":\"" + dt.Rows[i]["Icon"] + "\",\"handler\":\"" + pageName + "_delete();\"},");
                         break;
-                    case "setrole":
-                        sb.Append("{\"text\": \"" + dt.Rows[i]["Name"] + "\",\"iconCls\":\"" + dt.Rows[i]["Icon"] + "\",\"handler\":\"" + pageName + "_setrole();\"},");
-                        break;
-                    case "setorg":
+                    case "setorg"://设置机构
                         sb.Append("{\"text\": \"" + dt.Rows[i]["Name"] + "\",\"iconCls\":\"" + dt.Rows[i]["Icon"] + "\",\"handler\":\"" + pageName + "_setorg();\"},");
                         break;
-                    case "authorize":
+                    case "setrole"://设置角色
+                        sb.Append("{\"text\": \"" + dt.Rows[i]["Name"] + "\",\"iconCls\":\"" + dt.Rows[i]["Icon"] + "\",\"handler\":\"" + pageName + "_setrole();\"},");
+                        break;
+                    case "authorize"://角色授权
                         sb.Append("{\"text\": \"" + dt.Rows[i]["Name"] + "\",\"iconCls\":\"" + dt.Rows[i]["Icon"] + "\",\"handler\":\"" + pageName + "_authorize();\"},");
                         break;
-                    case "export":
+                    case "export"://导出
                         sb.Append("{\"text\": \"" + dt.Rows[i]["Name"] + "\",\"iconCls\":\"" + dt.Rows[i]["Icon"] + "\",\"handler\":\"" + pageName + "_export();\"},");
                         break;
-                    case "setbutton":
+                    case "setbutton"://设置按钮
                         sb.Append("{\"text\": \"" + dt.Rows[i]["Name"] + "\",\"iconCls\":\"" + dt.Rows[i]["Icon"] + "\",\"handler\":\"" + pageName + "_setbutton();\"},");
                         break;
-                    case "expandall":
+                    case "expandall"://全部展开
                         sb.Append("{\"text\": \"" + dt.Rows[i]["Name"] + "\",\"iconCls\":\"" + dt.Rows[i]["Icon"] + "\",\"handler\":\"" + pageName + "_expandall();\"},");
                         break;
-                    case "collapseall":
+                    case "collapseall"://全部折叠
                         sb.Append("{\"text\": \"" + dt.Rows[i]["Name"] + "\",\"iconCls\":\"" + dt.Rows[i]["Icon"] + "\",\"handler\":\"" + pageName + "_collapseall();\"},");
                         break;
                     default:

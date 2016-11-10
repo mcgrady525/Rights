@@ -155,5 +155,29 @@ namespace Rights.Service.Rights
 
             return result;
         }
+
+        /// <summary>
+        /// 为所选用户设置机构
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public ServiceResult<bool> SetOrg(SetOrgRequest request)
+        {
+            //先删除所选用户原来的所属机构
+            //再新增所选用户选择的所属机构
+            var result = new ServiceResult<bool>
+            {
+                ReturnCode = ReturnCodeType.Error
+            };
+
+            var rs = userDao.SetOrg(request);
+            if (rs == true)
+            {
+                result.ReturnCode = ReturnCodeType.Success;
+                result.Content = true;
+            }
+
+            return result;
+        }
     }
 }

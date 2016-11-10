@@ -41,5 +41,18 @@ namespace Rights.Entity.ViewModel
         /// </summary>
         public DateTime CreatedTime { get; set; }
 
+        /// <summary>
+        /// 用户所属机构id，多个机构以','分隔
+        /// </summary>
+        public string UserOrgIds { get; set; }
+
+        public string UserOrgNames { get; set; }
+
+        /// <summary>
+        /// 用户拥有角色id，多个角色以','分隔
+        /// </summary>
+        public string UserRoleIds { get; set; }
+
+        public string UserRoleNames { get; set; }
     }
 }

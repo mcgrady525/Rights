@@ -75,5 +75,11 @@ namespace Rights.IDao.Rights
         /// <returns></returns>
         bool DeleteUser(DeleteUserRequest request);
 
+        /// <summary>
+        /// 为所选用户设置机构
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        bool SetOrg(SetOrgRequest request);
     }
 }

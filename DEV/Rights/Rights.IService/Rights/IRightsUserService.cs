@@ -53,5 +53,13 @@ namespace Rights.IService.Rights
         [OperationContract]
         ServiceResult<bool> DeleteUser(DeleteUserRequest request);
 
+        /// <summary>
+        /// 为所选用户设置机构
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [OperationContract]
+        ServiceResult<bool> SetOrg(SetOrgRequest request);
+
     }
 }

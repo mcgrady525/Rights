@@ -70,6 +70,7 @@
     <Compile Include="ViewModel\FirstLoginRequest.cs" />
     <Compile Include="ViewModel\GetPagingUsersRequest.cs" />
     <Compile Include="ViewModel\GetPagingUsersResponse.cs" />
+    <Compile Include="ViewModel\SetOrgRequest.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
