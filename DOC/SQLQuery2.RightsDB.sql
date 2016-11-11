@@ -259,6 +259,103 @@ WHERE u.id= @UserId;
 --先删除所选用户原来的所属机构
 DELETE FROM dbo.t_rights_user_organization WHERE user_id IN @UserIds;
 
+SELECT * FROM dbo.t_rights_organization;
+--角色管理
+SELECT * FROM dbo.t_rights_role;
+
+SELECT * FROM dbo.t_rights_user_role WHERE role_id= 1;
+
+--UPDATE dbo.t_rights_role SET organization_id= 12 WHERE id= 3;
+
+--插入
+INSERT INTO dbo.t_rights_role VALUES (@Name ,@Description ,@OrganizationId ,@CreatedBy ,@CreatedTime ,@LastUpdatedBy ,@LastUpdatedTime);
+
+--修改
+UPDATE dbo.t_rights_role SET name= @Name, description= @Description, organization_id= @OrganizationId, last_updated_by= @LastUpdatedBy,
+last_updated_time= @LastUpdatedTime WHERE id= @Id;
+
+--删除
+DELETE FROM dbo.t_rights_role WHERE id= @Id;
+
+--查询by id
+SELECT r.organization_id AS OrganizationId, r.created_by AS CreatedBy,r.created_time AS CreatedTime,
+r.last_updated_by AS LastUpdatedBy,r.last_updated_time AS LastUpdatedTime,* 
+FROM dbo.t_rights_role AS r
+WHERE r.id= @Id;
+
+--查询所有
+SELECT r.organization_id AS OrganizationId, r.created_by AS CreatedBy,r.created_time AS CreatedTime,
+r.last_updated_by AS LastUpdatedBy,r.last_updated_time AS LastUpdatedTime,* 
+FROM dbo.t_rights_role AS r
+
+--获取所有角色并分页
+SELECT  rs.*
+FROM    ( SELECT    ROW_NUMBER() OVER ( ORDER BY r.created_time DESC ) AS RowNum ,
+					r.id,
+					r.name,
+					r.description,
+                    r.organization_id AS OrganizationId ,
+                    r.created_by AS CreatedBy ,
+                    r.created_time AS CreatedTime ,
+                    r.last_updated_by AS LastUpdatedBy ,
+                    r.last_updated_time AS LastUpdatedTime ,
+                    org.name AS OrgName
+          FROM      dbo.t_rights_role AS r
+          LEFT JOIN dbo.t_rights_organization AS org ON r.organization_id= org.id
+        ) AS rs
+WHERE   rs.RowNum BETWEEN @Start AND @End;
+
+--获取所有角色total
+SELECT COUNT(DISTINCT r.id) FROM dbo.t_rights_role AS r;
+
+
+--获取指定机构(包括所有子机构)的角色并分页
+SELECT  rs.*
+FROM    ( SELECT    ROW_NUMBER() OVER ( ORDER BY r.created_time DESC ) AS RowNum ,
+					r.id,
+					r.name,
+					r.description,
+                    r.organization_id AS OrganizationId ,
+                    r.created_by AS CreatedBy ,
+                    r.created_time AS CreatedTime ,
+                    r.last_updated_by AS LastUpdatedBy ,
+                    r.last_updated_time AS LastUpdatedTime ,
+                    org.name AS OrgName
+          FROM      dbo.t_rights_role AS r
+          LEFT JOIN dbo.t_rights_organization AS org ON r.organization_id= org.id
+          WHERE r.organization_id IN @OrgIds
+        ) AS rs
+WHERE   rs.RowNum BETWEEN @Start AND @End;
+
+--获取指定机构(包括所有子机构)的角色total
+SELECT COUNT(DISTINCT r.id) FROM dbo.t_rights_role AS r
+WHERE r.organization_id IN @OrgIds;
+
+
+--获取指定角色下的所有用户(分页)
+SELECT  rs.*
+FROM    ( SELECT    ROW_NUMBER() OVER ( ORDER BY u.created_time DESC ) AS RowNum ,
+                    u.id ,
+                    u.user_id AS UserId ,
+                    u.user_name AS UserName ,
+                    u.is_change_pwd AS IsChangePwd ,
+                    u.enable_flag AS EnableFlag ,
+                    u.created_by AS CreatedBy ,
+                    u.created_time AS CreatedTime ,
+                    u.last_updated_by AS LastUpdatedBy ,
+                    u.last_updated_time AS LastUpdatedTime
+          FROM      dbo.t_rights_user AS u
+                    LEFT JOIN dbo.t_rights_user_role AS userRole ON u.id = userRole.user_id
+          WHERE     userRole.role_id = @RoleId
+        ) AS rs
+WHERE   rs.RowNum BETWEEN @Start AND @End;
+
+--获取指定角色下的所有用户total
+SELECT  COUNT(DISTINCT u.id)
+FROM    dbo.t_rights_user AS u
+        LEFT JOIN dbo.t_rights_user_role AS userRole ON u.id = userRole.user_id
+WHERE   userRole.role_id = @RoleId;
+
 
 
 
