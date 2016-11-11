@@ -68,6 +68,10 @@
     <Compile Include="ViewModel\EditOrganizationRequest.cs" />
     <Compile Include="ViewModel\EditUserRequest.cs" />
     <Compile Include="ViewModel\FirstLoginRequest.cs" />
+    <Compile Include="ViewModel\GetPagingRolesRequest.cs" />
+    <Compile Include="ViewModel\GetPagingRolesResponse.cs" />
+    <Compile Include="ViewModel\GetPagingRoleUsersRequest.cs" />
+    <Compile Include="ViewModel\GetPagingRoleUsersResponse.cs" />
     <Compile Include="ViewModel\GetPagingUsersRequest.cs" />
     <Compile Include="ViewModel\GetPagingUsersResponse.cs" />
     <Compile Include="ViewModel\SetOrgRequest.cs" />
