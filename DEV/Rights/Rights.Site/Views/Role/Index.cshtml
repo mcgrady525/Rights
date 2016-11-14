@@ -19,7 +19,7 @@
     <div id="ui_role_layout" class="easyui-layout" data-options="fit:true,border:false">
         <div data-options="region:'west',split:true,title:'组织机构'" style="width: 200px; padding: 10px;">
             <div>
-                <ul id="treeOrg"></ul>
+                <ul id="ui_role_treeOrg"></ul>
             </div>
         </div>
         <div data-options="region:'east',split:true,border:true,collapsed:true" title="角色成员" style="width: 480px;">
@@ -36,7 +36,7 @@
 
     <script type="text/javascript">
         $(function () {
-            $('#treeOrg').tree({
+            $('#ui_role_treeOrg').tree({
                 method: 'POST',
                 url: '@Url.Action("GetTreeOrgData", "Organization")',
                 lines: true,
