@@ -84,5 +84,49 @@ namespace Rights.Site.Controllers
             return Content(result);        
         }
 
+        /// <summary>
+        /// 添加角色
+        /// </summary>
+        /// <returns></returns>
+        [LoginAuthorization]
+        public ActionResult Add()
+        {
+            return View();
+        }
+
+        /// <summary>
+        /// 添加角色
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult Add(AddRoleRequest request)
+        {
+            var flag = false;
+            var msg = string.Empty;
+
+            if (request == null)
+            {
+                request = new AddRoleRequest();
+            }
+
+            using (var factory = new ChannelFactory<IRightsRoleService>("*"))
+            {
+                var client = factory.CreateChannel();
+                var rs = client.AddRole(request, loginInfo);
+                if (rs.ReturnCode == ReturnCodeType.Success && rs.Content == true)
+                {
+                    flag = true;
+                    msg = "新增成功!";
+                }
+                else
+                {
+                    msg = rs.Message;
+                }
+            }
+
+            return Json(new { success = flag, msg = msg }, JsonRequestBehavior.AllowGet);
+        }
+
 	}
 }

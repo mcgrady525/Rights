@@ -11,6 +11,7 @@ using Tracy.Frameworks.Common.Result;
 using Rights.Entity.ViewModel;
 using Rights.IDao.Rights;
 using Rights.DaoFactory;
+using Rights.Entity.Db;
 
 namespace Rights.Service.Rights
 {
@@ -30,10 +31,10 @@ namespace Rights.Service.Rights
         /// <returns></returns>
         public ServiceResult<PagingResult<GetPagingRolesResponse>> GetPagingRoles(GetPagingRolesRequest request)
         {
-            var result = new ServiceResult<PagingResult<GetPagingRolesResponse>> 
+            var result = new ServiceResult<PagingResult<GetPagingRolesResponse>>
             {
-                ReturnCode= ReturnCodeType.Error,
-                Content= new PagingResult<GetPagingRolesResponse>()
+                ReturnCode = ReturnCodeType.Error,
+                Content = new PagingResult<GetPagingRolesResponse>()
             };
 
             var rs = roleDao.GetPagingRoles(request);
@@ -59,6 +60,37 @@ namespace Rights.Service.Rights
             var rs = roleDao.GetPagingRoleUsers(request);
             result.ReturnCode = ReturnCodeType.Success;
             result.Content = rs;
+
+            return result;
+        }
+
+        /// <summary>
+        /// 新增角色
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="loginInfo"></param>
+        /// <returns></returns>
+        public ServiceResult<bool> AddRole(AddRoleRequest request, TRightsUser loginInfo)
+        {
+            var result = new ServiceResult<bool>
+            {
+                ReturnCode = ReturnCodeType.Error
+            };
+
+            var item = new TRightsRole
+            {
+                Name= request.Name,
+                Description= request.Description,
+                OrganizationId= request.OrgId,
+                CreatedBy= loginInfo.Id,
+                CreatedTime= DateTime.Now
+            };
+            var rs = roleDao.Insert(item);
+            if (rs == true)
+            {
+                result.ReturnCode = ReturnCodeType.Success;
+                result.Content = true;
+            }
 
             return result;
         }

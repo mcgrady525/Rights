@@ -76,6 +76,7 @@
                                 sortOrder: 'desc',
                                 pageList: [10, 20, 40, 60, 80, 100],
                                 frozenColumns: [[
+                                                //{ field: 'ck', checkbox: true },
                                                  {
                                                      width: '100',
                                                      title: '角色名称',
@@ -116,7 +117,7 @@
                                     if (eastRoleUser.panel("options").collapsed) {
                                         $ui_role_layout.layout("expand", "east");
                                     }
-                                    eastRoleUser.panel("setTitle", rowData.RoleName + "的成员");
+                                    eastRoleUser.panel("setTitle", rowData.Name + "的成员");
                                     if ($("#ui_role_user_dg").data("datagrid")) {
                                         $("#ui_role_user_dg").datagrid({
                                             url: '@Url.Action("GetPagingRoleUsers", "Role")'+ '?roleId='+ rowData.Id
@@ -183,39 +184,43 @@
             }
         }
 
-        //新增用户
-        function user_add() {
+        //新增角色
+        function role_add() {
             $("<div/>").dialog({
-                id: "ui_user_add_dialog",
+                id: "ui_role_add_dialog",
                 href: '@Url.Action("Add", "Role")',
-                title: "添加用户",
+                title: "添加角色",
                 height: 350,
                 width: 460,
                 modal: true,
                 buttons: [{
-                    id: "ui_user_add_btn",
+                    id: "ui_role_add_btn",
                     text: '添 加',
                     handler: function () {
-                        $("#ui_user_addform").form("submit", {
+                        $("#ui_role_addform").form("submit", {
                             url: '@Url.Action("Add", "Role")',
                             onSubmit: function (param) {
-                                $('#ui_user_add_btn').linkbutton('disable');
+                                $('#ui_role_add_btn').linkbutton('disable');
                                 if ($(this).form('validate')) {
+                                    //获取机构id
+                                    var t = $("#comboParent").combotree('tree');
+                                    var node = t.tree('getSelected');
+                                    param.OrgId = node.id;
                                     return true;
                                 }
                                 else {
-                                    $('#ui_user_add_btn').linkbutton('enable');
+                                    $('#ui_role_add_btn').linkbutton('enable');
                                     return false;
                                 }
                             },
                             success: function (data) {
                                 var dataJson = eval('(' + data + ')');
                                 if (dataJson.success) {
-                                    $("#ui_user_add_dialog").dialog('destroy');
+                                    $("#ui_role_add_dialog").dialog('destroy');
                                     $.show_warning("提示", dataJson.msg);
                                     $('#ui_role_dg').datagrid('reload');
                                 } else {
-                                    $('#ui_user_add_btn').linkbutton('enable');
+                                    $('#ui_role_add_btn').linkbutton('enable');
                                     $.show_warning("提示", dataJson.msg);
                                 }
                             }
@@ -223,16 +228,16 @@
                     }
                 }],
                 onLoad: function () {
-                    $("#UserId").focus();
+                    $("#Name").focus();
                 },
                 onClose: function () {
-                    $("#ui_user_add_dialog").dialog('destroy');
+                    $("#ui_role_add_dialog").dialog('destroy');
                 }
             });
         };
 
-        //修改用户
-        function user_edit() {
+        //修改角色
+        function role_edit() {
             var rows = $('#ui_role_dg').datagrid('getChecked');
             if (rows.length<1) {
                 $.show_warning("提示", "请先勾选要修改的用户或者双击某个用户!");
@@ -299,8 +304,8 @@
             });
         }
 
-        //删除用户(可批量)
-        function user_delete() {
+        //删除角色
+        function role_delete() {
             var rows = $('#ui_role_dg').datagrid('getChecked');
             if (rows.length < 1) {
                 $.show_warning("提示", "请先勾选要删除的用户");
@@ -335,8 +340,8 @@
         };
 
 
-        //设置机构(可批量)
-        function user_setorg() {
+        //角色授权
+        function role_setorg() {
             var rows = $("#ui_role_dg").datagrid("getChecked");
             if (rows.length < 1) {
                 $.show_warning("提示", "请先勾选要设置机构的用户");

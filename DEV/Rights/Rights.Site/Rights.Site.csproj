@@ -1705,6 +1705,7 @@
     <Content Include="Views\User\Edit.cshtml" />
     <Content Include="Views\User\SetOrg.cshtml" />
     <Content Include="Views\Role\Index.cshtml" />
+    <Content Include="Views\Role\Add.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
