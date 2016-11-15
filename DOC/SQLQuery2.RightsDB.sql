@@ -121,26 +121,31 @@ SELECT * FROM dbo.t_rights_button;
 --菜单-按钮
 SELECT * FROM dbo.t_rights_menu_button;
 
+SELECT * FROM dbo.t_rights_menu_button AS menuButton
+WHERE menuButton.menu_id= 7;
+
 --INSERT INTO dbo.t_rights_menu_button
 --        ( menu_id, button_id )
 --VALUES  
---( 6,2),
---( 6,3),
---( 6,4),
---( 6,7),
---( 6,8);
+--( 7,2),
+--( 7,3),
+--( 7,4),
+--( 7,9);
 
 --角色-菜单-按钮
 SELECT * FROM dbo.t_rights_role_menu_button;
 
+SELECT * FROM dbo.t_rights_role_menu_button AS roleMenuButton
+WHERE roleMenuButton.role_id= 1
+AND roleMenuButton.menu_id= 7;
+
 --INSERT INTO dbo.t_rights_role_menu_button
 --        ( role_id, menu_id, button_id )
 --VALUES  
---( 1,6,2 ),
---( 1,6,3 ),
---( 1,6,4 ),
---( 1,6,7 ),
---( 1,6,8 );
+--( 1,7,2 ),
+--( 1,7,3 ),
+--( 1,7,4 ),
+--( 1,6,9 );
 
 --当前用户可以访问的菜单
 SELECT menu.id, menu.name, menu.parent_id AS ParentId, menu.code, menu.url, menu.icon,menu.sort,
@@ -355,6 +360,19 @@ SELECT  COUNT(DISTINCT u.id)
 FROM    dbo.t_rights_user AS u
         LEFT JOIN dbo.t_rights_user_role AS userRole ON u.id = userRole.user_id
 WHERE   userRole.role_id = @RoleId;
+
+
+--依据角色名获取角色
+SELECT * FROM dbo.t_rights_role AS r WHERE r.name= @RoleName;
+
+--删除指定角色
+DELETE FROM dbo.t_rights_role WHERE id= @RoleId;
+
+--删除用户角色
+DELETE FROM dbo.t_rights_user_role WHERE role_id= @RoleId;
+
+--删除角色菜单按钮
+DELETE FROM dbo.t_rights_role_menu_button WHERE role_id= @RoleId;
 
 
 

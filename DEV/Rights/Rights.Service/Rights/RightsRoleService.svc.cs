@@ -143,5 +143,29 @@ namespace Rights.Service.Rights
             return result;
         }
 
+        /// <summary>
+        /// 删除角色
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public ServiceResult<bool> DeleteRole(DeleteRoleRequest request)
+        {
+            //删除指定角色
+            //删除角色时解除角色用户角色，角色菜单按钮关系。
+            var result = new ServiceResult<bool>
+            {
+                ReturnCode = ReturnCodeType.Error
+            };
+
+            var rs = roleDao.DeleteRole(request);
+            if (rs == true)
+            {
+                result.ReturnCode = ReturnCodeType.Success;
+                result.Content = true;
+            }
+
+            return result;
+        }
+
     }
 }

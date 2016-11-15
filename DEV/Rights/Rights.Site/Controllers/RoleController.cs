@@ -162,5 +162,34 @@ namespace Rights.Site.Controllers
             return Json(new { success = flag, msg = msg }, JsonRequestBehavior.AllowGet);
         }
 
+        /// <summary>
+        /// 删除角色
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult Delete(DeleteRoleRequest request)
+        {
+            var flag = false;
+            var msg = string.Empty;
+
+            using (var factory = new ChannelFactory<IRightsRoleService>("*"))
+            {
+                var client = factory.CreateChannel();
+                var rs = client.DeleteRole(request);
+                if (rs.ReturnCode == ReturnCodeType.Success && rs.Content == true)
+                {
+                    flag = true;
+                    msg = "删除成功!";
+                }
+                else
+                {
+                    msg = rs.Message.IsNullOrEmpty() ? "删除失败!" : rs.Message;
+                }
+            }
+
+            return Json(new { success = flag, msg = msg }, JsonRequestBehavior.AllowGet);
+        }
+
 	}
 }

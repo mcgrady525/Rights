@@ -48,5 +48,13 @@ namespace Rights.IService.Rights
         [OperationContract]
         ServiceResult<bool> EditRole(EditRoleRequest request, TRightsUser loginInfo);
 
+        /// <summary>
+        /// 删除角色
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [OperationContract]
+        ServiceResult<bool> DeleteRole(DeleteRoleRequest request);
+
     }
 }

@@ -75,5 +75,12 @@ namespace Rights.IDao.Rights
         /// <returns>不存在返回Null</returns>
         TRightsRole GetRoleByName(string roleName);
 
+        /// <summary>
+        /// 删除角色
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        bool DeleteRole(DeleteRoleRequest request);
+
     }
 }

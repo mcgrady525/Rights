@@ -298,7 +298,7 @@ namespace Rights.Dao.Rights
                     trans.Commit();
                     result = true;
                 }
-                catch
+                catch (Exception ex)
                 {
                     trans.Rollback();
                 }

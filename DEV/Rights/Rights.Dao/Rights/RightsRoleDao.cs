@@ -280,5 +280,42 @@ namespace Rights.Dao.Rights
             return result;
         }
 
+        /// <summary>
+        /// 删除角色
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public bool DeleteRole(DeleteRoleRequest request)
+        {
+            //删除指定角色
+            //删除角色时解除角色用户角色，角色菜单按钮关系。
+            var result = false;
+            using (var conn = DapperHelper.CreateConnection())
+            {
+                var trans = conn.BeginTransaction();
+
+                try
+                {
+                    //删除角色
+                    conn.Execute(@"DELETE FROM dbo.t_rights_role WHERE id= @RoleId;", new { @RoleId = request.DeleteRoleId }, trans);
+
+                    //删除用户角色
+                    conn.Execute(@"DELETE FROM dbo.t_rights_user_role WHERE role_id= @RoleId;", new { @RoleId = request.DeleteRoleId }, trans);
+
+                    //删除角色菜单按钮
+                    conn.Execute(@"DELETE FROM dbo.t_rights_role_menu_button WHERE role_id= @RoleId;", new { @RoleId = request.DeleteRoleId }, trans);
+
+                    trans.Commit();
+                    result = true;
+                }
+                catch (Exception ex)
+                {
+                    trans.Rollback();
+                }
+            }
+
+            return result;
+        }
+
     }
 }
