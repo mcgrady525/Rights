@@ -37,5 +37,10 @@ namespace Rights.Entity.ViewModel
         /// 所属机构名称
         /// </summary>
         public string OrgName { get; set; }
+
+        /// <summary>
+        /// 所属机构id
+        /// </summary>
+        public int OrgId { get; set; }
     }
 }

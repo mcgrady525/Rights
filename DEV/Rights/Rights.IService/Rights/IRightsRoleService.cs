@@ -39,5 +39,14 @@ namespace Rights.IService.Rights
         [OperationContract]
         ServiceResult<bool> AddRole(AddRoleRequest request, TRightsUser loginInfo);
 
+        /// <summary>
+        /// 修改角色
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="loginInfo"></param>
+        /// <returns></returns>
+        [OperationContract]
+        ServiceResult<bool> EditRole(EditRoleRequest request, TRightsUser loginInfo);
+
     }
 }

@@ -153,7 +153,7 @@ namespace Rights.Dao.Rights
 					                        r.id,
 					                        r.name,
 					                        r.description,
-                                            r.organization_id AS OrganizationId ,
+                                            r.organization_id AS OrgId ,
                                             r.created_by AS CreatedBy ,
                                             r.created_time AS CreatedTime ,
                                             r.last_updated_by AS LastUpdatedBy ,
@@ -189,7 +189,7 @@ namespace Rights.Dao.Rights
 					                        r.id,
 					                        r.name,
 					                        r.description,
-                                            r.organization_id AS OrganizationId ,
+                                            r.organization_id AS OrgId ,
                                             r.created_by AS CreatedBy ,
                                             r.created_time AS CreatedTime ,
                                             r.last_updated_by AS LastUpdatedBy ,
@@ -258,6 +258,23 @@ namespace Rights.Dao.Rights
                 totalCount = query2.First();
 
                 result = new PagingResult<GetPagingRoleUsersResponse>(totalCount, request.PageIndex, request.PageSize, query1);
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// 依据角色名获取角色
+        /// </summary>
+        /// <param name="roleName"></param>
+        /// <returns>不存在返回Null</returns>
+        public TRightsRole GetRoleByName(string roleName)
+        {
+            TRightsRole result = null;
+
+            using (var conn = DapperHelper.CreateConnection())
+            {
+                result = conn.Query<TRightsRole>(@"SELECT * FROM dbo.t_rights_role AS r WHERE r.name= @RoleName;", new { @RoleName = roleName }).FirstOrDefault();
             }
 
             return result;

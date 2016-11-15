@@ -218,7 +218,7 @@
                                 if (dataJson.success) {
                                     $("#ui_role_add_dialog").dialog('destroy');
                                     $.show_warning("提示", dataJson.msg);
-                                    $('#ui_role_dg').datagrid('reload');
+                                    $("#ui_role_dg").datagrid("reload").datagrid('clearSelections').datagrid('clearChecked');//刷新并清除已选择
                                 } else {
                                     $('#ui_role_add_btn').linkbutton('enable');
                                     $.show_warning("提示", dataJson.msg);
@@ -238,47 +238,47 @@
 
         //修改角色
         function role_edit() {
-            var rows = $('#ui_role_dg').datagrid('getChecked');
-            if (rows.length<1) {
-                $.show_warning("提示", "请先勾选要修改的用户或者双击某个用户!");
-                return;
-            }
-            if (rows.length>1) {
-                $.show_warning("提示", "不支持批量修改!");
+            var row = $('#ui_role_dg').datagrid('getSelected');
+            if (!row) {
+                $.show_warning("提示", "请先选择要修改的角色!");
                 return;
             }
 
             $("<div/>").dialog({
-                id: "ui_user_edit_dialog",
+                id: "ui_role_edit_dialog",
                 href: '@Url.Action("Edit", "Role")',
-                title: "修改用户",
+                title: "修改角色",
                 height: 350,
                 width: 460,
                 modal: true,
                 buttons: [{
-                    id: "ui_user_edit_btn",
+                    id: "ui_role_edit_btn",
                     text: '修 改',
                     handler: function () {
-                        $("#ui_user_editform").form("submit", {
+                        $("#ui_role_editform").form("submit", {
                             url: '@Url.Action("Edit", "Role")',
                             onSubmit: function (param) {
-                                $('#ui_user_edit_btn').linkbutton('disable');
+                                $('#ui_role_edit_btn').linkbutton('disable');
                                 if ($(this).form('validate')) {
+                                    //获取机构id
+                                    var t = $("#comboParent").combotree('tree');
+                                    var node = t.tree('getSelected');
+                                    param.OrgId = node.id;
                                     return true;
                                 }
                                 else {
-                                    $('#ui_user_edit_btn').linkbutton('enable');
+                                    $('#ui_role_edit_btn').linkbutton('enable');
                                     return false;
                                 }
                             },
                             success: function (data) {
                                 var dataJson = eval('(' + data + ')');
                                 if (dataJson.success) {
-                                    $("#ui_user_edit_dialog").dialog('destroy');
+                                    $("#ui_role_edit_dialog").dialog('destroy');
                                     $.show_warning("提示", dataJson.msg);
                                     $("#ui_role_dg").datagrid("reload").datagrid('clearSelections').datagrid('clearChecked');//刷新并清除已选择
                                 } else {
-                                    $('#ui_user_edit_btn').linkbutton('enable');
+                                    $('#ui_role_edit_btn').linkbutton('enable');
                                     $.show_warning("提示", dataJson.msg);
                                 }
                             }
@@ -287,19 +287,14 @@
                 }],
                 onLoad: function () {
                     //初始化
-                    $("#id").val(rows[0].Id);
-                    $("#OriginalUserId").val(rows[0].UserId);
-                    $("#NewUserId").val(rows[0].UserId);
-                    $("#NewUserName").val(rows[0].UserName);
-                    if (rows[0].EnableFlag) {
-                        $("#EnableFlag").attr("checked", "checked");
-                    }
-                    if (rows[0].IsChangePwd) {
-                        $("#IsChangePwd").attr("checked", "checked");
-                    }
+                    $("#Id").val(row.Id);
+                    $("#OriginalName").val(row.Name);
+                    $("#NewName").val(row.Name);
+                    $("#Description").val(row.Description);
+                    $("#comboParent").combotree('setValue', row.OrgId);                  
                 },
                 onClose: function () {
-                    $("#ui_user_edit_dialog").dialog('destroy');
+                    $("#ui_role_edit_dialog").dialog('destroy');
                 }
             });
         }

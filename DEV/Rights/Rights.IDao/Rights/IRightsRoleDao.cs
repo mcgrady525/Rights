@@ -68,5 +68,12 @@ namespace Rights.IDao.Rights
         /// <returns></returns>
         PagingResult<GetPagingRoleUsersResponse> GetPagingRoleUsers(GetPagingRoleUsersRequest request);
 
+        /// <summary>
+        /// 依据角色名获取角色
+        /// </summary>
+        /// <param name="roleName"></param>
+        /// <returns>不存在返回Null</returns>
+        TRightsRole GetRoleByName(string roleName);
+
     }
 }

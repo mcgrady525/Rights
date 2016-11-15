@@ -121,7 +121,41 @@ namespace Rights.Site.Controllers
                 }
                 else
                 {
-                    msg = rs.Message;
+                    msg = rs.Message.IsNullOrEmpty() ? "新增失败!" : rs.Message;
+                }
+            }
+
+            return Json(new { success = flag, msg = msg }, JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
+        /// 修改角色
+        /// </summary>
+        /// <returns></returns>
+        [LoginAuthorization]
+        public ActionResult Edit()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult Edit(EditRoleRequest request)
+        {
+            var flag = false;
+            var msg = string.Empty;
+
+            using (var factory = new ChannelFactory<IRightsRoleService>("*"))
+            {
+                var client = factory.CreateChannel();
+                var rs = client.EditRole(request, loginInfo);
+                if (rs.ReturnCode == ReturnCodeType.Success && rs.Content == true)
+                {
+                    flag = true;
+                    msg = "修改成功!";
+                }
+                else
+                {
+                    msg = rs.Message.IsNullOrEmpty() ? "修改失败!" : rs.Message;
                 }
             }
 

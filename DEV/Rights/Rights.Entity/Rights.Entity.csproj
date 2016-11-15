@@ -67,6 +67,7 @@
     <Compile Include="ViewModel\DeleteOrganizationRequest.cs" />
     <Compile Include="ViewModel\DeleteUserRequest.cs" />
     <Compile Include="ViewModel\EditOrganizationRequest.cs" />
+    <Compile Include="ViewModel\EditRoleRequest.cs" />
     <Compile Include="ViewModel\EditUserRequest.cs" />
     <Compile Include="ViewModel\FirstLoginRequest.cs" />
     <Compile Include="ViewModel\GetPagingRolesRequest.cs" />
