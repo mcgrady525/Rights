@@ -307,11 +307,11 @@
                 return;
             }
 
-            $.messager.confirm('提示', '确定删除：' + row.text + '？', function (r) {
+            $.messager.confirm('提示', '确定删除：' + row.Name + '?', function (r) {
                 if (r) {
                     $.ajax({
                         url: '@Url.Action("Delete", "Role")',
-                        data: { "deleteRoleId": row.id },
+                        data: { "deleteRoleId": row.Id },
                         type: "POST",
                         dataType: "JSON",
                         success: function (data) {

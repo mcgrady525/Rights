@@ -365,15 +365,18 @@ WHERE   userRole.role_id = @RoleId;
 --依据角色名获取角色
 SELECT * FROM dbo.t_rights_role AS r WHERE r.name= @RoleName;
 
---删除指定角色
-DELETE FROM dbo.t_rights_role WHERE id= @RoleId;
+----删除指定角色
+--DELETE FROM dbo.t_rights_role WHERE id= @RoleId;
 
---删除用户角色
-DELETE FROM dbo.t_rights_user_role WHERE role_id= @RoleId;
+----删除用户角色
+--DELETE FROM dbo.t_rights_user_role WHERE role_id= @RoleId;
 
---删除角色菜单按钮
-DELETE FROM dbo.t_rights_role_menu_button WHERE role_id= @RoleId;
+----删除角色菜单按钮
+--DELETE FROM dbo.t_rights_role_menu_button WHERE role_id= @RoleId;
 
+SELECT * FROM dbo.t_rights_user_role WHERE role_id= 4;
+
+SELECT * FROM dbo.t_rights_role_menu_button WHERE role_id= 4;
 
 
 
