@@ -121,7 +121,7 @@ namespace Rights.Dao.Rights
 
             using (var conn = DapperHelper.CreateConnection())
             {
-                var query = conn.Query<TRightsRole>(@"SELECT r.organization_id AS OrganizationId, r.created_by AS CreatedBy,r.created_time AS CreatedTime,
+                result = conn.Query<TRightsRole>(@"SELECT r.organization_id AS OrganizationId, r.created_by AS CreatedBy,r.created_time AS CreatedTime,
                     r.last_updated_by AS LastUpdatedBy,r.last_updated_time AS LastUpdatedTime,* 
                     FROM dbo.t_rights_role AS r").ToList();
             }

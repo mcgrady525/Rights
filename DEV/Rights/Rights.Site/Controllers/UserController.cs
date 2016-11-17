@@ -200,5 +200,45 @@ namespace Rights.Site.Controllers
             return Json(new { success = flag, msg = msg }, JsonRequestBehavior.AllowGet);
         }
 
+        /// <summary>
+        /// 设置角色
+        /// </summary>
+        /// <returns></returns>
+        [LoginAuthorization]
+        public ActionResult SetRole()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult SetRole(SetRoleRequest request)
+        {
+            var flag = false;
+            var msg = string.Empty;
+
+            //if (request.OrgIds.IsNullOrEmpty())
+            //{
+            //    msg = "请选择机构!";
+            //    return Json(new { success = flag, msg = msg }, JsonRequestBehavior.AllowGet);
+            //}
+
+            //using (var factory = new ChannelFactory<IRightsUserService>("*"))
+            //{
+            //    var client = factory.CreateChannel();
+            //    var rs = client.SetOrg(request);
+            //    if (rs.ReturnCode == ReturnCodeType.Success && rs.Content == true)
+            //    {
+            //        flag = true;
+            //        msg = "设置机构成功!";
+            //    }
+            //    else
+            //    {
+            //        msg = "设置机构失败!";
+            //    }
+            //}
+
+            return Json(new { success = flag, msg = msg }, JsonRequestBehavior.AllowGet);
+        }
+
     }
 }

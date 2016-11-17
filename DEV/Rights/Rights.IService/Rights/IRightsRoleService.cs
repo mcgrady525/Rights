@@ -56,5 +56,12 @@ namespace Rights.IService.Rights
         [OperationContract]
         ServiceResult<bool> DeleteRole(DeleteRoleRequest request);
 
+        /// <summary>
+        /// 获取所有角色
+        /// </summary>
+        /// <returns></returns>
+        [OperationContract]
+        ServiceResult<List<TRightsRole>> GetAllRole();
+
     }
 }

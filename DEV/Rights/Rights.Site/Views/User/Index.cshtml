@@ -344,6 +344,15 @@
                             onSubmit: function (param) {
                                 $('#ui_user_setorg_btn').linkbutton('disable');
                                 param.action = 'setdep';
+
+                                //调用api手动获取combotree选中节点的值，使用默认的隐藏域有时取不到值
+                                var selectedOrgIds = "";
+                                var t = $("#CombotreeOrg").combotree('tree');
+                                var nodes = t.tree('getChecked');
+                                for (var i = 0; i < nodes.length; i++) {
+                                    selectedOrgIds += nodes[i].id + ",";
+                                }
+                                param.OrgIds = selectedOrgIds.substring(0, selectedOrgIds.length - 1);
                             },
                             success: function (data) {
                                 var dataJson = eval('(' + data + ')');
@@ -363,7 +372,7 @@
                     if (rows.length == 1) {//单个用户
                         $("#UserIds").val(rows[0].Id);
                         $("#UserNames").val(rows[0].UserName);
-                        $("#OrgIds").combotree('setValues', stringToList(rows[0].UserOrgIds));
+                        $("#CombotreeOrg").combotree('setValues', stringToList(rows[0].UserOrgIds));
                     }
                     else {//多个用户(批量)
                         var userids = "";
@@ -389,32 +398,39 @@
                 $.show_warning("提示", "请先勾选要设置角色的用户");
                 return;
             }
-
             $("<div/>").dialog({
-                id: "ui_user_setorg_dialog",
-                href: '@Url.Action("SetOrg", "User")',
-                title: rows.length == 1 ? "设置机构" : "批量设置机构：" + rows.length + "个用户",
+                id: "ui_user_setrole_dialog",
+                href: '@Url.Action("SetRole", "User")',
+                title: rows.length == 1 ? "设置角色" : "批量设置角色：" + rows.length + "个用户",
                 height: 220,
                 width: 380,
                 modal: true,
                 buttons: [{
-                    id: "ui_user_setorg_btn",
+                    id: "ui_user_setrole_btn",
                     text: '确 定',
                     handler: function () {
-                        $("#ui_user_setorgform").form("submit", {
-                            url: '@Url.Action("SetOrg", "User")',
+                        $("#ui_user_setroleform").form("submit", {
+                            url: '@Url.Action("SetRole", "User")',
                             onSubmit: function (param) {
-                                $('#ui_user_setorg_btn').linkbutton('disable');
-                                param.action = 'setdep';
+                                $('#ui_user_setrole_btn').linkbutton('disable');
+                                param.action = 'setrole';
+
+                                //调用api手动获取选中的值
+                                var selectedRoleIds = "";
+                                var nodes = $("#ComboboxRole").combo('getValues');
+                                for (var i = 0; i < nodes.length; i++) {
+                                    selectedRoleIds += nodes[i] + ",";
+                                }
+                                param.RoleIds = selectedRoleIds.substring(0, selectedRoleIds.length - 1);
                             },
                             success: function (data) {
                                 var dataJson = eval('(' + data + ')');
                                 if (dataJson.success) {
-                                    $("#ui_user_setorg_dialog").dialog('destroy');
+                                    $("#ui_user_setrole_dialog").dialog('destroy');
                                     $.show_warning("提示", dataJson.msg);
                                     $("#ui_user_dg").datagrid("reload").datagrid('clearSelections').datagrid('clearChecked');
                                 } else {
-                                    $('#ui_user_setorg_btn').linkbutton('enable');
+                                    $('#ui_user_setrole_btn').linkbutton('enable');
                                     $.show_warning("提示", dataJson.msg);
                                 }
                             }
@@ -425,9 +441,9 @@
                     if (rows.length == 1) {//单个用户
                         $("#UserIds").val(rows[0].Id);
                         $("#UserNames").val(rows[0].UserName);
-                        $("#OrgIds").combotree('setValues', stringToList(rows[0].UserOrgIds));
+                        $("#ComboboxRole").combotree('setValues', stringToList(rows[0].UserRoleIds));
                     }
-                    else {//多个用户(批量)
+                    else {//批量
                         var userids = "";
                         var usernames = "";
                         for (var i = 0; i < rows.length; i++) {
@@ -439,7 +455,7 @@
                     }
                 },
                 onClose: function () {
-                    $("#ui_user_setorg_dialog").dialog('destroy');
+                    $("#ui_user_setrole_dialog").dialog('destroy');
                 }
             });
         };

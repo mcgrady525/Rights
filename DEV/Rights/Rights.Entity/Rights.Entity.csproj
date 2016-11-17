@@ -78,6 +78,7 @@
     <Compile Include="ViewModel\GetPagingUsersRequest.cs" />
     <Compile Include="ViewModel\GetPagingUsersResponse.cs" />
     <Compile Include="ViewModel\SetOrgRequest.cs" />
+    <Compile Include="ViewModel\SetRoleRequest.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

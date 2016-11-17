@@ -378,6 +378,9 @@ SELECT * FROM dbo.t_rights_user_role WHERE role_id= 4;
 
 SELECT * FROM dbo.t_rights_role_menu_button WHERE role_id= 4;
 
+--设置角色
+SELECT * FROM dbo.t_rights_role;
+
 
 
 

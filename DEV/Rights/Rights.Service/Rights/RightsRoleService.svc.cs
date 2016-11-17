@@ -167,5 +167,24 @@ namespace Rights.Service.Rights
             return result;
         }
 
+        /// <summary>
+        /// 获取所有角色
+        /// </summary>
+        /// <returns></returns>
+        public ServiceResult<List<TRightsRole>> GetAllRole()
+        {
+            var result = new ServiceResult<List<TRightsRole>> 
+            {
+                ReturnCode= ReturnCodeType.Error,
+                Content= new List<TRightsRole>()
+            };
+
+            var rs = roleDao.GetAll();
+            result.ReturnCode = ReturnCodeType.Success;
+            result.Content = rs;
+
+            return result;
+        }
+
     }
 }

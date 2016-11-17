@@ -191,5 +191,30 @@ namespace Rights.Site.Controllers
             return Json(new { success = flag, msg = msg }, JsonRequestBehavior.AllowGet);
         }
 
+        /// <summary>
+        /// 获取所有角色
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult GetAll()
+        {
+            var result = string.Empty;
+
+            using (var factory = new ChannelFactory<IRightsRoleService>("*"))
+            {
+                var client = factory.CreateChannel();
+                var rs = client.GetAllRole();
+                if (rs.ReturnCode == ReturnCodeType.Success)
+                {
+                    result= rs.Content.Select(p => new 
+                    {
+                        Id= p.Id,
+                        RoleName= p.Name
+                    }).ToJson();
+                }
+            }
+
+            return Content(result);
+        }
+
 	}
 }
