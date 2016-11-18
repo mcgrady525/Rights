@@ -57,11 +57,13 @@
     <Compile Include="Db\TRightsUserRole.cs" />
     <Compile Include="Enum\Enums.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Rights.Entity.Partial.cs" />
     <Compile Include="Rights\GetMyInfoResponse.cs" />
     <Compile Include="Rights\LeftMenu.cs" />
     <Compile Include="ViewModel\AddOrganizationRequest.cs" />
     <Compile Include="ViewModel\AddRoleRequest.cs" />
     <Compile Include="ViewModel\AddUserRequest.cs" />
+    <Compile Include="ViewModel\AuthorizeRoleRequest.cs" />
     <Compile Include="ViewModel\ChangePwdRequest.cs" />
     <Compile Include="ViewModel\CheckLoginRequest.cs" />
     <Compile Include="ViewModel\DeleteOrganizationRequest.cs" />
@@ -77,6 +79,7 @@
     <Compile Include="ViewModel\GetPagingRoleUsersResponse.cs" />
     <Compile Include="ViewModel\GetPagingUsersRequest.cs" />
     <Compile Include="ViewModel\GetPagingUsersResponse.cs" />
+    <Compile Include="ViewModel\GetRoleMenuButtonResponse.cs" />
     <Compile Include="ViewModel\SetOrgRequest.cs" />
     <Compile Include="ViewModel\SetRoleRequest.cs" />
   </ItemGroup>

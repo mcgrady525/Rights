@@ -332,65 +332,72 @@
         };
 
         //角色授权
-        function role_setorg() {
-            var rows = $("#ui_role_dg").datagrid("getChecked");
-            if (rows.length < 1) {
-                $.show_warning("提示", "请先勾选要设置机构的用户");
+        function role_authorize() {
+            var row = $('#ui_role_dg').datagrid('getSelected');
+            if (!row) {
+                $.show_warning("提示", "请选择要授权的角色");
                 return;
             }
+
+            //初始化dialog
             $("<div/>").dialog({
-                id: "ui_user_setorg_dialog",
-                href: '@Url.Action("SetOrg", "Role")',
-            title: rows.length == 1 ? "设置机构" : "批量设置机构：" + rows.length + "个用户",
-            height: 220,
-            width: 380,
-            modal: true,
-            buttons: [{
-                id: "ui_user_setorg_btn",
-                text: '确 定',
-                handler: function () {
-                    $("#ui_user_setorgform").form("submit", {
-                        url: '@Url.Action("SetOrg", "Role")',
-                        onSubmit: function (param) {
-                            $('#ui_user_setorg_btn').linkbutton('disable');
-                            param.action = 'setdep';
-                        },
-                        success: function (data) {
-                            var dataJson = eval('(' + data + ')');
-                            if (dataJson.success) {
-                                $("#ui_user_setorg_dialog").dialog('destroy');
-                                $.show_warning("提示", dataJson.msg);
-                                $("#ui_role_dg").datagrid("reload").datagrid('clearSelections').datagrid('clearChecked');
-                            } else {
-                                $('#ui_user_setorg_btn').linkbutton('enable');
-                                $.show_warning("提示", dataJson.msg);
-                            }
-                        }
-                    });
-                }
-            }],
-            onLoad: function () {
-                if (rows.length == 1) {//单个用户
-                    $("#UserIds").val(rows[0].Id);
-                    $("#UserNames").val(rows[0].UserName);
-                    $("#OrgIds").combotree('setValues', stringToList(rows[0].UserOrgIds));
-                }
-                else {//多个用户(批量)
-                    var userids = "";
-                    var usernames = "";
-                    for (var i = 0; i < rows.length; i++) {
-                        userids += rows[i].Id + ",";
-                        usernames += rows[i].UserName + ",";
+                id: "ui_role_authorize_dialog",
+                href: '@Url.Action("Authorize", "Role")',
+                title: "角色授权：" + row.Name,
+                height: 500,
+                width: 300,
+                modal: true,
+                buttons: [{
+                    id: "ui_role_authorize_btn",
+                    text: '授 权',
+                    handler: function () {
+                        $('#ui_role_authorize_btn').linkbutton('disable');
+                        doAuthorize(row.Id);//保存授权信息
                     }
-                    $("#UserIds").val(userids.substring(0, userids.length - 1));
-                    $("#UserNames").val(usernames.substring(0, usernames.length - 1));
+                }],
+                onLoad: function () {
+                    $('#tree_menu_button').tree({
+                        url: '@Url.Action("GetRoleMenuButton", "Role")'+ '?roleId='+ row.Id,
+                        onlyLeafCheck: true,
+                        checkbox: true
+                    });
+                },
+                onClose: function () {
+                    $("#ui_role_authorize_dialog").dialog('destroy');
                 }
-            },
-            onClose: function () {
-                $("#ui_user_setorg_dialog").dialog('destroy');
+            });
+        };
+
+        //保存授权信息
+        function doAuthorize(roleId) {
+            debugger;
+            var menuButtonId = "";
+            var nodes = $('#tree_menu_button').tree('getChecked');
+            for (var i = 0; i < nodes.length; i++) {
+                menuButtonId += nodes[i].attributes.menuid + "," + nodes[i].attributes.buttonid + "|";//最终拼接示例：5,1|5,2|7,1|10,1|11,1分别是菜单id、按钮id
             }
-        });
-    };
+            var para = {};
+            para.action = "authorize";
+            para.timespan = new Date().getTime();
+            para.menuButtonId = menuButtonId;
+            para.roleId = roleId;
+
+            $.ajax({
+                url: '@Url.Action("Authorize", "Role")',
+                data: para,
+                type: "POST",
+                dataType: "json",
+                success: function (data) {
+                    if (data.success) {
+                        $("#ui_role_authorize_dialog").dialog('destroy');
+                        $.show_warning("提示", data.msg);
+                    } else {
+                        $('#ui_role_authorize_btn').linkbutton('enable');
+                        $.show_warning("提示", data.msg);
+                    }
+                }
+            });
+        };
 
     </script>
 

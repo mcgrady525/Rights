@@ -173,15 +173,59 @@ namespace Rights.Service.Rights
         /// <returns></returns>
         public ServiceResult<List<TRightsRole>> GetAllRole()
         {
-            var result = new ServiceResult<List<TRightsRole>> 
+            var result = new ServiceResult<List<TRightsRole>>
             {
-                ReturnCode= ReturnCodeType.Error,
-                Content= new List<TRightsRole>()
+                ReturnCode = ReturnCodeType.Error,
+                Content = new List<TRightsRole>()
             };
 
             var rs = roleDao.GetAll();
             result.ReturnCode = ReturnCodeType.Success;
             result.Content = rs;
+
+            return result;
+        }
+
+        /// <summary>
+        /// 角色授权页面，获取角色所拥有的菜单按钮权限
+        /// </summary>
+        /// <param name="roleId"></param>
+        /// <returns></returns>
+        public ServiceResult<List<GetRoleMenuButtonResponse>> GetRoleMenuButton(int roleId)
+        {
+            var result = new ServiceResult<List<GetRoleMenuButtonResponse>>
+            {
+                ReturnCode = ReturnCodeType.Error,
+                Content = new List<GetRoleMenuButtonResponse>()
+            };
+
+            var rs = roleDao.GetRoleMenuButton(roleId);
+            result.ReturnCode = ReturnCodeType.Success;
+            result.Content = rs;
+
+            return result;
+        }
+
+        /// <summary>
+        /// 为角色授权
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public ServiceResult<bool> AuthorizeRole(AuthorizeRoleRequest request)
+        {
+            //先删除该角色原来拥有的菜单和按钮权限
+            //再新增该角色新选择的菜单和按钮权限
+            var result = new ServiceResult<bool>
+            {
+                ReturnCode = ReturnCodeType.Error
+            };
+
+            var rs = roleDao.AuthorizeRole(request);
+            if (rs == true)
+            {
+                result.ReturnCode = ReturnCodeType.Success;
+                result.Content = true;
+            }
 
             return result;
         }

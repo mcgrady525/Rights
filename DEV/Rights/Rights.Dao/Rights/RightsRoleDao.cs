@@ -317,5 +317,105 @@ namespace Rights.Dao.Rights
             return result;
         }
 
+        /// <summary>
+        /// 角色授权页面，获取角色所拥有的菜单按钮权限
+        /// </summary>
+        /// <param name="roleId"></param>
+        /// <returns></returns>
+        public List<GetRoleMenuButtonResponse> GetRoleMenuButton(int roleId)
+        {
+            List<GetRoleMenuButtonResponse> result = null;
+
+            using (var conn = DapperHelper.CreateConnection())
+            {
+                var multi = conn.QueryMultiple(@"SELECT  menu.id AS MenuId ,
+                            menu.name AS MenuName ,
+                            menu.parent_id AS MenuParentId ,
+                            menu.icon AS MenuIcon ,
+                            button.id AS ButtonId ,
+                            button.name AS ButtonName ,
+                            button.icon AS ButtonIcon ,
+                            roleMenuButton.role_id AS RoleId ,
+                            CASE WHEN ISNULL(roleMenuButton.button_id, 0) = 0 THEN 'false'
+                                 ELSE 'true'
+                            END Checked ,
+                            *
+                    FROM    dbo.t_rights_menu AS menu
+                            LEFT JOIN dbo.t_rights_menu_button AS menuButton ON menu.id = menuButton.menu_id
+                            LEFT JOIN dbo.t_rights_button AS button ON menuButton.button_id = button.id
+                            LEFT JOIN dbo.t_rights_role_menu_button AS roleMenuButton ON ( roleMenuButton.menu_id = menu.id
+                                                                                  AND roleMenuButton.button_id = button.id
+                                                                                  AND roleMenuButton.role_id = @RoleId
+                                                                                  )
+                    ORDER BY menu.parent_id ,
+                            menu.sort ,
+                            button.sort;", new { @RoleId = roleId });
+                result = multi.Read<GetRoleMenuButtonResponse>().ToList();
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// 为角色授权
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public bool AuthorizeRole(AuthorizeRoleRequest request)
+        {
+            var result = false;
+            var addRoleMenuButtons = new List<TRightsRoleMenuButton>();
+
+            //没有为该角色授权
+            if (request.MenuButtonId.IsNullOrEmpty())
+            {
+                using (var conn = DapperHelper.CreateConnection())
+                {
+                    conn.Execute(@"DELETE FROM dbo.t_rights_role_menu_button WHERE role_id= @RoleId AND button_id!=0;", new { @RoleId = request.RoleId });
+                    result = true;
+                    return result;
+                }
+            }
+
+            //有为该角色授权
+            var menuButtons = request.MenuButtonId.Trim(new char[] { '|' }).Split(new string[] { "|" }, StringSplitOptions.RemoveEmptyEntries).ToList();
+            if (menuButtons.HasValue())
+            {
+                foreach (var menuButton in menuButtons)
+                {
+                    var menuButtonArr = menuButton.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
+                    addRoleMenuButtons.Add(new TRightsRoleMenuButton
+                    {
+                        RoleId = request.RoleId,
+                        MenuId = menuButtonArr[0].ToInt(),
+                        ButtonId = menuButtonArr[1].ToInt()
+                    });
+                }
+
+                using (var conn = DapperHelper.CreateConnection())
+                {
+                    var trans = conn.BeginTransaction();
+
+                    try
+                    {
+                        //先删除(不能删除buttonId=0的记录，否则登陆后无法访问顶级菜单)
+                        conn.Execute(@"DELETE FROM dbo.t_rights_role_menu_button WHERE role_id= @RoleId AND button_id! = 0;", new { @RoleId = request.RoleId }, trans);
+
+                        //后添加
+                        conn.Execute(@"INSERT INTO dbo.t_rights_role_menu_button VALUES  ( @RoleId,@MenuId,@ButtonId);", addRoleMenuButtons, trans);
+
+                        trans.Commit();
+                        result = true;
+                    }
+                    catch (Exception ex)
+                    {
+                        trans.Rollback();
+                    }
+                }
+            }
+
+            return result;
+        }
+
     }
 }

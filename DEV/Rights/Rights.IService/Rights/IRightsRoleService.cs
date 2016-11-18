@@ -63,5 +63,21 @@ namespace Rights.IService.Rights
         [OperationContract]
         ServiceResult<List<TRightsRole>> GetAllRole();
 
+        /// <summary>
+        /// 角色授权页面，获取角色所拥有的菜单按钮权限
+        /// </summary>
+        /// <param name="roleId"></param>
+        /// <returns></returns>
+        [OperationContract]
+        ServiceResult<List<GetRoleMenuButtonResponse>> GetRoleMenuButton(int roleId);
+
+        /// <summary>
+        /// 为角色授权
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [OperationContract]
+        ServiceResult<bool> AuthorizeRole(AuthorizeRoleRequest request);
+
     }
 }

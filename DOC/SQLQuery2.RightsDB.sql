@@ -381,6 +381,83 @@ SELECT * FROM dbo.t_rights_role_menu_button WHERE role_id= 4;
 --设置角色
 SELECT * FROM dbo.t_rights_role;
 
+SELECT * FROM dbo.t_rights_user_role;
+
+----先删除
+--DELETE FROM dbo.t_rights_user_role WHERE user_id IN @UserIds;
+
+----再添加
+--INSERT INTO dbo.t_rights_user_role VALUES ( @UserId,@RoleId);
+
+SELECT * FROM dbo.t_rights_menu;
+
+SELECT * FROM dbo.t_rights_button;
+
+SELECT * FROM dbo.t_rights_menu_button AS menuButton
+WHERE menuButton.menu_id= 5;
+
+
+--为角色授权
+SELECT * FROM dbo.t_rights_role;
+
+SELECT * FROM dbo.t_rights_role_menu_button AS roleMenuButton
+WHERE roleMenuButton.role_id= 1 AND roleMenuButton.button_id= 0
+ORDER BY menu_id, button_id;
+
+SELECT menu.id AS MenuId ,
+        menu.name AS MenuName ,
+        menu.parent_id AS MenuParentId ,
+        menu.icon AS MenuIcon ,
+        button.id AS ButtonId ,
+        button.name AS ButtonName ,
+        button.icon AS ButtonIcon ,
+        roleMenuButton.role_id AS RoleId ,
+        CASE WHEN ISNULL(roleMenuButton.button_id, 0) = 0 THEN 'false'
+             ELSE 'true'
+        END Checked
+FROM    dbo.t_rights_menu AS menu
+        LEFT JOIN dbo.t_rights_menu_button AS menuButton ON menu.id = menuButton.menu_id
+        LEFT JOIN dbo.t_rights_button AS button ON menuButton.button_id = button.id
+        LEFT JOIN dbo.t_rights_role_menu_button AS roleMenuButton ON ( roleMenuButton.menu_id = menu.id
+                                                              AND roleMenuButton.button_id = button.id
+                                                              AND roleMenuButton.role_id = 1
+                                                              )
+ORDER BY menu.parent_id ,
+        menu.sort ,
+        button.sort;
+        
+--先删除该角色所拥有的菜单按钮
+DELETE FROM dbo.t_rights_role_menu_button WHERE role_id= @RoleId AND button_id!=0;
+
+--再添加该角色所选择的菜单按钮
+INSERT INTO dbo.t_rights_role_menu_button VALUES  ( @RoleId,@MenuId,@ButtonId);
+
+--为组织机构菜单分配按钮
+SELECT * FROM dbo.t_rights_menu;
+
+SELECT * FROM dbo.t_rights_button;
+
+SELECT * FROM dbo.t_rights_menu_button
+WHERE menu_id= 5;
+
+--INSERT INTO dbo.t_rights_menu_button
+--        ( menu_id, button_id )
+--VALUES  
+--( 5,2),
+--( 5,3),
+--( 5,4),
+--( 5,11),
+--( 5,12);
+
+--INSERT INTO dbo.t_rights_role_menu_button
+--        ( role_id, menu_id, button_id )
+--VALUES  
+--( 1,1,0),
+--( 1,2,0),
+--( 1,3,0),
+--( 1,4,0),
+--( 1,14,0);
+
 
 
 

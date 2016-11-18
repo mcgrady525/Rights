@@ -82,5 +82,19 @@ namespace Rights.IDao.Rights
         /// <returns></returns>
         bool DeleteRole(DeleteRoleRequest request);
 
+        /// <summary>
+        /// 角色授权页面，获取角色所拥有的菜单按钮权限
+        /// </summary>
+        /// <param name="roleId"></param>
+        /// <returns></returns>
+        List<GetRoleMenuButtonResponse> GetRoleMenuButton(int roleId);
+
+        /// <summary>
+        /// 为角色授权
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        bool AuthorizeRole(AuthorizeRoleRequest request);
+
     }
 }
