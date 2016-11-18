@@ -61,5 +61,13 @@ namespace Rights.IService.Rights
         [OperationContract]
         ServiceResult<bool> SetOrg(SetOrgRequest request);
 
+        /// <summary>
+        /// 为所选用户设置角色(支持批量)
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [OperationContract]
+        ServiceResult<bool> SetRole(SetRoleRequest request);
+
     }
 }

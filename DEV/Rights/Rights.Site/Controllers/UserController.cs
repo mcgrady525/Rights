@@ -193,7 +193,7 @@ namespace Rights.Site.Controllers
                 }
                 else
                 {
-                    msg = "设置机构失败!";
+                    msg = rs.Message.IsNullOrEmpty() ? "设置机构失败!" : rs.Message;
                 }
             }
 
@@ -216,26 +216,26 @@ namespace Rights.Site.Controllers
             var flag = false;
             var msg = string.Empty;
 
-            //if (request.OrgIds.IsNullOrEmpty())
-            //{
-            //    msg = "请选择机构!";
-            //    return Json(new { success = flag, msg = msg }, JsonRequestBehavior.AllowGet);
-            //}
+            if (request.RoleIds.IsNullOrEmpty())
+            {
+                msg = "请选择角色!";
+                return Json(new { success = flag, msg = msg }, JsonRequestBehavior.AllowGet);
+            }
 
-            //using (var factory = new ChannelFactory<IRightsUserService>("*"))
-            //{
-            //    var client = factory.CreateChannel();
-            //    var rs = client.SetOrg(request);
-            //    if (rs.ReturnCode == ReturnCodeType.Success && rs.Content == true)
-            //    {
-            //        flag = true;
-            //        msg = "设置机构成功!";
-            //    }
-            //    else
-            //    {
-            //        msg = "设置机构失败!";
-            //    }
-            //}
+            using (var factory = new ChannelFactory<IRightsUserService>("*"))
+            {
+                var client = factory.CreateChannel();
+                var rs = client.SetRole(request);
+                if (rs.ReturnCode == ReturnCodeType.Success && rs.Content == true)
+                {
+                    flag = true;
+                    msg = "设置角色成功!";
+                }
+                else
+                {
+                    msg = rs.Message.IsNullOrEmpty() ? "设置角色失败!" : rs.Message;
+                }
+            }
 
             return Json(new { success = flag, msg = msg }, JsonRequestBehavior.AllowGet);
         }

@@ -179,5 +179,29 @@ namespace Rights.Service.Rights
 
             return result;
         }
+
+        /// <summary>
+        /// 为所选用户设置角色(支持批量)
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public ServiceResult<bool> SetRole(SetRoleRequest request)
+        {
+            //先删除所选用户原来的拥有角色
+            //再新增所选用户选择的新角色
+            var result = new ServiceResult<bool>
+            {
+                ReturnCode = ReturnCodeType.Error
+            };
+
+            var rs = userDao.SetRole(request);
+            if (rs == true)
+            {
+                result.ReturnCode = ReturnCodeType.Success;
+                result.Content = true;
+            }
+
+            return result;
+        }
     }
 }

@@ -358,5 +358,57 @@ namespace Rights.Dao.Rights
 
             return result;
         }
+
+        /// <summary>
+        /// 为所选用户设置角色(支持批量)
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public bool SetRole(SetRoleRequest request)
+        {
+            //先删除所选用户原来的拥有角色
+            //再新增所选用户选择的新角色
+            //使用事务
+            var result = false;
+            var userIds = request.UserIds.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries).Select(p => p.ToInt()).OrderBy(p => p).ToList();
+            var roleIds = request.RoleIds.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries).Select(p => p.ToInt()).OrderBy(p => p).ToList();
+            var addUserRoles = new List<TRightsUserRole>();//待添加的用户角色
+
+            foreach (var userId in userIds)
+            {
+                foreach (var roleId in roleIds)
+                {
+                    var addUserRole = new TRightsUserRole()
+                    {
+                        UserId = userId,
+                        RoleId = roleId
+                    };
+                    addUserRoles.Add(addUserRole);
+                }
+            }
+
+            using (var conn = DapperHelper.CreateConnection())
+            {
+                var trans = conn.BeginTransaction();
+
+                try
+                {
+                    //先删除
+                    conn.Execute(@"DELETE FROM dbo.t_rights_user_role WHERE user_id IN @UserIds;", new { @UserIds = userIds }, trans);
+
+                    //后添加
+                    conn.Execute(@"INSERT INTO dbo.t_rights_user_role VALUES ( @UserId,@RoleId);", addUserRoles, trans);
+
+                    trans.Commit();
+                    result = true;
+                }
+                catch (Exception ex)
+                {
+                    trans.Rollback();
+                }
+            }
+
+            return result;
+        }
     }
 }

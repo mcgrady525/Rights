@@ -345,7 +345,7 @@
                                 $('#ui_user_setorg_btn').linkbutton('disable');
                                 param.action = 'setdep';
 
-                                //调用api手动获取combotree选中节点的值，使用默认的隐藏域有时取不到值
+                                //调用api手动获取combotree选中节点的值，默认使用隐藏域会有多个相同的name，mvc的模型绑定只会取第一个
                                 var selectedOrgIds = "";
                                 var t = $("#CombotreeOrg").combotree('tree');
                                 var nodes = t.tree('getChecked');
@@ -415,7 +415,7 @@
                                 $('#ui_user_setrole_btn').linkbutton('disable');
                                 param.action = 'setrole';
 
-                                //调用api手动获取选中的值
+                                //调用api手动获取combotree选中节点的值，默认使用隐藏域会有多个相同的name，mvc的模型绑定只会取第一个
                                 var selectedRoleIds = "";
                                 var nodes = $("#ComboboxRole").combo('getValues');
                                 for (var i = 0; i < nodes.length; i++) {
@@ -441,7 +441,7 @@
                     if (rows.length == 1) {//单个用户
                         $("#UserIds").val(rows[0].Id);
                         $("#UserNames").val(rows[0].UserName);
-                        $("#ComboboxRole").combotree('setValues', stringToList(rows[0].UserRoleIds));
+                        $("#ComboboxRole").combobox('setValues', stringToList(rows[0].UserRoleIds));
                     }
                     else {//批量
                         var userids = "";

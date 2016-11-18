@@ -76,10 +76,18 @@ namespace Rights.IDao.Rights
         bool DeleteUser(DeleteUserRequest request);
 
         /// <summary>
-        /// 为所选用户设置机构
+        /// 为所选用户设置机构(支持批量)
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
         bool SetOrg(SetOrgRequest request);
+
+        /// <summary>
+        /// 为所选用户设置角色(支持批量)
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        bool SetRole(SetRoleRequest request);
+
     }
 }
