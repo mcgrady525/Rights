@@ -458,6 +458,9 @@ WHERE menu_id= 5;
 --( 1,4,0),
 --( 1,14,0);
 
+--菜单管理
+SELECT * FROM dbo.t_rights_menu;
+
 
 
 

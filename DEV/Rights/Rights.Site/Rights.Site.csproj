@@ -1675,6 +1675,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\MenuController.cs" />
     <Compile Include="Controllers\OrganizationController.cs" />
     <Compile Include="Controllers\RoleController.cs" />
     <Compile Include="Controllers\UserController.cs" />
@@ -1710,6 +1711,7 @@
     <Content Include="Views\Role\Edit.cshtml" />
     <Content Include="Views\User\SetRole.cshtml" />
     <Content Include="Views\Role\Authorize.cshtml" />
+    <Content Include="Views\Menu\Index.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
