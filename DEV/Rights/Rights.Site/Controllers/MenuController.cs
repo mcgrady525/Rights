@@ -33,7 +33,7 @@ namespace Rights.Site.Controllers
             var result = string.Empty;
             StringBuilder sb = new StringBuilder();
 
-            //using (var factory = new ChannelFactory<IRightsOrganizationService>("*"))
+            //using (var factory = new ChannelFactory<IRightsMenuService>("*"))
             //{
             //    var client = factory.CreateChannel();
             //    var rs = client.GetAll();

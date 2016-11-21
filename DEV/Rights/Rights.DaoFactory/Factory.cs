@@ -72,5 +72,23 @@ namespace Rights.DaoFactory
             return GetInstance("RightsRoleDao", "Rights") as IRightsRoleDao;
         }
 
+        /// <summary>
+        /// 菜单dao
+        /// </summary>
+        /// <returns></returns>
+        public static IRightsMenuDao GetRightsMenuDao()
+        {
+            return GetInstance("RightsMenuDao", "Rights") as IRightsMenuDao;
+        }
+
+        /// <summary>
+        /// 按钮dao
+        /// </summary>
+        /// <returns></returns>
+        public static IRightsButtonDao GetRightsButtonDao()
+        {
+            return GetInstance("RightsButtonDao", "Rights") as IRightsButtonDao;
+        }
+
     }
 }
