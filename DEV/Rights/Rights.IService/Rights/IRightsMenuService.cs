@@ -14,5 +14,6 @@ namespace Rights.IService.Rights
     public interface IRightsMenuService
     {
 
+
     }
 }

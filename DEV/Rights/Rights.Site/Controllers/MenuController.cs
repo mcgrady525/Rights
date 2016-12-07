@@ -9,7 +9,7 @@ using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using Tracy.Frameworks.Common.Extends;
-using Tracy.Frameworks.Common.Const;
+using Tracy.Frameworks.Common.Consts;
 
 namespace Rights.Site.Controllers
 {
@@ -42,7 +42,7 @@ namespace Rights.Site.Controllers
             //        var orgs = rs.Content;
             //        if (orgs.HasValue())
             //        {
-            //            sb.Append(RecursionOrg(orgs, 0));
+            //            sb.Append(RecursionMenu(orgs, 0));
             //            sb = sb.Remove(sb.Length - 2, 2);
             //            result = sb.ToString();
             //        }

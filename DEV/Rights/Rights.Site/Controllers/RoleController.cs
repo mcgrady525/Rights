@@ -9,7 +9,7 @@ using System.ServiceModel;
 using System.Text;
 using System.Web;
 using System.Web.Mvc;
-using Tracy.Frameworks.Common.Const;
+using Tracy.Frameworks.Common.Consts;
 using Tracy.Frameworks.Common.Extends;
 using Rights.Common.Helper;
 
@@ -49,7 +49,7 @@ namespace Rights.Site.Controllers
                 var rs = client.GetPagingRoles(request);
                 if (rs.ReturnCode == ReturnCodeType.Success)
                 {
-                    result = "{\"total\": " + rs.Content.TotalCount + ",\"rows\":" + rs.Content.Entities.ToJson(dateTimeFormat: DateFormat.DATETIME) + "}";
+                    result = "{\"total\": " + rs.Content.TotalCount + ",\"rows\":" + rs.Content.Entities.ToJson(dateTimeFormat: DateTimeTypeConst.DATETIME) + "}";
                 }
             }
 
@@ -79,7 +79,7 @@ namespace Rights.Site.Controllers
                 var rs = client.GetPagingRoleUsers(request);
                 if (rs.ReturnCode == ReturnCodeType.Success)
                 {
-                    result = "{\"total\": " + rs.Content.TotalCount + ",\"rows\":" + rs.Content.Entities.ToJson(dateTimeFormat: DateFormat.DATETIME) + "}";
+                    result = "{\"total\": " + rs.Content.TotalCount + ",\"rows\":" + rs.Content.Entities.ToJson(dateTimeFormat: DateTimeTypeConst.DATETIME) + "}";
                 }
             }
 

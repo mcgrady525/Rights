@@ -10,7 +10,7 @@ using Rights.IService.Rights;
 using Rights.Entity.Common;
 using Rights.Entity.Db;
 using Tracy.Frameworks.Common.Extends;
-using Tracy.Frameworks.Common.Const;
+using Tracy.Frameworks.Common.Consts;
 using Rights.Common.Helper;
 using Rights.Entity.ViewModel;
 
@@ -241,7 +241,7 @@ namespace Rights.Site.Controllers
             {
                 var currentOrg = list.First(p => p.Id == orgId);
                 sb.Append("[{");
-                sb.Append("\"id\":\"" + currentOrg.Id.ToString() + "\",\"Code\":\"" + currentOrg.Code + "\",\"Enabled\":\"" + currentOrg.EnableFlag.Value + "\",\"Sort\":\"" + currentOrg.Sort.Value + "\",\"CreatedTime\":\"" + currentOrg.CreatedTime.ToString(DateFormat.DATETIME) + "\",\"ParentId\":\"" + currentOrg.ParentId.ToString() + "\",\"text\":\"" + currentOrg.Name + "\"");
+                sb.Append("\"id\":\"" + currentOrg.Id.ToString() + "\",\"Code\":\"" + currentOrg.Code + "\",\"Enabled\":\"" + currentOrg.EnableFlag.Value + "\",\"Sort\":\"" + currentOrg.Sort.Value + "\",\"CreatedTime\":\"" + currentOrg.CreatedTime.ToString(DateTimeTypeConst.DATETIME) + "\",\"ParentId\":\"" + currentOrg.ParentId.ToString() + "\",\"text\":\"" + currentOrg.Name + "\"");
 
                 var childOrgs = list.Where(p => p.ParentId == orgId).ToList();
                 if (childOrgs.HasValue())
@@ -268,12 +268,12 @@ namespace Rights.Site.Controllers
                     var childStr = RecursionOrg(list, childOrgs[i].Id);
                     if (!childStr.IsNullOrEmpty())
                     {
-                        sb.Append("{\"id\":\"" + childOrgs[i].Id.ToString() + "\",\"Code\":\"" + childOrgs[i].Code + "\",\"Enabled\":\"" + childOrgs[i].EnableFlag.Value + "\",\"Sort\":\"" + childOrgs[i].Sort.Value + "\",\"CreatedTime\":\"" + childOrgs[i].CreatedTime.ToString(DateFormat.DATETIME) + "\",\"ParentId\":\"" + childOrgs[i].ParentId.ToString() + "\",\"text\":\"" + childOrgs[i].Name + "\",\"children\":");
+                        sb.Append("{\"id\":\"" + childOrgs[i].Id.ToString() + "\",\"Code\":\"" + childOrgs[i].Code + "\",\"Enabled\":\"" + childOrgs[i].EnableFlag.Value + "\",\"Sort\":\"" + childOrgs[i].Sort.Value + "\",\"CreatedTime\":\"" + childOrgs[i].CreatedTime.ToString(DateTimeTypeConst.DATETIME) + "\",\"ParentId\":\"" + childOrgs[i].ParentId.ToString() + "\",\"text\":\"" + childOrgs[i].Name + "\",\"children\":");
                         sb.Append(childStr);
                     }
                     else
                     {
-                        sb.Append("{\"id\":\"" + childOrgs[i].Id.ToString() + "\",\"Code\":\"" + childOrgs[i].Code + "\",\"Enabled\":\"" + childOrgs[i].EnableFlag.Value + "\",\"Sort\":\"" + childOrgs[i].Sort.Value + "\",\"CreatedTime\":\"" + childOrgs[i].CreatedTime.ToString(DateFormat.DATETIME) + "\",\"ParentId\":\"" + childOrgs[i].ParentId.ToString() + "\",\"text\":\"" + childOrgs[i].Name + "\"},");
+                        sb.Append("{\"id\":\"" + childOrgs[i].Id.ToString() + "\",\"Code\":\"" + childOrgs[i].Code + "\",\"Enabled\":\"" + childOrgs[i].EnableFlag.Value + "\",\"Sort\":\"" + childOrgs[i].Sort.Value + "\",\"CreatedTime\":\"" + childOrgs[i].CreatedTime.ToString(DateTimeTypeConst.DATETIME) + "\",\"ParentId\":\"" + childOrgs[i].ParentId.ToString() + "\",\"text\":\"" + childOrgs[i].Name + "\"},");
                     }
 
                 }

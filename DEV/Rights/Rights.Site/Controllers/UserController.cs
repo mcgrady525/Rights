@@ -8,7 +8,7 @@ using System.Linq;
 using System.ServiceModel;
 using System.Web;
 using System.Web.Mvc;
-using Tracy.Frameworks.Common.Const;
+using Tracy.Frameworks.Common.Consts;
 using Tracy.Frameworks.Common.Extends;
 
 namespace Rights.Site.Controllers
@@ -45,7 +45,7 @@ namespace Rights.Site.Controllers
                 var rs = client.GetPagingUsers(request);
                 if (rs.ReturnCode == ReturnCodeType.Success)
                 {
-                    result = "{\"total\": " + rs.Content.TotalCount + ",\"rows\":" + rs.Content.Entities.ToJson(dateTimeFormat: DateFormat.DATETIME) + "}";
+                    result = "{\"total\": " + rs.Content.TotalCount + ",\"rows\":" + rs.Content.Entities.ToJson(dateTimeFormat: DateTimeTypeConst.DATETIME) + "}";
                 }
             }
 

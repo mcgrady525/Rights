@@ -13,6 +13,7 @@ using Rights.IDao.Rights;
 using Rights.DaoFactory;
 using Rights.Entity.Db;
 using Tracy.Frameworks.Common.Extends;
+using Tracy.Frameworks.Common.Helpers;
 
 namespace Rights.Service.Rights
 {
@@ -71,7 +72,7 @@ namespace Rights.Service.Rights
             var item = new TRightsUser
             {
                 UserId = request.UserId,
-                Password = "123456".To32bitMD5(),//默认密码为123456
+                Password = EncryptHelper.MD5With32bit("123456"),//默认密码为123456
                 UserName = request.UserName,
                 IsChangePwd = request.IsChangePwd,
                 EnableFlag = request.EnableFlag,

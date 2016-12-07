@@ -8,6 +8,7 @@ using System.Web.Mvc;
 using Rights.IService.Rights;
 using Rights.Entity.Db;
 using Tracy.Frameworks.Common.Extends;
+using Tracy.Frameworks.Common.Helpers;
 using Rights.Entity.Rights;
 using System.Text;
 using Rights.Site.Filters;
@@ -61,8 +62,9 @@ namespace Rights.Site.Controllers
                 return Json(new { success = flag, msg = msg }, JsonRequestBehavior.AllowGet);
             }
 
-            request.NewPwd = request.NewPwd.To32bitMD5();
-            if (loginInfo.Password.Equals(request.NewPwd.To32bitMD5()))
+            var newPwd = EncryptHelper.MD5With32bit(request.NewPwd);
+            request.NewPwd = newPwd;
+            if (loginInfo.Password.Equals(newPwd))
             {
                 msg = "新密码不能和默认密码一样!";
                 return Json(new { success = flag, msg = msg }, JsonRequestBehavior.AllowGet);
@@ -77,7 +79,7 @@ namespace Rights.Site.Controllers
                     //更新cookie
                     FormsIdentity id = (FormsIdentity)HttpContext.User.Identity;
                     FormsAuthenticationTicket ticketOld = id.Ticket;
-                    loginInfo.Password = request.NewPwd.To32bitMD5();
+                    loginInfo.Password = newPwd;
                     loginInfo.IsChangePwd = true;
 
                     FormsAuthentication.SignOut();
@@ -132,8 +134,8 @@ namespace Rights.Site.Controllers
             var flag = false;
             var msg = string.Empty;
 
-            var originalPwd = request.OriginalPwd.To32bitMD5();
-            var newPwd = request.NewPwd.To32bitMD5();
+            var originalPwd = EncryptHelper.MD5With32bit(request.OriginalPwd);
+            var newPwd = EncryptHelper.MD5With32bit(request.NewPwd);
             if (!originalPwd.Equals(loginInfo.Password))
             {
                 msg = "原密码不正确!";

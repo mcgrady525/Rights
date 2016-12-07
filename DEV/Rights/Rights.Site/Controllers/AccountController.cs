@@ -7,6 +7,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
 using Tracy.Frameworks.Common.Extends;
+using Tracy.Frameworks.Common.Helpers;
 using Rights.Entity.Db;
 using Rights.IService.Rights;
 using Rights.Entity.Common;
@@ -34,7 +35,7 @@ namespace Rights.Site.Controllers
             using (var factory = new ChannelFactory<IRightsAccountService>("*"))
             {
                 var client = factory.CreateChannel();
-                request.loginPwd = request.loginPwd.To32bitMD5();
+                request.loginPwd = EncryptHelper.MD5With32bit(request.loginPwd);
                 var result = client.CheckLogin(request);
                 if (result.ReturnCode == ReturnCodeType.Success)
                 {

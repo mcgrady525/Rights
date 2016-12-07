@@ -10,7 +10,7 @@ using Rights.Common.Helper;
 using Dapper;
 using Rights.Entity.Rights;
 using Tracy.Frameworks.Common.Extends;
-using Tracy.Frameworks.Common.Const;
+using Tracy.Frameworks.Common.Consts;
 
 namespace Rights.Dao.Rights
 {
@@ -153,7 +153,7 @@ namespace Rights.Dao.Rights
                     {
                         UserId = users.First().UserId,
                         UserName = users.First().UserName,
-                        CreatedTime = users.First().CreatedTime.ToString(DateFormat.DATETIME),
+                        CreatedTime = users.First().CreatedTime.ToString(DateTimeTypeConst.DATETIME),
                         RolesName = users.First().Role != null ? string.Join(",", users.Select(p => p.Role.Name).Distinct()) : "",
                         DepartmentsName = users.First().Organization != null ? string.Join(",", users.Select(p => p.Organization.Name).Distinct()) : ""
                     };
