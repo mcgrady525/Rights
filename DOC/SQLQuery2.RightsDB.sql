@@ -461,6 +461,46 @@ WHERE menu_id= 5;
 --菜单管理
 SELECT * FROM dbo.t_rights_menu;
 
+--插入
+--INSERT INTO dbo.t_rights_menu VALUES  ( @Name ,@ParentId ,@Code ,@Url ,@Icon ,@Sort ,@CreatedBy ,@CreatedTime ,@LastUpdatedBy ,@LastUpdatedTime);
+
+--修改
+--UPDATE dbo.t_rights_menu SET name=@Name, url= @Url, icon= @Icon, sort=@Sort, last_updated_by= @LastUpdatedBy, last_updated_time= @LastUpdatedTime
+--WHERE id= @Id;
+
+--删除
+--DELETE FROM dbo.t_rights_menu WHERE id= @Id;
+
+--查询by id
+SELECT menu.parent_id AS ParentId,
+menu.created_by AS CreatedBy,
+menu.created_time AS CreatedTime,
+menu.last_updated_by AS LastUpdatedBy,
+menu.last_updated_time AS LastUpdatedTime,
+* FROM dbo.t_rights_menu AS menu
+ORDER BY menu.parent_id, menu.sort;
+
+--查询所有菜单
+
+
+--按钮管理
+SELECT * FROM dbo.t_rights_button;
+--插入
+--INSERT INTO dbo.t_rights_button VALUES (@Name ,@Code ,@Icon ,@Sort ,@CreatedBy ,@CreatedTime ,@LastUpdatedBy ,@LastUpdatedTime);
+
+--更新
+--UPDATE dbo.t_rights_button SET name=@Name, icon= @Icon, sort=@Sort, last_updated_by= @LastUpdatedBy, last_updated_time= @LastUpdatedTime WHERE id= @Id;
+
+
+--查询by id
+--SELECT  btn.created_by AS CreatedBy ,
+--        btn.created_time AS CreatedTime ,
+--        btn.last_updated_by AS LastUpdatedBy ,
+--        btn.last_updated_time AS LastUpdatedTime ,
+--        *
+--FROM    dbo.t_rights_button AS btn
+--ORDER BY btn.sort;
+
 
 
 

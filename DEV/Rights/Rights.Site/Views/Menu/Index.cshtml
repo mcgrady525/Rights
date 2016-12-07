@@ -51,15 +51,14 @@
                                 treeField: 'text',
                                 rownumbers: true,
                                 columns: [[
-                                       { field: 'Id', title: '菜单id', width: 60 },
-                                       { field: 'Name', title: '菜单名称', width: 100 },
+                                       { field: 'text', title: '菜单名称', width: 150 },
                                        { field: 'ParentId', title: '上级菜单id', sortable: true, width: 80 },
                                        { field: 'Code', title: '菜单编码', width: 120 },
-                                       { field: 'Url', title: '链接地址', width: 200 },
+                                       { field: 'Url', title: '链接地址', width: 250 },
                                        { field: 'Icon', title: '图标', width: 150 },
                                        { field: 'Sort', title: '排序', sortable: true, width: 80 },
-                                       { field: 'CreatedTime', title: '创建时间', width: 130 },
-                                       { field: 'UpdatedTime', title: '上次更新时间', width: 130 }
+                                       { field: 'CreatedTime', title: '创建时间', width: 150 },
+                                       { field: 'LastUpdatedTime', title: '上次更新时间', width: 150 }
                                 ]],
                                 toolbar: toolbar.length == 0 ? null : toolbar
                             });

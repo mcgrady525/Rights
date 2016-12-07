@@ -10,6 +10,7 @@ using System.Web;
 using System.Web.Mvc;
 using Tracy.Frameworks.Common.Extends;
 using Tracy.Frameworks.Common.Consts;
+using Rights.Entity.Db;
 
 namespace Rights.Site.Controllers
 {
@@ -33,29 +34,57 @@ namespace Rights.Site.Controllers
             var result = string.Empty;
             StringBuilder sb = new StringBuilder();
 
-            //using (var factory = new ChannelFactory<IRightsMenuService>("*"))
-            //{
-            //    var client = factory.CreateChannel();
-            //    var rs = client.GetAll();
-            //    if (rs.ReturnCode == ReturnCodeType.Success)
-            //    {
-            //        var orgs = rs.Content;
-            //        if (orgs.HasValue())
-            //        {
-            //            sb.Append(RecursionMenu(orgs, 0));
-            //            sb = sb.Remove(sb.Length - 2, 2);
-            //            result = sb.ToString();
-            //        }
-            //        else
-            //        {
-            //            result = "[]";
-            //        }
-            //    }
-            //}
+            using (var factory = new ChannelFactory<IRightsMenuService>("*"))
+            {
+                var client = factory.CreateChannel();
+                var rs = client.GetAll();
+                if (rs.ReturnCode == ReturnCodeType.Success)
+                {
+                    var menus = rs.Content;
+                    if (menus.HasValue())
+                    {
+                        sb.Append(RecursionMenu(menus, 0));
+                        sb = sb.Remove(sb.Length - 2, 2);
+                        result = sb.ToString();
+                    }
+                    else
+                    {
+                        result = "[]";
+                    }
+                }
+            }
 
             return Content(result);
         }
 
+
+        private string RecursionMenu(List<TRightsMenu> list, int parentId)
+        {
+            StringBuilder sb = new StringBuilder();
+            var childMenus = list.Where(p => p.ParentId == parentId).ToList();
+            if (childMenus.HasValue())
+            {
+                sb.Append("[");
+                for (int i = 0; i < childMenus.Count; i++)
+                {
+                    var childStr = RecursionMenu(list, childMenus[i].Id);
+                    var lastUpdatedTime = childMenus[i].LastUpdatedTime.HasValue ? childMenus[i].LastUpdatedTime.Value.ToString(DateTimeTypeConst.DATETIME) : "";
+                    if (!childStr.IsNullOrEmpty())
+                    {
+                        sb.Append("{\"id\":\"" + childMenus[i].Id.ToString() + "\",\"Code\":\"" + childMenus[i].Code + "\",\"Url\":\"" + childMenus[i].Url + "\",\"Icon\":\"" + childMenus[i].Icon + "\",\"Sort\":\"" + childMenus[i].Sort.Value + "\",\"CreatedTime\":\"" + childMenus[i].CreatedTime.ToString(DateTimeTypeConst.DATETIME) + "\",\"LastUpdatedTime\":\"" + lastUpdatedTime + "\",\"ParentId\":\"" + childMenus[i].ParentId.ToString() + "\",\"text\":\"" + childMenus[i].Name + "\",\"children\":");
+                        sb.Append(childStr);
+                    }
+                    else
+                    {
+                        sb.Append("{\"id\":\"" + childMenus[i].Id.ToString() + "\",\"Code\":\"" + childMenus[i].Code + "\",\"Url\":\"" + childMenus[i].Url + "\",\"Icon\":\"" + childMenus[i].Icon + "\",\"Sort\":\"" + childMenus[i].Sort.Value + "\",\"CreatedTime\":\"" + childMenus[i].CreatedTime.ToString(DateTimeTypeConst.DATETIME) + "\",\"LastUpdatedTime\":\"" + lastUpdatedTime + "\",\"ParentId\":\"" + childMenus[i].ParentId.ToString() + "\",\"text\":\"" + childMenus[i].Name + "\"},");
+                    }
+
+                }
+                sb.Remove(sb.Length - 1, 1);
+                sb.Append("]},");
+            }
+            return sb.ToString();
+        }
 
     }
 }
