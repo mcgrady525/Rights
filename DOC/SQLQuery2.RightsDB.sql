@@ -501,6 +501,40 @@ SELECT * FROM dbo.t_rights_button;
 --FROM    dbo.t_rights_button AS btn
 --ORDER BY btn.sort;
 
+--菜单
+SELECT * FROM dbo.t_rights_menu;
+
+--按钮
+SELECT * FROM dbo.t_rights_button;
+
+--菜单-按钮
+SELECT * FROM dbo.t_rights_menu_button
+WHERE menu_id= 8;
+
+--角色-菜单-按钮
+SELECT * FROM dbo.t_rights_role_menu_button
+WHERE role_id= 1 AND menu_id= 8;
+
+--INSERT INTO dbo.t_rights_menu_button
+--        ( menu_id, button_id )
+--VALUES  
+--( 8,2),
+--( 8,3),
+--( 8,4),
+--( 8,10),
+--( 8,11),
+--( 8,12);
+
+--INSERT INTO dbo.t_rights_role_menu_button
+--        ( role_id, menu_id, button_id )
+--VALUES  
+--( 1,8,2),
+--( 1,8,3),
+--( 1,8,4),
+--( 1,8,10),
+--( 1,8,11),
+--( 1,8,12);
+
 
 
 

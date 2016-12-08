@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Rights.Entity.Common;
 using Rights.Entity.Db;
+using Rights.Entity.ViewModel;
 
 namespace Rights.IService.Rights
 {
@@ -21,6 +22,15 @@ namespace Rights.IService.Rights
         /// <returns></returns>
         [OperationContract]
         ServiceResult<List<TRightsMenu>> GetAll();
+
+        /// <summary>
+        /// 添加菜单
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="loginInfo"></param>
+        /// <returns></returns>
+        [OperationContract]
+        ServiceResult<bool> AddMenu(AddMenuRequest request, TRightsUser loginInfo);
 
     }
 }

@@ -60,6 +60,7 @@
     <Compile Include="Rights.Entity.Partial.cs" />
     <Compile Include="Rights\GetMyInfoResponse.cs" />
     <Compile Include="Rights\LeftMenu.cs" />
+    <Compile Include="ViewModel\AddMenuRequest.cs" />
     <Compile Include="ViewModel\AddOrganizationRequest.cs" />
     <Compile Include="ViewModel\AddRoleRequest.cs" />
     <Compile Include="ViewModel\AddUserRequest.cs" />

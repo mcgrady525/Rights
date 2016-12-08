@@ -11,6 +11,7 @@ using System.Web.Mvc;
 using Tracy.Frameworks.Common.Extends;
 using Tracy.Frameworks.Common.Consts;
 using Rights.Entity.Db;
+using Rights.Entity.ViewModel;
 
 namespace Rights.Site.Controllers
 {
@@ -57,7 +58,47 @@ namespace Rights.Site.Controllers
             return Content(result);
         }
 
+        /// <summary>
+        /// 添加菜单
+        /// </summary>
+        /// <returns></returns>
+        [LoginAuthorization]
+        public ActionResult Add()
+        {
+            return View();
+        }
 
+        /// <summary>
+        /// 添加菜单
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult Add(AddMenuRequest request)
+        {
+            var flag = false;
+            var msg = string.Empty;
+
+            using (var factory = new ChannelFactory<IRightsMenuService>("*"))
+            {
+                var client = factory.CreateChannel();
+                var rs = client.AddMenu(request, loginInfo);
+                if (rs.ReturnCode == ReturnCodeType.Success && rs.Content == true)
+                {
+                    flag = true;
+                    msg = "新增成功!";
+                }
+                else
+                {
+                    msg = "新增失败!";
+                }
+            }
+
+            return Json(new { success = flag, msg = msg }, JsonRequestBehavior.AllowGet);
+        }
+
+
+        #region Private method
         private string RecursionMenu(List<TRightsMenu> list, int parentId)
         {
             StringBuilder sb = new StringBuilder();
@@ -84,7 +125,8 @@ namespace Rights.Site.Controllers
                 sb.Append("]},");
             }
             return sb.ToString();
-        }
+        } 
+        #endregion
 
     }
 }

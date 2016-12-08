@@ -1712,6 +1712,7 @@
     <Content Include="Views\User\SetRole.cshtml" />
     <Content Include="Views\Role\Authorize.cshtml" />
     <Content Include="Views\Menu\Index.cshtml" />
+    <Content Include="Views\Menu\Add.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

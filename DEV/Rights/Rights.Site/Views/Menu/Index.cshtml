@@ -94,39 +94,39 @@
         //添加菜单
         function menu_add() {
             $("<div/>").dialog({
-                id: "ui_org_add_dialog",
-                href: '@Url.Action("Add", "Organization")',
-                title: "添加机构",
+                id: "ui_menu_add_dialog",
+                href: '@Url.Action("Add", "Menu")',
+                title: "添加菜单",
                 height: 350,
                 width: 460,
                 modal: true,
                 buttons: [{
-                    id: "ui_org_add_btn",
+                    id: "ui_menu_add_btn",
                     text: '添 加',
                     handler: function () {
-                        $("#ui_org_addform").form("submit", {
-                            url: '@Url.Action("Add", "Organization")',
+                        $("#ui_menu_addform").form("submit", {
+                            url: '@Url.Action("Add", "Menu")',
                             onSubmit: function (param) {
-                                $('#ui_org_add_btn').linkbutton('disable');
+                                $('#ui_menu_add_btn').linkbutton('disable');
                                 if ($(this).form('validate')) {
-                                    var t = $("#comboParent").combotree('tree');
+                                    var t = $("#ComboParentMenu").combotree('tree');
                                     var node = t.tree('getSelected');
                                     param.ParentId = node.id;
                                     return true;
                                 }
                                 else {
-                                    $('#ui_org_add_btn').linkbutton('enable');
+                                    $('#ui_menu_add_btn').linkbutton('enable');
                                     return false;
                                 }
                             },
                             success: function (data) {
                                 var dataJson = eval('(' + data + ')');
                                 if (dataJson.success) {
-                                    $("#ui_org_add_dialog").dialog('destroy');
+                                    $("#ui_menu_add_dialog").dialog('destroy');
                                     $.show_warning("提示", dataJson.msg);
-                                    $("#ui_menu_tg").treegrid("reload");
+                                    $("#ui_menu_tg").treegrid("reload").treegrid('clearSelections').treegrid('clearChecked');//刷新并清除已选择
                                 } else {
-                                    $('#ui_org_add_btn').linkbutton('enable');
+                                    $('#ui_menu_add_btn').linkbutton('enable');
                                     $.show_warning("提示", dataJson.msg);
                                 }
                             }
@@ -137,7 +137,7 @@
                     $("#Name").focus();
                 },
                 onClose: function () {
-                    $("#ui_org_add_dialog").dialog('destroy');
+                    $("#ui_menu_add_dialog").dialog('destroy');
                 }
             });
         };

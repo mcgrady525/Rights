@@ -11,6 +11,7 @@ using Rights.Entity.Common;
 using Rights.IDao.Rights;
 using Rights.DaoFactory;
 using Tracy.Frameworks.Common.Extends;
+using Rights.Entity.ViewModel;
 
 namespace Rights.Service.Rights
 {
@@ -39,6 +40,43 @@ namespace Rights.Service.Rights
             var rs = menuDao.GetAll();
             result.ReturnCode = ReturnCodeType.Success;
             result.Content = rs;
+
+            return result;
+        }
+
+        /// <summary>
+        /// 添加菜单
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="loginInfo"></param>
+        /// <returns></returns>
+        public ServiceResult<bool> AddMenu(AddMenuRequest request, TRightsUser loginInfo)
+        {
+            var result = new ServiceResult<bool>
+            {
+                ReturnCode = ReturnCodeType.Error
+            };
+
+            var currentTime = DateTime.Now;
+            var menu = new TRightsMenu
+            {
+                Name = request.Name,
+                ParentId = request.ParentId,
+                Code = request.Code,
+                Url = request.Url,
+                Icon = request.Icon,
+                Sort = request.Sort,
+                CreatedBy = loginInfo.Id,
+                CreatedTime = currentTime,
+                LastUpdatedBy = loginInfo.Id,
+                LastUpdatedTime = currentTime
+            };
+            var rs = menuDao.Insert(menu);
+            if (rs == true)
+            {
+                result.ReturnCode = ReturnCodeType.Success;
+                result.Content = true;
+            }
 
             return result;
         }
