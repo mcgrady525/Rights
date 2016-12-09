@@ -67,9 +67,11 @@
     <Compile Include="ViewModel\AuthorizeRoleRequest.cs" />
     <Compile Include="ViewModel\ChangePwdRequest.cs" />
     <Compile Include="ViewModel\CheckLoginRequest.cs" />
+    <Compile Include="ViewModel\DeleteMenuRequest.cs" />
     <Compile Include="ViewModel\DeleteOrganizationRequest.cs" />
     <Compile Include="ViewModel\DeleteRoleRequest.cs" />
     <Compile Include="ViewModel\DeleteUserRequest.cs" />
+    <Compile Include="ViewModel\EditMenuRequest.cs" />
     <Compile Include="ViewModel\EditOrganizationRequest.cs" />
     <Compile Include="ViewModel\EditRoleRequest.cs" />
     <Compile Include="ViewModel\EditUserRequest.cs" />

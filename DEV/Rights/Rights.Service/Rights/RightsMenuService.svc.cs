@@ -80,5 +80,64 @@ namespace Rights.Service.Rights
 
             return result;
         }
+
+        /// <summary>
+        /// 修改菜单
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="loginInfo"></param>
+        /// <returns></returns>
+        public ServiceResult<bool> EditMenu(EditMenuRequest request, TRightsUser loginInfo)
+        {
+            var result = new ServiceResult<bool>
+            {
+                ReturnCode = ReturnCodeType.Error
+            };
+
+            var menu = menuDao.GetById(request.Id);
+            if (menu != null)
+            {
+                menu.Name = request.Name;
+                menu.Url = request.Url;
+                menu.Icon = request.Icon;
+                menu.Sort = request.Sort;
+                menu.LastUpdatedBy = loginInfo.Id;
+                menu.LastUpdatedTime = DateTime.Now;
+            }
+            var rs = menuDao.Update(menu);
+            if (rs == true)
+            {
+                result.ReturnCode = ReturnCodeType.Success;
+                result.Content = true;
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// 删除菜单
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public ServiceResult<bool> DeleteMenu(DeleteMenuRequest request)
+        {
+            var result = new ServiceResult<bool>
+            {
+                ReturnCode = ReturnCodeType.Error
+            };
+
+            var deletedMenuIds = request.DeleteMenuIds.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries).Select(p => p.ToInt()).ToList();
+            if (deletedMenuIds.HasValue())
+            {
+                var rs = menuDao.BatchDelete(deletedMenuIds);
+                if (rs == true)
+                {
+                    result.ReturnCode = ReturnCodeType.Success;
+                    result.Content = true;
+                }
+            }
+
+            return result;
+        }
     }
 }

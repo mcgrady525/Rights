@@ -81,11 +81,11 @@
             })
         };
 
-        var orgIds = "";
+        var menuIds = "";
         function recursionGetIds(rows) {
             if (rows.children != undefined) {
                 $.each(rows.children, function (i, row) {
-                    orgIds += row.id + ",";
+                    menuIds += row.id + ",";
                     recursionGetIds(row);
                 });
             }
@@ -146,43 +146,40 @@
         function menu_edit() {
             var row = $("#ui_menu_tg").treegrid("getSelected");
             if (!row) {
-                $.show_warning("提示", "请先选择要修改的机构!");
+                $.show_warning("提示", "请先选择要修改的菜单!");
                 return;
             }
             $("<div/>").dialog({
-                id: "ui_org_edit_dialog",
-                href: '@Url.Action("Edit", "Organization")',
-                title: "修改机构",
+                id: "ui_menu_edit_dialog",
+                href: '@Url.Action("Edit", "Menu")',
+                title: "修改菜单",
                 height: 350,
                 width: 460,
                 modal: true,
                 buttons: [{
-                    id: "ui_org_edit_btn",
+                    id: "ui_menu_edit_btn",
                     text: '修 改',
                     handler: function () {
-                        $("#ui_org_editform").form("submit", {
-                            url: '@Url.Action("Edit", "Organization")',
+                        $("#ui_menu_editform").form("submit", {
+                            url: '@Url.Action("Edit", "Menu")',
                             onSubmit: function (param) {
-                                $('#ui_org_edit_btn').linkbutton('disable');
+                                $('#ui_menu_edit_btn').linkbutton('disable');
                                 if ($(this).form('validate')) {
-                                    var t = $("#comboParent").combotree('tree');
-                                    var node = t.tree('getSelected');
-                                    param.ParentId = node.id;
                                     return true;
                                 }
                                 else {
-                                    $('#ui_org_edit_btn').linkbutton('enable');
+                                    $('#ui_menu_edit_btn').linkbutton('enable');
                                     return false;
                                 }
                             },
                             success: function (data) {
                                 var dataJson = eval('(' + data + ')');
                                 if (dataJson.success) {
-                                    $("#ui_org_edit_dialog").dialog('destroy');
+                                    $("#ui_menu_edit_dialog").dialog('destroy');
                                     $.show_warning("提示", dataJson.msg);
-                                    $("#ui_menu_tg").treegrid("reload");
+                                    $("#ui_menu_tg").treegrid("reload").treegrid('clearSelections').treegrid('clearChecked');//刷新并清除已选择
                                 } else {
-                                    $('#ui_org_edit_btn').linkbutton('enable');
+                                    $('#ui_menu_edit_btn').linkbutton('enable');
                                     $.show_warning("提示", dataJson.msg);
                                 }
                             }
@@ -192,11 +189,12 @@
                 onLoad: function () {
                     $("#id").val(row.id);
                     $("#Name").val(row.text);
+                    $("#Url").val(row.Url);
+                    $("#Icon").val(row.Icon);
                     $('#Sort').numberspinner('setValue', row.Sort);
-                    $("#comboParent").combotree('setValue', row.ParentId);
                 },
                 onClose: function () {
-                    $("#ui_org_edit_dialog").dialog('destroy');
+                    $("#ui_menu_edit_dialog").dialog('destroy');
                 }
             });
         }
@@ -205,26 +203,22 @@
         function menu_delete() {
             var row = $("#ui_menu_tg").datagrid("getSelected");
             if (!row) {
-                $.show_warning("提示", "请先勾选要删除的机构");
+                $.show_warning("提示", "请先勾选要删除的菜单");
                 return;
             }
-            $.messager.confirm('提示', '确定删除：' + row.text + '？如果有子机构也会同时删除！', function (r) {
+            $.messager.confirm('提示', '确定删除：' + row.text + '？如果有子菜单也会同时删除！', function (r) {
                 if (r) {
-                    orgIds = "";
+                    menuIds = "";
                     recursionGetIds(row);
                     $.ajax({
-                        url: '@Url.Action("Delete", "Organization")',
-                        data: { "deleteOrgIds": row.id +","+ orgIds },
+                        url: '@Url.Action("Delete", "Menu")',
+                        data: { "deleteMenuIds": row.id + "," + menuIds },
                         type: "POST",
                         dataType: "JSON",
                         success: function (data) {
                             if (data.success) {
                                 $.show_warning("提示", data.msg);
-                                $("#ui_menu_tg").treegrid("reload");
-                                if ($('#tabs').tabs('exists', '组织机构')) {
-                                    $('#tabs').tabs('getTab', '组织机构').panel('refresh');
-                                }
-                                //$("#ui_menu_layout").layout("collapse", "east");
+                                $("#ui_menu_tg").treegrid("reload").treegrid('clearSelections').treegrid('clearChecked');//刷新并清除已选择
                             } else {
                                 $.show_warning("提示", data.msg);
                             }

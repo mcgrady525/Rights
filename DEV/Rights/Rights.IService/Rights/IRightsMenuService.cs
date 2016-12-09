@@ -32,5 +32,22 @@ namespace Rights.IService.Rights
         [OperationContract]
         ServiceResult<bool> AddMenu(AddMenuRequest request, TRightsUser loginInfo);
 
+        /// <summary>
+        /// 修改菜单
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="loginInfo"></param>
+        /// <returns></returns>
+        [OperationContract]
+        ServiceResult<bool> EditMenu(EditMenuRequest request, TRightsUser loginInfo);
+
+        /// <summary>
+        /// 删除菜单
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [OperationContract]
+        ServiceResult<bool> DeleteMenu(DeleteMenuRequest request);
+
     }
 }
