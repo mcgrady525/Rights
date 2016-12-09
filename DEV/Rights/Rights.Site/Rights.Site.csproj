@@ -1714,6 +1714,7 @@
     <Content Include="Views\Menu\Index.cshtml" />
     <Content Include="Views\Menu\Add.cshtml" />
     <Content Include="Views\Menu\Edit.cshtml" />
+    <Content Include="Views\Menu\SetButton.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

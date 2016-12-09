@@ -201,7 +201,7 @@
 
         //删除菜单
         function menu_delete() {
-            var row = $("#ui_menu_tg").datagrid("getSelected");
+            var row = $("#ui_menu_tg").treegrid("getSelected");
             if (!row) {
                 $.show_warning("提示", "请先勾选要删除的菜单");
                 return;
@@ -224,6 +224,91 @@
                             }
                         }
                     });
+                }
+            });
+        };
+
+        //分配按钮
+        function ui_menu_setbutton() {
+            var row = $("#ui_menu_tg").treegrid("getSelected");
+            if (row.length < 1) {
+                $.show_warning("提示", "请先勾选要分配按钮的菜单");
+                return;
+            }
+            if (row.length > 1) {
+                $.show_warning("提示", "无法批量分配菜单对应的按钮");
+                $("#ui_menu_tg").treegrid('clearSelections').treegrid('clearChecked');
+                return;
+            }
+            if (row[0].ParentId == 0 || row[0].ParentId == "") {
+                $.show_warning("提示", "根节点无法分配按钮");
+                $("#ui_menu_tg").treegrid('clearSelections').treegrid('clearChecked');
+                return;
+            }
+
+            //分配按钮
+            $("<div/>").dialog({
+                id: "ui_menu_setbutton_dialog",
+                href: '@Url.Action("SetButton", "Menu")',
+                title: "分配按钮",
+                height: 350,
+                width: 460,
+                modal: true,
+                buttons: [{
+                    id: "ui_menu_setbutton_btn",
+                    text: '确 定',
+                    handler: function () {
+                        $("#ui_menu_setbuttonform").form("submit", {
+                            url: '@Url.Action("SetButton", "Menu")',
+                            onSubmit: function (param) {
+                                $('#ui_menu_setbutton_btn').linkbutton('disable');
+                                param.action = 'setmenubutton';
+                                param.code = row[0].Code;
+                                var buttonIds = '';
+                                $("#btnList input:checked").each(function (index, el) {
+                                    buttonIds += $(this).attr('value') + ",";
+                                });
+                                buttonIds = buttonIds.substring(0, buttonIds.length - 1);
+                                param.buttonIds = buttonIds;
+                                if ($(this).form('validate'))
+                                    return true;
+                                else {
+                                    $('#ui_menu_setbutton_btn').linkbutton('enable');
+                                    return false;
+                                }
+                            },
+                            success: function (data) {
+                                var dataJson = eval('(' + data + ')');
+                                if (dataJson.success) {
+                                    $("#ui_menu_setbutton_dialog").dialog('destroy');
+                                    $.show_warning("提示", dataJson.msg);
+                                    $("#ui_menu_tg").treegrid("reload");
+                                } else {
+                                    $('#ui_menu_setbutton_btn').linkbutton('enable');
+                                    $.show_warning("提示", dataJson.msg);
+                                }
+                            }
+                        });
+                    }
+                }],
+                onLoad: function () {
+                    $.post("ashx/bg_menu.ashx", { action: "getmenubutton", code: row[0].Code }, function (data) {
+                        if (data != null && data.length > 0) {
+                            for (var i = 0; i < data.length; i++) {
+                                var li = "";
+                                if (data[i].IsChecked) {
+                                    li = "<li><input type=\"checkbox\" name=\"menubutton\" value=\"" + data[i].ButtonId + "\" checked=\"checked\" />" + data[i].ButtonName + "</li>";
+                                } else {
+                                    li = "<li><input type=\"checkbox\" name=\"menubutton\" value=\"" + data[i].ButtonId + "\" />" + data[i].ButtonName + "</li>";
+                                }
+                                $("#btnList").append(li);
+                            }
+                        }
+                    });
+
+                },
+                onClose: function () {
+                    $("#ui_menu_setbutton_dialog").dialog('destroy');  //销毁dialog对象
                 }
             });
         };

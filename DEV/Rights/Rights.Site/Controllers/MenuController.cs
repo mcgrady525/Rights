@@ -155,6 +155,45 @@ namespace Rights.Site.Controllers
             return Json(new { success = flag, msg = msg }, JsonRequestBehavior.AllowGet);
         }
 
+        /// <summary>
+        /// 分配按钮
+        /// </summary>
+        /// <returns></returns>
+        [LoginAuthorization]
+        public ActionResult SetButton()
+        {
+            return View();
+        }
+
+        /// <summary>
+        /// 分配按钮
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult SetButton(SetButtonRequest request)
+        {
+            var flag = false;
+            var msg = string.Empty;
+
+            //using (var factory = new ChannelFactory<IRightsMenuService>("*"))
+            //{
+            //    var client = factory.CreateChannel();
+            //    var rs = client.SetButton(request);
+            //    if (rs.ReturnCode == ReturnCodeType.Success && rs.Content == true)
+            //    {
+            //        flag = true;
+            //        msg = "分配按钮成功!";
+            //    }
+            //    else
+            //    {
+            //        msg = "分配按钮失败!";
+            //    }
+            //}
+
+            return Json(new { success = flag, msg = msg }, JsonRequestBehavior.AllowGet);
+        }
+
 
         #region Private method
         private string RecursionMenu(List<TRightsMenu> list, int parentId)
