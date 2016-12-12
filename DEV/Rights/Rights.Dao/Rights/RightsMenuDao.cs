@@ -9,6 +9,7 @@ using Tracy.Frameworks.Common.Extends;
 using Tracy.Frameworks.Common.Helpers;
 using Dapper;
 using Rights.Common.Helper;
+using Rights.Entity.ViewModel;
 
 namespace Rights.Dao.Rights
 {
@@ -134,6 +135,92 @@ namespace Rights.Dao.Rights
             }
 
             return result;
+        }
+
+        /// <summary>
+        /// 获取当前菜单关联的按钮
+        /// </summary>
+        /// <param name="menuId">当前菜单id</param>
+        /// <returns></returns>
+        public List<TRightsMenuButton> GetButtonsByMenuId(int menuId)
+        {
+            var result = new List<TRightsMenuButton>();
+            using (var conn = DapperHelper.CreateConnection())
+            {
+                result = conn.Query<TRightsMenuButton>(@"SELECT menuButton.menu_id AS MenuId, menuButton.button_id AS ButtonId,* 
+                                                            FROM dbo.t_rights_menu_button AS menuButton
+                                                            WHERE menuButton.menu_id= @MenuId;", new { MenuId = menuId }).ToList();
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// 为菜单分配按钮
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public bool SetButton(SetButtonRequest request)
+        {
+            //先删除原来分配的按钮,如果是删除按钮，需要同时删除角色菜单按钮中的记录
+            //再增加新分配的按钮
+            //使用事务
+            var addMenuButtons = new List<TRightsMenuButton>();
+            var delMenuButtons = new List<TRightsMenuButton>();
+            var buttonIds = request.buttonIds.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries).Select(p => p.ToInt()).ToList();
+            if (buttonIds.HasValue())
+            {
+                foreach (var item in buttonIds)
+                {
+                    var addMenuButton = new TRightsMenuButton
+                    {
+                        MenuId = request.MenuId,
+                        ButtonId = item
+                    };
+                    addMenuButtons.Add(addMenuButton);
+                }
+            }
+
+            var originButtons = GetButtonsByMenuId(request.MenuId).Select(p => p.ButtonId.Value).ToList();
+            //var addButtonIds = buttonIds.Except(originButtons).ToList();
+            var delButtonIds = originButtons.Except(buttonIds).ToList();
+            if (delButtonIds.HasValue())
+            {
+                foreach (var item in delButtonIds)
+                {
+                    var delMenuButton = new TRightsMenuButton
+                    {
+                        MenuId = request.MenuId,
+                        ButtonId = item
+                    };
+                    delMenuButtons.Add(delMenuButton);
+                }
+            }
+
+            using (var conn = DapperHelper.CreateConnection())
+            {
+                var trans = conn.BeginTransaction();
+
+                try
+                {
+                    //删除原来的菜单按钮
+                    conn.Execute(@"DELETE FROM dbo.t_rights_menu_button WHERE menu_id= @MenuId;", new { @MenuId = request.MenuId }, trans);
+
+                    //删除角色菜单按钮(如果有取消关联按钮的话)
+                    conn.Execute(@"DELETE FROM dbo.t_rights_role_menu_button WHERE menu_id= @MenuId AND button_id= @ButtonId;", delMenuButtons, trans);
+
+                    //新增新分配的
+                    conn.Execute(@"INSERT INTO dbo.t_rights_menu_button VALUES (@MenuId,@ButtonId);", addMenuButtons, trans);
+
+                    trans.Commit();
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    trans.Rollback();
+                }
+            }
+            return false;
         }
     }
 }

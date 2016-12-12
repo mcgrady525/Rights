@@ -49,5 +49,21 @@ namespace Rights.IService.Rights
         [OperationContract]
         ServiceResult<bool> DeleteMenu(DeleteMenuRequest request);
 
+        /// <summary>
+        /// 获取当前菜单关联的按钮列表
+        /// </summary>
+        /// <param name="menuId"></param>
+        /// <returns></returns>
+        [OperationContract]
+        ServiceResult<List<GetButtonResponse>> GetButton(string menuId);
+
+        /// <summary>
+        /// 为菜单分配按钮
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [OperationContract]
+        ServiceResult<bool> SetButton(SetButtonRequest request);
+
     }
 }

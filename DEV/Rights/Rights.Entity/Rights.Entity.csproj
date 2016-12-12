@@ -76,6 +76,7 @@
     <Compile Include="ViewModel\EditRoleRequest.cs" />
     <Compile Include="ViewModel\EditUserRequest.cs" />
     <Compile Include="ViewModel\FirstLoginRequest.cs" />
+    <Compile Include="ViewModel\GetButtonResponse.cs" />
     <Compile Include="ViewModel\GetPagingRolesRequest.cs" />
     <Compile Include="ViewModel\GetPagingRolesResponse.cs" />
     <Compile Include="ViewModel\GetPagingRoleUsersRequest.cs" />

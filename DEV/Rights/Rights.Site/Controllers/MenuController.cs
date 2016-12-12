@@ -176,22 +176,44 @@ namespace Rights.Site.Controllers
             var flag = false;
             var msg = string.Empty;
 
-            //using (var factory = new ChannelFactory<IRightsMenuService>("*"))
-            //{
-            //    var client = factory.CreateChannel();
-            //    var rs = client.SetButton(request);
-            //    if (rs.ReturnCode == ReturnCodeType.Success && rs.Content == true)
-            //    {
-            //        flag = true;
-            //        msg = "分配按钮成功!";
-            //    }
-            //    else
-            //    {
-            //        msg = "分配按钮失败!";
-            //    }
-            //}
+            using (var factory = new ChannelFactory<IRightsMenuService>("*"))
+            {
+                var client = factory.CreateChannel();
+                var rs = client.SetButton(request);
+                if (rs.ReturnCode == ReturnCodeType.Success && rs.Content == true)
+                {
+                    flag = true;
+                    msg = "分配按钮成功!";
+                }
+                else
+                {
+                    msg = "分配按钮失败!";
+                }
+            }
 
             return Json(new { success = flag, msg = msg }, JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
+        /// 获取当前菜单关联的按钮列表
+        /// </summary>
+        /// <param name="menuId"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult GetButton(string menuId)
+        {
+            var result = string.Empty;
+            using (var factory = new ChannelFactory<IRightsMenuService>("*"))
+            {
+                var client = factory.CreateChannel();
+                var rs = client.GetButton(menuId);
+                if (rs.ReturnCode == ReturnCodeType.Success)
+                {
+                    result = rs.Content.ToJson();
+                }
+            }
+
+            return Content(result);
         }
 
 
@@ -222,7 +244,7 @@ namespace Rights.Site.Controllers
                 sb.Append("]},");
             }
             return sb.ToString();
-        } 
+        }
         #endregion
 
     }

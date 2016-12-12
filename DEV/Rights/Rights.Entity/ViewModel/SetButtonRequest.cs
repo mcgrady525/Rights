@@ -11,6 +11,14 @@ namespace Rights.Entity.ViewModel
     [Serializable]
     public class SetButtonRequest
     {
+        /// <summary>
+        /// 为哪个菜单分配按钮
+        /// </summary>
+        public int MenuId { get; set; }
 
+        /// <summary>
+        /// 勾选了哪些按钮
+        /// </summary>
+        public string buttonIds { get; set; }
     }
 }

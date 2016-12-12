@@ -24,6 +24,7 @@ namespace Rights.Service.Rights
     {
         //注入dao
         private static readonly IRightsMenuDao menuDao = Factory.GetRightsMenuDao();
+        private static readonly IRightsButtonDao buttonDao = Factory.GetRightsButtonDao();
 
         /// <summary>
         /// 获取所有菜单
@@ -135,6 +136,72 @@ namespace Rights.Service.Rights
                     result.ReturnCode = ReturnCodeType.Success;
                     result.Content = true;
                 }
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// 获取当前菜单关联的按钮列表
+        /// </summary>
+        /// <param name="menuId">当前菜单id</param>
+        /// <returns></returns>
+        public ServiceResult<List<GetButtonResponse>> GetButton(string menuId)
+        {
+            //首先获取所有按钮
+            //融合当前菜单关联的按钮
+            var result = new ServiceResult<List<GetButtonResponse>>
+            {
+                ReturnCode = ReturnCodeType.Error,
+                Content = new List<GetButtonResponse>()
+            };
+
+            var allButtons = buttonDao.GetAll();
+            var menuButtons = menuDao.GetButtonsByMenuId(menuId.ToInt());
+            if (allButtons.HasValue())
+            {
+                foreach (var item in allButtons)
+                {
+                    var getButtonResponse = new GetButtonResponse
+                    {
+                        MenuId = menuId.ToInt(),
+                        ButtonId = item.Id,
+                        ButtonName = item.Name,
+                        ButtonIcon = item.Icon
+                    };
+                    if (menuButtons.HasValue() && menuButtons.Any(p => p.ButtonId == item.Id))
+                    {
+                        getButtonResponse.IsChecked = true;
+                    }
+
+                    result.Content.Add(getButtonResponse);
+                }
+            }
+            result.ReturnCode = ReturnCodeType.Success;
+
+            return result;
+        }
+
+        /// <summary>
+        /// 为菜单分配按钮
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public ServiceResult<bool> SetButton(SetButtonRequest request)
+        {
+            //先删除原来分配的按钮
+            //再增加新分配的按钮
+            //使用事务
+            var result = new ServiceResult<bool>
+            {
+                ReturnCode = ReturnCodeType.Error
+            };
+
+            var rs = menuDao.SetButton(request);
+            if (rs == true)
+            {
+                result.ReturnCode = ReturnCodeType.Success;
+                result.Content = true;
             }
 
             return result;

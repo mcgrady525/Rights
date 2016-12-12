@@ -229,7 +229,7 @@
         };
 
         //分配按钮
-        function ui_menu_setbutton() {
+        function menu_setbutton() {
             var row = $("#ui_menu_tg").treegrid("getSelected");
             if (row.length < 1) {
                 $.show_warning("提示", "请先勾选要分配按钮的菜单");
@@ -240,7 +240,7 @@
                 $("#ui_menu_tg").treegrid('clearSelections').treegrid('clearChecked');
                 return;
             }
-            if (row[0].ParentId == 0 || row[0].ParentId == "") {
+            if (row.ParentId == 0 || row.ParentId == "") {
                 $.show_warning("提示", "根节点无法分配按钮");
                 $("#ui_menu_tg").treegrid('clearSelections').treegrid('clearChecked');
                 return;
@@ -262,8 +262,7 @@
                             url: '@Url.Action("SetButton", "Menu")',
                             onSubmit: function (param) {
                                 $('#ui_menu_setbutton_btn').linkbutton('disable');
-                                param.action = 'setmenubutton';
-                                param.code = row[0].Code;
+                                param.menuId = row.id;
                                 var buttonIds = '';
                                 $("#btnList input:checked").each(function (index, el) {
                                     buttonIds += $(this).attr('value') + ",";
@@ -292,7 +291,8 @@
                     }
                 }],
                 onLoad: function () {
-                    $.post("ashx/bg_menu.ashx", { action: "getmenubutton", code: row[0].Code }, function (data) {
+                    $.post('@Url.Action("GetButton", "Menu")' + '?menuId=' + row.id, function (data) {
+                        data = eval('(' + data + ')');
                         if (data != null && data.length > 0) {
                             for (var i = 0; i < data.length; i++) {
                                 var li = "";

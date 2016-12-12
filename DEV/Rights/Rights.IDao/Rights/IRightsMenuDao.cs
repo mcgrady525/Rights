@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Rights.Entity.Db;
+using Rights.Entity.ViewModel;
 
 namespace Rights.IDao.Rights
 {
@@ -51,5 +52,19 @@ namespace Rights.IDao.Rights
         /// </summary>
         /// <returns></returns>
         List<TRightsMenu> GetAll();
+
+        /// <summary>
+        /// 获取当前菜单关联的按钮
+        /// </summary>
+        /// <param name="menuId">当前菜单id</param>
+        /// <returns></returns>
+        List<TRightsMenuButton> GetButtonsByMenuId(int menuId);
+
+        /// <summary>
+        /// 为菜单分配按钮
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        bool SetButton(SetButtonRequest request);
     }
 }
