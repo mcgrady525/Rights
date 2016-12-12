@@ -7,6 +7,8 @@ using Rights.IDao.Rights;
 using Rights.Entity.Db;
 using Rights.Common.Helper;
 using Dapper;
+using Tracy.Frameworks.Common.Result;
+using Rights.Entity.ViewModel;
 
 namespace Rights.Dao.Rights
 {
@@ -132,5 +134,70 @@ namespace Rights.Dao.Rights
 
             return result;
         }
+
+        /// <summary>
+        /// 获取所有按钮(分页)
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public PagingResult<GetPagingButtonsResponse> GetPagingButtons(GetPagingButtonsRequest request)
+        {
+            PagingResult<GetPagingButtonsResponse> result = null;
+            var totalCount = 0;
+            var startIndex = (request.PageIndex - 1) * request.PageSize + 1;
+            var endIndex = request.PageIndex * request.PageSize;
+
+            using (var conn = DapperHelper.CreateConnection())
+            {
+                var multi = conn.QueryMultiple(@"--获取所有按钮(分页)
+                    SELECT rs.* FROM
+                    (SELECT ROW_NUMBER() OVER (ORDER BY btn.created_time DESC) AS RowNum, btn.created_time AS CreatedTime, btn.last_updated_time AS LastUpdatedTIme,* 
+                    FROM dbo.t_rights_button AS btn) AS rs
+                    WHERE rs.RowNum BETWEEN @Start AND @End;
+
+                    --获取所有按钮total
+                    SELECT COUNT(btn.id) FROM dbo.t_rights_button AS btn;", new { @Start = startIndex, @End = endIndex });
+                var query1 = multi.Read<GetPagingButtonsResponse>();
+                var query2 = multi.Read<int>();
+                totalCount = query2.First();
+
+                result = new PagingResult<GetPagingButtonsResponse>(totalCount, request.PageIndex, request.PageSize, query1);
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// 依名称查询按钮，不存在返回NULL
+        /// </summary>
+        /// <param name="buttonName"></param>
+        /// <returns></returns>
+        public TRightsButton GetButtonByName(string buttonName)
+        {
+            TRightsButton result = null;
+            using (var conn = DapperHelper.CreateConnection())
+            {
+                result = conn.Query<TRightsButton>(@"SELECT * FROM dbo.t_rights_button WHERE name= @Name;", new { @Name = buttonName }).FirstOrDefault();
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// 依标识码查询按钮，不存在返回NULL
+        /// </summary>
+        /// <param name="buttonCode"></param>
+        /// <returns></returns>
+        public TRightsButton GetButtonByCode(string buttonCode)
+        {
+            TRightsButton result = null;
+            using (var conn = DapperHelper.CreateConnection())
+            {
+                result = conn.Query<TRightsButton>(@"SELECT * FROM dbo.t_rights_button WHERE code= @Code;", new { @Code = buttonCode }).FirstOrDefault();
+            }
+
+            return result;
+        }
+
     }
 }

@@ -70,6 +70,7 @@
   <ItemGroup>
     <Content Include="Global.asax" />
     <Content Include="RightsAccountService.svc" />
+    <Content Include="RightsButtonService.svc" />
     <Content Include="RightsMenuService.svc" />
     <Content Include="RightsOrganizationService.svc" />
     <Content Include="RightsRoleService.svc" />

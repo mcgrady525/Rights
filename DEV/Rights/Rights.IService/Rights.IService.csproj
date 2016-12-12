@@ -48,6 +48,7 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Rights\IRightsAccountService.cs" />
+    <Compile Include="Rights\IRightsButtonService.cs" />
     <Compile Include="Rights\IRightsMenuService.cs" />
     <Compile Include="Rights\IRightsOrganizationService.cs" />
     <Compile Include="Rights\IRightsRoleService.cs" />

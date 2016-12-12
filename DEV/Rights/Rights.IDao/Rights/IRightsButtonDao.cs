@@ -1,9 +1,11 @@
 ﻿using Rights.Entity.Db;
+using Rights.Entity.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Tracy.Frameworks.Common.Result;
 
 namespace Rights.IDao.Rights
 {
@@ -51,5 +53,27 @@ namespace Rights.IDao.Rights
         /// </summary>
         /// <returns></returns>
         List<TRightsButton> GetAll();
+
+        /// <summary>
+        /// 获取所有按钮(分页)
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        PagingResult<GetPagingButtonsResponse> GetPagingButtons(GetPagingButtonsRequest request);
+
+        /// <summary>
+        /// 依名称查询按钮，不存在返回NULL
+        /// </summary>
+        /// <param name="buttonName"></param>
+        /// <returns></returns>
+        TRightsButton GetButtonByName(string buttonName);
+
+        /// <summary>
+        /// 依标识码查询按钮，不存在返回NULL
+        /// </summary>
+        /// <param name="buttonCode"></param>
+        /// <returns></returns>
+        TRightsButton GetButtonByCode(string buttonCode);
+
     }
 }

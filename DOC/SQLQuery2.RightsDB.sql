@@ -511,9 +511,13 @@ SELECT * FROM dbo.t_rights_button;
 SELECT * FROM dbo.t_rights_menu_button
 WHERE menu_id= 8;
 
+SELECT menuButton.menu_id AS MenuId, menuButton.button_id AS ButtonId,* 
+FROM dbo.t_rights_menu_button AS menuButton
+WHERE menuButton.menu_id= 8;
+
 --角色-菜单-按钮
 SELECT * FROM dbo.t_rights_role_menu_button
-WHERE role_id= 1 AND menu_id= 8;
+WHERE role_id= 1 AND menu_id= 9;
 
 --INSERT INTO dbo.t_rights_menu_button
 --        ( menu_id, button_id )
@@ -535,6 +539,35 @@ WHERE role_id= 1 AND menu_id= 8;
 --( 1,8,11),
 --( 1,8,12);
 
+--为菜单分配按钮
+--删除原来的菜单按钮
+--DELETE FROM dbo.t_rights_menu_button WHERE menu_id= @MenuId;
+
+----删除原来的角色菜单按钮
+--DELETE FROM dbo.t_rights_role_menu_button WHERE menu_id= @MenuId AND button_id= @ButtonId;
+
+----新增菜单按钮
+--INSERT INTO dbo.t_rights_menu_button VALUES (@MenuId,@ButtonId);
+
+
+--按钮管理
+--
+SELECT * FROM dbo.t_rights_button;
+
+SELECT * FROM dbo.t_rights_menu_button AS menuButton
+WHERE menuButton.menu_id= 9;
+
+--获取所有按钮(分页)
+SELECT rs.* FROM
+(SELECT ROW_NUMBER() OVER (ORDER BY btn.created_time DESC) AS RowNum, btn.created_time AS CreatedTime, btn.last_updated_time AS LastUpdatedTIme,* 
+FROM dbo.t_rights_button AS btn) AS rs
+WHERE rs.RowNum BETWEEN @Start AND @End;
+
+--获取所有按钮total
+SELECT COUNT(btn.id) FROM dbo.t_rights_button AS btn;
+
+--依据name查询
+SELECT * FROM dbo.t_rights_button WHERE code= @Code;
 
 
 

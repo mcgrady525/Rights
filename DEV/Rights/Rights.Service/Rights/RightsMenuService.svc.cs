@@ -104,14 +104,14 @@ namespace Rights.Service.Rights
                 menu.Sort = request.Sort;
                 menu.LastUpdatedBy = loginInfo.Id;
                 menu.LastUpdatedTime = DateTime.Now;
+                var rs = menuDao.Update(menu);
+                if (rs == true)
+                {
+                    result.ReturnCode = ReturnCodeType.Success;
+                    result.Content = true;
+                }
             }
-            var rs = menuDao.Update(menu);
-            if (rs == true)
-            {
-                result.ReturnCode = ReturnCodeType.Success;
-                result.Content = true;
-            }
-
+            
             return result;
         }
 
