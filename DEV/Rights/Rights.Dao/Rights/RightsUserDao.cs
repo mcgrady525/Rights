@@ -415,5 +415,24 @@ namespace Rights.Dao.Rights
 
             return result;
         }
+
+        /// <summary>
+        /// 获取用户所拥有的角色
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns>返回角色id，可能多个</returns>
+        public List<int> GetRolesByUserId(int userId)
+        {
+            var result = new List<int>();
+            using (var conn = DapperHelper.CreateConnection())
+            {
+                var userRoles = conn.Query<TRightsUserRole>(@"SELECT userRole.id, userRole.user_id AS UserId, userRole.role_id AS RoleId FROM dbo.t_rights_user AS u
+                    LEFT JOIN dbo.t_rights_user_role AS userRole ON u.id= userRole.user_id
+                    WHERE u.id= @UserId;", new { @UserId = userId }).ToList();
+                result = userRoles.Select(p => p.RoleId.Value).ToList();
+            }
+
+            return result;
+        }
     }
 }

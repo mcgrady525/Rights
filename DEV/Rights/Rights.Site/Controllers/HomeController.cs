@@ -14,6 +14,7 @@ using System.Text;
 using Rights.Site.Filters;
 using Rights.Entity.ViewModel;
 using System.Web.Security;
+using Rights.Common.Helper;
 
 namespace Rights.Site.Controllers
 {
@@ -314,7 +315,25 @@ namespace Rights.Site.Controllers
         /// <returns></returns>
         public ActionResult GetMyAuthority()
         {
-            throw new NotImplementedException();
+            //获取当前用户所拥有的所有角色
+            //获取角色关联的角色菜单按钮信息
+            var result = string.Empty;
+
+            using (var factory = new ChannelFactory<IRightsAccountService>("*"))
+            {
+                var client = factory.CreateChannel();
+                var rs = client.GetMyAuthority(base.loginInfo.Id);
+                if (rs.ReturnCode == ReturnCodeType.Success)
+                {
+                    var roleMenuButtons = rs.Content;
+                    if (roleMenuButtons.HasValue())
+                    {
+                        result = RightsHelper.GetRoleMenuButtonStr(roleMenuButtons);
+                    }
+                }
+            }
+
+            return Content(result);
         }
 
 

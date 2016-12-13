@@ -89,5 +89,12 @@ namespace Rights.IDao.Rights
         /// <returns></returns>
         bool SetRole(SetRoleRequest request);
 
+        /// <summary>
+        /// 获取用户所拥有的角色
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns>返回角色id，可能多个</returns>
+        List<int> GetRolesByUserId(int userId);
+
     }
 }

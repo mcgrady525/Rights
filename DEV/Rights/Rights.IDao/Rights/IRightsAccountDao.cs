@@ -49,6 +49,5 @@ namespace Rights.IDao.Rights
         /// <param name="request"></param>
         /// <returns></returns>
         bool ChangePwd(ChangePwdRequest request, TRightsUser loginInfo);
-
     }
 }

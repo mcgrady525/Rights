@@ -570,5 +570,67 @@ SELECT COUNT(btn.id) FROM dbo.t_rights_button AS btn;
 SELECT * FROM dbo.t_rights_button WHERE code= @Code;
 
 
+--组织机构
+SELECT * FROM dbo.t_rights_organization;
+
+--删除机构(支持批量)
+--DELETE FROM dbo.t_rights_organization WHERE id IN @Ids;
+
+----删除机构-用户
+--DELETE FROM dbo.t_rights_user_organization WHERE organization_id IN @OrgIds;
+
+--用户
+SELECT * FROM dbo.t_rights_user;
+
+
+SELECT * FROM dbo.t_rights_button;
+--菜单
+SELECT * FROM dbo.t_rights_menu;
+
+--删除菜单数据
+--DELETE FROM dbo.t_rights_menu WHERE id IN @MenuIds;
+
+----删除菜单按钮数据
+SELECT * FROM dbo.t_rights_menu_button WHERE menu_id= 30;
+
+--DELETE FROM dbo.t_rights_menu_button WHERE menu_id IN @MenuIds;
+
+----删除角色菜单按钮数据
+SELECT * FROM dbo.t_rights_role_menu_button WHERE menu_id= 30;
+
+--DELETE FROM dbo.t_rights_role_menu_button WHERE menu_id IN @MenuIds;
+
+
+--删除按钮数据
+--DELETE FROM dbo.t_rights_button WHERE id= @ButtonId;
+
+----删除菜单按钮数据
+--DELETE FROM dbo.t_rights_menu_button WHERE button_id= @ButtonId;
+
+----删除角色菜单按钮数据
+--DELETE FROM dbo.t_rights_role_menu_button WHERE button_id= @ButtonId;
+
+--按钮
+SELECT * FROM dbo.t_rights_button AS btn
+ORDER BY btn.last_updated_time DESC;
+
+--菜单
+SELECT * FROM dbo.t_rights_menu AS menu
+ORDER BY menu.last_updated_time DESC;
+
+--菜单按钮
+SELECT * FROM dbo.t_rights_menu_button AS menuBtn
+WHERE menu_id= 30;
+
+--角色菜单按钮
+SELECT * FROM dbo.t_rights_role_menu_button WHERE menu_id= 30;
+
+SELECT * FROM dbo.t_rights_organization;
+
+--用户拥有的角色
+SELECT userRole.id, userRole.user_id AS UserId, userRole.role_id AS RoleId FROM dbo.t_rights_user AS u
+LEFT JOIN dbo.t_rights_user_role AS userRole ON u.id= userRole.user_id
+WHERE u.id= @UserId;
+
 
 

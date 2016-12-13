@@ -58,5 +58,13 @@ namespace Rights.IService.Rights
         [OperationContract]
         ServiceResult<bool> ChangePwd(ChangePwdRequest request, TRightsUser loginInfo);
 
+        /// <summary>
+        /// 获取当前用户的权限信息
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        [OperationContract]
+        ServiceResult<List<GetRoleMenuButtonResponse>> GetMyAuthority(int userId);
+ 
     }
 }

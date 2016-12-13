@@ -183,11 +183,11 @@
                         }
                     });
 
-                    @*$('#ui_myinfo_authority').tree({
+                    $('#ui_myinfo_authority').tree({
                         url: '@Url.Action("GetMyAuthority", "Home")',
                         onlyLeafCheck: true,
                         checkbox: true
-                    });*@
+                    });
                 },
                 onClose: function () {
                     $("#ui_myinfo_dialog").dialog('destroy');  //销毁dialog对象

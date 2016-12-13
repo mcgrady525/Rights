@@ -18,7 +18,10 @@ namespace Rights.Service.Rights
     /// </summary>
     public class RightsAccountService : IRightsAccountService
     {
+        //注入dao
         private static readonly IRightsAccountDao accountDao = Factory.GetRightsAccountDao();
+        private static readonly IRightsUserDao userDao = Factory.GetRightsUserDao();
+        private static readonly IRightsRoleDao roleDao = Factory.GetRightsRoleDao();
 
         /// <summary>
         /// 检查登录
@@ -27,9 +30,9 @@ namespace Rights.Service.Rights
         /// <returns></returns>
         public ServiceResult<TRightsUser> CheckLogin(CheckLoginRequest request)
         {
-            var result = new ServiceResult<TRightsUser> 
+            var result = new ServiceResult<TRightsUser>
             {
-                ReturnCode= ReturnCodeType.Error
+                ReturnCode = ReturnCodeType.Error
             };
 
             var user = accountDao.CheckLogin(request);
@@ -67,9 +70,9 @@ namespace Rights.Service.Rights
         /// <returns></returns>
         public ServiceResult<bool> InitUserPwd(FirstLoginRequest request, TRightsUser loginInfo)
         {
-            var result = new ServiceResult<bool> 
+            var result = new ServiceResult<bool>
             {
-                ReturnCode= ReturnCodeType.Error
+                ReturnCode = ReturnCodeType.Error
             };
 
             if (accountDao.InitUserPwd(request, loginInfo))
@@ -88,14 +91,14 @@ namespace Rights.Service.Rights
         /// <returns></returns>
         public ServiceResult<GetMyInfoResponse> GetMyInfo(int id)
         {
-            var result = new ServiceResult<GetMyInfoResponse> 
+            var result = new ServiceResult<GetMyInfoResponse>
             {
                 ReturnCode = ReturnCodeType.Error,
-                Content= new GetMyInfoResponse()
+                Content = new GetMyInfoResponse()
             };
 
             var myInfo = accountDao.GetMyInfo(id);
-            if (myInfo!= null)
+            if (myInfo != null)
             {
                 result.ReturnCode = ReturnCodeType.Success;
                 result.Content = myInfo;
@@ -111,9 +114,9 @@ namespace Rights.Service.Rights
         /// <returns></returns>
         public ServiceResult<bool> ChangePwd(ChangePwdRequest request, TRightsUser loginInfo)
         {
-            var result = new ServiceResult<bool> 
+            var result = new ServiceResult<bool>
             {
-                ReturnCode= ReturnCodeType.Error
+                ReturnCode = ReturnCodeType.Error
             };
 
             if (accountDao.ChangePwd(request, loginInfo))
@@ -121,6 +124,29 @@ namespace Rights.Service.Rights
                 result.ReturnCode = ReturnCodeType.Success;
                 result.Content = true;
             }
+
+            return result;
+        }
+
+        /// <summary>
+        /// 获取当前用户的权限信息
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public ServiceResult<List<GetRoleMenuButtonResponse>> GetMyAuthority(int userId)
+        {
+            //获取当前用户所拥有的所有角色(可能多个角色)
+            //获取角色关联的角色菜单按钮信息
+            var result = new ServiceResult<List<GetRoleMenuButtonResponse>>
+            {
+                ReturnCode = ReturnCodeType.Error,
+                Content = new List<GetRoleMenuButtonResponse>()
+            };
+
+            var roleIds = userDao.GetRolesByUserId(userId);
+            var rs = roleDao.GetRoleMenuButton(roleIds);
+            result.ReturnCode = ReturnCodeType.Success;
+            result.Content = rs;
 
             return result;
         }

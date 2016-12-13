@@ -83,11 +83,11 @@ namespace Rights.IDao.Rights
         bool DeleteRole(DeleteRoleRequest request);
 
         /// <summary>
-        /// 角色授权页面，获取角色所拥有的菜单按钮权限
+        /// 获取角色所拥有的菜单按钮权限，角色授权页面和首页我的信息/我的权限页面使用
         /// </summary>
         /// <param name="roleId"></param>
         /// <returns></returns>
-        List<GetRoleMenuButtonResponse> GetRoleMenuButton(int roleId);
+        List<GetRoleMenuButtonResponse> GetRoleMenuButton(List<int> roleIds);
 
         /// <summary>
         /// 为角色授权

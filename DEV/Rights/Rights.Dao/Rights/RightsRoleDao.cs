@@ -320,11 +320,11 @@ namespace Rights.Dao.Rights
         }
 
         /// <summary>
-        /// 角色授权页面，获取角色所拥有的菜单按钮权限
+        /// 获取角色所拥有的菜单按钮权限，角色授权页面和首页我的信息/我的权限页面使用
         /// </summary>
         /// <param name="roleId"></param>
         /// <returns></returns>
-        public List<GetRoleMenuButtonResponse> GetRoleMenuButton(int roleId)
+        public List<GetRoleMenuButtonResponse> GetRoleMenuButton(List<int> roleIds)
         {
             List<GetRoleMenuButtonResponse> result = null;
 
@@ -347,11 +347,11 @@ namespace Rights.Dao.Rights
                             LEFT JOIN dbo.t_rights_button AS button ON menuButton.button_id = button.id
                             LEFT JOIN dbo.t_rights_role_menu_button AS roleMenuButton ON ( roleMenuButton.menu_id = menu.id
                                                                                   AND roleMenuButton.button_id = button.id
-                                                                                  AND roleMenuButton.role_id = @RoleId
+                                                                                  AND roleMenuButton.role_id IN @RoleIds
                                                                                   )
                     ORDER BY menu.parent_id ,
                             menu.sort ,
-                            button.sort;", new { @RoleId = roleId });
+                            button.sort;", new { @RoleIds = roleIds });
                 result = multi.Read<GetRoleMenuButtonResponse>().ToList();
             }
 

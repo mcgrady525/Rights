@@ -66,7 +66,7 @@ namespace Rights.Dao.Rights
                     return menu;
                 }, new { @UserId = userId });
 
-                UserMenus = query.DistinctBy(p=> p.Id).ToList();
+                UserMenus = query.DistinctBy(p => p.Id).ToList();
             }
 
             return RecursionAllChildrenMenu(menuParentId).ToList();
@@ -182,7 +182,7 @@ namespace Rights.Dao.Rights
                         new
                         {
                             @Id = request.Id,
-                            @NewPwd= request.NewPwd,
+                            @NewPwd = request.NewPwd,
                             @LastUpdatedBy = loginInfo.Id,
                             @LastUpdatedTime = DateTime.Now
                         });
@@ -195,8 +195,6 @@ namespace Rights.Dao.Rights
 
             return false;
         }
-
-
 
     }
 }

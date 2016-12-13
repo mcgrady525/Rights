@@ -93,8 +93,8 @@ namespace Rights.Service.Rights
                 OrganizationId = request.OrgId,
                 CreatedBy = loginInfo.Id,
                 CreatedTime = currentTime,
-                LastUpdatedBy= loginInfo.Id,
-                LastUpdatedTime= currentTime
+                LastUpdatedBy = loginInfo.Id,
+                LastUpdatedTime = currentTime
             };
             var rs = roleDao.Insert(item);
             if (rs == true)
@@ -128,7 +128,7 @@ namespace Rights.Service.Rights
             }
 
             var item = roleDao.GetById(request.Id);
-            if (item!= null)
+            if (item != null)
             {
                 item.Name = request.NewName;
                 item.Description = request.Description;
@@ -205,7 +205,7 @@ namespace Rights.Service.Rights
                 Content = new List<GetRoleMenuButtonResponse>()
             };
 
-            var rs = roleDao.GetRoleMenuButton(roleId);
+            var rs = roleDao.GetRoleMenuButton(new List<int> { roleId });
             result.ReturnCode = ReturnCodeType.Success;
             result.Content = rs;
 
