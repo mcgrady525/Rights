@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Rights.Entity.Db;
+using Rights.Entity.ViewModel;
 
 namespace Rights.IDao.Rights
 {
@@ -66,6 +67,13 @@ namespace Rights.IDao.Rights
         /// <param name="orgId"></param>
         /// <returns></returns>
         List<TRightsOrganization> GetChildrenOrgs(int orgId);
+
+        /// <summary>
+        /// 删除机构(支持批量)
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        bool DeleteOrganization(DeleteOrganizationRequest request);
 
     }
 }

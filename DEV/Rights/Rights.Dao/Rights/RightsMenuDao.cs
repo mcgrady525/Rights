@@ -222,5 +222,44 @@ namespace Rights.Dao.Rights
             }
             return false;
         }
+
+        /// <summary>
+        /// 删除菜单
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public bool DeleteMenu(DeleteMenuRequest request)
+        {
+            //删除菜单数据
+            //删除菜单按钮数据
+            //删除角色菜单按钮数据
+            //使用事务
+            var result = false;
+            var deletedMenuIds = request.DeleteMenuIds.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries).Select(p => p.ToInt()).ToList();
+            using (var conn = DapperHelper.CreateConnection())
+            {
+                var trans = conn.BeginTransaction();
+                try
+                {
+                    //删除菜单数据
+                    conn.Execute(@"DELETE FROM dbo.t_rights_menu WHERE id IN @MenuIds;", new { @MenuIds = deletedMenuIds }, trans);
+
+                    //删除菜单按钮数据
+                    conn.Execute(@"DELETE FROM dbo.t_rights_menu_button WHERE menu_id IN @MenuIds;", new { @MenuIds = deletedMenuIds }, trans);
+
+                    //删除角色菜单按钮数据
+                    conn.Execute(@"DELETE FROM dbo.t_rights_role_menu_button WHERE menu_id IN @MenuIds;", new { @MenuIds = deletedMenuIds }, trans);
+
+                    trans.Commit();
+                    result = true;
+                }
+                catch (Exception ex)
+                {
+                    trans.Rollback();
+                }
+            }
+
+            return result;
+        }
     }
 }

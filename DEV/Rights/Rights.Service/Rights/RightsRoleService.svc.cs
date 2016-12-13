@@ -85,13 +85,16 @@ namespace Rights.Service.Rights
                 return result;
             }
 
+            var currentTime = DateTime.Now;
             var item = new TRightsRole
             {
                 Name = request.Name,
                 Description = request.Description,
                 OrganizationId = request.OrgId,
                 CreatedBy = loginInfo.Id,
-                CreatedTime = DateTime.Now
+                CreatedTime = currentTime,
+                LastUpdatedBy= loginInfo.Id,
+                LastUpdatedTime= currentTime
             };
             var rs = roleDao.Insert(item);
             if (rs == true)
@@ -124,20 +127,21 @@ namespace Rights.Service.Rights
                 return result;
             }
 
-            var item = new TRightsRole
+            var item = roleDao.GetById(request.Id);
+            if (item!= null)
             {
-                Id = request.Id,
-                Name = request.NewName,
-                Description = request.Description,
-                OrganizationId = request.OrgId,
-                LastUpdatedBy = loginInfo.Id,
-                LastUpdatedTime = DateTime.Now
-            };
-            var rs = roleDao.Update(item);
-            if (rs == true)
-            {
-                result.ReturnCode = ReturnCodeType.Success;
-                result.Content = true;
+                item.Name = request.NewName;
+                item.Description = request.Description;
+                item.OrganizationId = request.OrgId;
+                item.LastUpdatedBy = loginInfo.Id;
+                item.LastUpdatedTime = DateTime.Now;
+
+                var rs = roleDao.Update(item);
+                if (rs == true)
+                {
+                    result.ReturnCode = ReturnCodeType.Success;
+                    result.Content = true;
+                }
             }
 
             return result;
@@ -150,8 +154,10 @@ namespace Rights.Service.Rights
         /// <returns></returns>
         public ServiceResult<bool> DeleteRole(DeleteRoleRequest request)
         {
-            //删除指定角色
-            //删除角色时解除角色用户角色，角色菜单按钮关系。
+            //删除角色数据
+            //删除用户角色数据
+            //删除角色菜单按钮数据
+            //使用事务
             var result = new ServiceResult<bool>
             {
                 ReturnCode = ReturnCodeType.Error

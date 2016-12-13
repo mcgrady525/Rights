@@ -69,6 +69,7 @@ namespace Rights.Service.Rights
                 return result;
             }
 
+            var currentTime = DateTime.Now;
             var item = new TRightsUser
             {
                 UserId = request.UserId,
@@ -77,7 +78,9 @@ namespace Rights.Service.Rights
                 IsChangePwd = request.IsChangePwd,
                 EnableFlag = request.EnableFlag,
                 CreatedBy = loginInfo.Id,
-                CreatedTime = DateTime.Now
+                CreatedTime = currentTime,
+                LastUpdatedBy = loginInfo.Id,
+                LastUpdatedTime = currentTime
             };
             var rs = userDao.Insert(item);
             if (rs == true)
@@ -110,21 +113,22 @@ namespace Rights.Service.Rights
                 return result;
             }
 
-            var item = new TRightsUser
+            var item = userDao.GetById(request.Id);
+            if (item != null)
             {
-                Id = request.Id,
-                UserId = request.NewUserId,
-                UserName = request.NewUserName,
-                EnableFlag = request.EnableFlag,
-                IsChangePwd = request.IsChangePwd,
-                LastUpdatedBy = loginInfo.Id,
-                LastUpdatedTime = DateTime.Now
-            };
-            var rs = userDao.Update(item);
-            if (rs == true)
-            {
-                result.ReturnCode = ReturnCodeType.Success;
-                result.Content = true;
+                item.UserId = request.NewUserId;
+                item.UserName = request.NewUserName;
+                item.EnableFlag = request.EnableFlag;
+                item.IsChangePwd = request.IsChangePwd;
+                item.LastUpdatedBy = loginInfo.Id;
+                item.LastUpdatedTime = DateTime.Now;
+
+                var rs = userDao.Update(item);
+                if (rs == true)
+                {
+                    result.ReturnCode = ReturnCodeType.Success;
+                    result.Content = true;
+                }
             }
 
             return result;
@@ -141,7 +145,6 @@ namespace Rights.Service.Rights
             //解除用户-机构的关系
             //解除用户-角色的关系
             //需要使用事务
-
             var result = new ServiceResult<bool>
             {
                 ReturnCode = ReturnCodeType.Error

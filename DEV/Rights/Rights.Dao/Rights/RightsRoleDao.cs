@@ -287,8 +287,10 @@ namespace Rights.Dao.Rights
         /// <returns></returns>
         public bool DeleteRole(DeleteRoleRequest request)
         {
-            //删除指定角色
-            //删除角色时解除角色用户角色，角色菜单按钮关系。
+            //删除角色数据
+            //删除用户角色数据
+            //删除角色菜单按钮数据
+            //使用事务
             var result = false;
             using (var conn = DapperHelper.CreateConnection())
             {

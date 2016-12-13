@@ -240,8 +240,11 @@ namespace Rights.Site.Controllers
             else
             {
                 var currentOrg = list.First(p => p.Id == orgId);
+                var createdTime = currentOrg.CreatedTime.ToString(DateTimeTypeConst.DATETIME);
+                var lastUpdatedTime = currentOrg.LastUpdatedTime.HasValue ? currentOrg.LastUpdatedTime.Value.ToString(DateTimeTypeConst.DATETIME) : "";
+
                 sb.Append("[{");
-                sb.Append("\"id\":\"" + currentOrg.Id.ToString() + "\",\"Code\":\"" + currentOrg.Code + "\",\"Enabled\":\"" + currentOrg.EnableFlag.Value + "\",\"Sort\":\"" + currentOrg.Sort.Value + "\",\"CreatedTime\":\"" + currentOrg.CreatedTime.ToString(DateTimeTypeConst.DATETIME) + "\",\"ParentId\":\"" + currentOrg.ParentId.ToString() + "\",\"text\":\"" + currentOrg.Name + "\"");
+                sb.Append("\"id\":\"" + currentOrg.Id.ToString() + "\",\"Code\":\"" + currentOrg.Code + "\",\"Enabled\":\"" + currentOrg.EnableFlag.Value + "\",\"Sort\":\"" + currentOrg.Sort.Value + "\",\"CreatedTime\":\"" + createdTime + "\",\"LastUpdatedTime\":\"" + lastUpdatedTime + "\",\"ParentId\":\"" + currentOrg.ParentId.ToString() + "\",\"text\":\"" + currentOrg.Name + "\"");
 
                 var childOrgs = list.Where(p => p.ParentId == orgId).ToList();
                 if (childOrgs.HasValue())
@@ -266,14 +269,17 @@ namespace Rights.Site.Controllers
                 for (int i = 0; i < childOrgs.Count; i++)
                 {
                     var childStr = RecursionOrg(list, childOrgs[i].Id);
+                    var createdTime = childOrgs[i].CreatedTime.ToString(DateTimeTypeConst.DATETIME);
+                    var lastUpdatedTime = childOrgs[i].LastUpdatedTime.HasValue ? childOrgs[i].LastUpdatedTime.Value.ToString(DateTimeTypeConst.DATETIME) : "";
+
                     if (!childStr.IsNullOrEmpty())
                     {
-                        sb.Append("{\"id\":\"" + childOrgs[i].Id.ToString() + "\",\"Code\":\"" + childOrgs[i].Code + "\",\"Enabled\":\"" + childOrgs[i].EnableFlag.Value + "\",\"Sort\":\"" + childOrgs[i].Sort.Value + "\",\"CreatedTime\":\"" + childOrgs[i].CreatedTime.ToString(DateTimeTypeConst.DATETIME) + "\",\"ParentId\":\"" + childOrgs[i].ParentId.ToString() + "\",\"text\":\"" + childOrgs[i].Name + "\",\"children\":");
+                        sb.Append("{\"id\":\"" + childOrgs[i].Id.ToString() + "\",\"Code\":\"" + childOrgs[i].Code + "\",\"Enabled\":\"" + childOrgs[i].EnableFlag.Value + "\",\"Sort\":\"" + childOrgs[i].Sort.Value + "\",\"CreatedTime\":\"" + createdTime + "\",\"LastUpdatedTime\":\"" + lastUpdatedTime + "\",\"ParentId\":\"" + childOrgs[i].ParentId.ToString() + "\",\"text\":\"" + childOrgs[i].Name + "\",\"children\":");
                         sb.Append(childStr);
                     }
                     else
                     {
-                        sb.Append("{\"id\":\"" + childOrgs[i].Id.ToString() + "\",\"Code\":\"" + childOrgs[i].Code + "\",\"Enabled\":\"" + childOrgs[i].EnableFlag.Value + "\",\"Sort\":\"" + childOrgs[i].Sort.Value + "\",\"CreatedTime\":\"" + childOrgs[i].CreatedTime.ToString(DateTimeTypeConst.DATETIME) + "\",\"ParentId\":\"" + childOrgs[i].ParentId.ToString() + "\",\"text\":\"" + childOrgs[i].Name + "\"},");
+                        sb.Append("{\"id\":\"" + childOrgs[i].Id.ToString() + "\",\"Code\":\"" + childOrgs[i].Code + "\",\"Enabled\":\"" + childOrgs[i].EnableFlag.Value + "\",\"Sort\":\"" + childOrgs[i].Sort.Value + "\",\"CreatedTime\":\"" + createdTime + "\",\"LastUpdatedTime\":\"" + lastUpdatedTime + "\",\"ParentId\":\"" + childOrgs[i].ParentId.ToString() + "\",\"text\":\"" + childOrgs[i].Name + "\"},");
                     }
 
                 }

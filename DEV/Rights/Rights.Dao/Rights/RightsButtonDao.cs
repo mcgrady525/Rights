@@ -8,6 +8,7 @@ using Rights.Entity.Db;
 using Rights.Common.Helper;
 using Dapper;
 using Tracy.Frameworks.Common.Result;
+using Tracy.Frameworks.Common.Extends;
 using Rights.Entity.ViewModel;
 
 namespace Rights.Dao.Rights
@@ -194,6 +195,45 @@ namespace Rights.Dao.Rights
             using (var conn = DapperHelper.CreateConnection())
             {
                 result = conn.Query<TRightsButton>(@"SELECT * FROM dbo.t_rights_button WHERE code= @Code;", new { @Code = buttonCode }).FirstOrDefault();
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// 删除按钮
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public bool DeleteButton(DeleteButtonRequest request)
+        {
+            //删除按钮数据
+            //删除菜单按钮数据
+            //删除角色菜单按钮数据
+            //使用事务
+            var result = false;
+            var buttonId = request.DeleteButtonId.ToInt();
+            using (var conn = DapperHelper.CreateConnection())
+            {
+                var trans = conn.BeginTransaction();
+                try
+                {
+                    //删除按钮数据
+                    conn.Execute(@"DELETE FROM dbo.t_rights_button WHERE id= @ButtonId;", new { @ButtonId = buttonId }, trans);
+
+                    //删除菜单按钮数据
+                    conn.Execute(@"DELETE FROM dbo.t_rights_menu_button WHERE button_id= @ButtonId;", new { @ButtonId = buttonId }, trans);
+
+                    //删除角色菜单按钮数据
+                    conn.Execute(@"DELETE FROM dbo.t_rights_role_menu_button WHERE button_id= @ButtonId;", new { @ButtonId = buttonId }, trans);
+
+                    trans.Commit();
+                    result = true;
+                }
+                catch (Exception ex)
+                {
+                    trans.Rollback();
+                }
             }
 
             return result;

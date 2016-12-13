@@ -42,6 +42,11 @@ namespace Rights.Entity.ViewModel
         public DateTime CreatedTime { get; set; }
 
         /// <summary>
+        /// 上次修改时间
+        /// </summary>
+        public DateTime? LastUpdatedTime { get; set; }
+
+        /// <summary>
         /// 用户所属机构id，多个机构以','分隔
         /// </summary>
         public string UserOrgIds { get; set; }

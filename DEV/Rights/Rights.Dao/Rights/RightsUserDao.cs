@@ -164,7 +164,8 @@ namespace Rights.Dao.Rights
                                             u.user_name AS UserName ,
                                             u.is_change_pwd AS IsChangePwd ,
                                             u.enable_flag AS EnableFlag ,
-                                            u.created_time AS CreatedTime
+                                            u.created_time AS CreatedTime,
+                                            u.last_updated_time AS LastUpdatedTime
                                   FROM      dbo.t_rights_user AS u
                                 ) AS r
                         WHERE   r.RowNum BETWEEN @Start AND @End;
@@ -196,7 +197,8 @@ namespace Rights.Dao.Rights
                                 u.user_name AS UserName ,
                                 u.is_change_pwd AS IsChangePwd ,
                                 u.enable_flag AS EnableFlag ,
-                                u.created_time AS CreatedTime
+                                u.created_time AS CreatedTime,
+                                u.last_updated_time AS LastUpdatedTime
                         FROM    dbo.t_rights_user AS u
                                 LEFT JOIN dbo.t_rights_user_organization AS userOrg ON u.id = userOrg.user_id
                         WHERE   userOrg.organization_id IN @OrgIds
@@ -289,10 +291,13 @@ namespace Rights.Dao.Rights
                 var trans = conn.BeginTransaction();
                 try
                 {
+                    //删除用户数据
                     conn.Execute(@"DELETE FROM dbo.t_rights_user WHERE id IN @Ids;", new { @Ids = ids }, trans);
 
+                    //删除用户-机构数据
                     conn.Execute(@"DELETE FROM dbo.t_rights_user_organization WHERE user_id IN @Ids;", new { @Ids = ids }, trans);
 
+                    //删除用户-角色数据
                     conn.Execute(@"DELETE FROM dbo.t_rights_user_role WHERE user_id IN @Ids;", new { @Ids = ids }, trans);
 
                     trans.Commit();

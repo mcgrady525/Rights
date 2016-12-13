@@ -66,5 +66,12 @@ namespace Rights.IDao.Rights
         /// <param name="request"></param>
         /// <returns></returns>
         bool SetButton(SetButtonRequest request);
+
+        /// <summary>
+        /// 删除菜单
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        bool DeleteMenu(DeleteMenuRequest request);
     }
 }

@@ -111,7 +111,7 @@ namespace Rights.Service.Rights
                     result.Content = true;
                 }
             }
-            
+
             return result;
         }
 
@@ -122,20 +122,20 @@ namespace Rights.Service.Rights
         /// <returns></returns>
         public ServiceResult<bool> DeleteMenu(DeleteMenuRequest request)
         {
+            //删除菜单数据
+            //删除菜单-按钮数据
+            //删除角色菜单按钮数据
+            //使用事务
             var result = new ServiceResult<bool>
             {
                 ReturnCode = ReturnCodeType.Error
             };
 
-            var deletedMenuIds = request.DeleteMenuIds.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries).Select(p => p.ToInt()).ToList();
-            if (deletedMenuIds.HasValue())
+            var rs = menuDao.DeleteMenu(request);
+            if (rs == true)
             {
-                var rs = menuDao.BatchDelete(deletedMenuIds);
-                if (rs == true)
-                {
-                    result.ReturnCode = ReturnCodeType.Success;
-                    result.Content = true;
-                }
+                result.ReturnCode = ReturnCodeType.Success;
+                result.Content = true;
             }
 
             return result;

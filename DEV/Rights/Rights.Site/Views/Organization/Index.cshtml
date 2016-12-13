@@ -69,14 +69,15 @@
                                 columns: [[
                                             { field: 'text', title: '机构名称', width: 200 },
                                             { field: 'Code', title: '编码', width: 100 },
+                                            { field: 'Sort', title: '排序', width: 60 },
                                             {
                                                 field: 'Enabled', title: '启用', sortable: true, width: 60, align: 'center',
                                                 formatter: function (value, row, index) {
                                                     return value ? '<img src="@Url.Content("~/Content/easyui/icon/chk_checked.gif")" alt="已启用" title="机构已启用" />' : '<img src="@Url.Content("~/Content/easyui/icon/chk_unchecked.gif")" alt="未启用" title="机构未启用" />';
                                                 }
                                             },
-                                            { field: 'Sort', title: '排序', width: 60 },
-                                            { field: 'CreatedTime', title: '创建时间', width: 150 }
+                                            { field: 'CreatedTime', title: '创建时间', width: 150 },
+                                            { field: 'LastUpdatedTime', title: '上次修改时间', width: 150 }
                                 ]],
                                 toolbar: toolbar.length == 0 ? null : toolbar
                             });

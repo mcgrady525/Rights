@@ -191,6 +191,7 @@ namespace Rights.Service.Rights
                 ReturnCode = ReturnCodeType.Error
             };
 
+            var currentTime = DateTime.Now;
             var item = new TRightsOrganization
             {
                 Name = request.Name,
@@ -199,7 +200,9 @@ namespace Rights.Service.Rights
                 Sort = request.Sort,
                 EnableFlag = true,
                 CreatedBy = loginInfo.Id,
-                CreatedTime = DateTime.Now
+                CreatedTime = currentTime,
+                LastUpdatedBy = loginInfo.Id,
+                LastUpdatedTime = currentTime
             };
             var rs = orgDao.Insert(item);
             if (rs == true)
@@ -219,25 +222,27 @@ namespace Rights.Service.Rights
         /// <returns></returns>
         public ServiceResult<bool> EditOrganization(EditOrganizationRequest request, TRightsUser loginInfo)
         {
+            //先查询出来再修改
             var result = new ServiceResult<bool>
             {
                 ReturnCode = ReturnCodeType.Error
             };
 
-            var item = new TRightsOrganization
+            var org = orgDao.GetById(request.Id);
+            if (org != null)
             {
-                Id = request.Id,
-                Name = request.Name,
-                Sort = request.Sort,
-                ParentId = request.ParentId,
-                LastUpdatedBy = loginInfo.Id,
-                LastUpdatedTime = DateTime.Now
-            };
-            var rs = orgDao.Update(item);
-            if (rs == true)
-            {
-                result.ReturnCode = ReturnCodeType.Success;
-                result.Content = true;
+                org.Id = request.Id;
+                org.Name = request.Name;
+                org.Sort = request.Sort;
+                org.ParentId = request.ParentId;
+                org.LastUpdatedBy = loginInfo.Id;
+                org.LastUpdatedTime = DateTime.Now;
+                var rs = orgDao.Update(org);
+                if (rs == true)
+                {
+                    result.ReturnCode = ReturnCodeType.Success;
+                    result.Content = true;
+                }
             }
 
             return result;
@@ -250,20 +255,18 @@ namespace Rights.Service.Rights
         /// <returns></returns>
         public ServiceResult<bool> DeleteOrganization(DeleteOrganizationRequest request)
         {
+            //删除机构
+            //解除用户和机构关系
             var result = new ServiceResult<bool>
             {
                 ReturnCode = ReturnCodeType.Error
             };
 
-            var list = request.DeleteOrgIds.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries).Select(p => p.ToInt()).ToList();
-            if (list.HasValue())
+            var rs = orgDao.DeleteOrganization(request);
+            if (rs == true)
             {
-                var rs = orgDao.BatchDelete(list);
-                if (rs == true)
-                {
-                    result.ReturnCode = ReturnCodeType.Success;
-                    result.Content = true;
-                }
+                result.ReturnCode = ReturnCodeType.Success;
+                result.Content = true;
             }
 
             return result;

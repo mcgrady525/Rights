@@ -75,5 +75,12 @@ namespace Rights.IDao.Rights
         /// <returns></returns>
         TRightsButton GetButtonByCode(string buttonCode);
 
+        /// <summary>
+        /// 删除按钮
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        bool DeleteButton(DeleteButtonRequest request);
+
     }
 }

@@ -8,6 +8,7 @@ using Rights.IDao.Rights;
 using Rights.Common.Helper;
 using Dapper;
 using Tracy.Frameworks.Common.Extends;
+using Rights.Entity.ViewModel;
 
 namespace Rights.Dao.Rights
 {
@@ -57,7 +58,7 @@ namespace Rights.Dao.Rights
             using (var conn = DapperHelper.CreateConnection())
             {
                 var effectRows = conn.Execute(@"UPDATE dbo.t_rights_organization SET name= @OrgName, parent_id= @ParentId, sort= @Sort, last_updated_by= @LastUpdatedBy, last_updated_time= @LastUpdatedTime WHERE id= @Id;",
-                                             new { @Id = item.Id, @OrgName = item.Name, @ParentId = item.ParentId, @Sort = item.Sort, @LastUpdatedBy = item.LastUpdatedBy, @LastUpdatedTime= item.LastUpdatedTime });
+                                             new { @Id = item.Id, @OrgName = item.Name, @ParentId = item.ParentId, @Sort = item.Sort, @LastUpdatedBy = item.LastUpdatedBy, @LastUpdatedTime = item.LastUpdatedTime });
                 if (effectRows > 0)
                 {
                     result = true;
@@ -201,6 +202,41 @@ namespace Rights.Dao.Rights
 
                 var childrenOrgs = RecursionChildrenOrgs(orgId);
                 result.AddRange(childrenOrgs);
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// 删除机构(支持批量)
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public bool DeleteOrganization(DeleteOrganizationRequest request)
+        {
+            //删除机构
+            //同时解除用户-机构关系
+            //使用事务
+            var result = false;
+            var orgIds = request.DeleteOrgIds.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries).Select(p => p.ToInt()).ToList();
+            using (var conn = DapperHelper.CreateConnection())
+            {
+                var trans = conn.BeginTransaction();
+                try
+                {
+                    //删除机构
+                    conn.Execute(@"DELETE FROM dbo.t_rights_organization WHERE id IN @Ids;", new { @Ids = orgIds }, trans);
+
+                    //删除用户-机构
+                    conn.Execute(@"DELETE FROM dbo.t_rights_user_organization WHERE organization_id IN @OrgIds;", new { @OrgIds = orgIds }, trans);
+
+                    trans.Commit();
+                    result = true;
+                }
+                catch (Exception ex)
+                {
+                    trans.Rollback();
+                }
             }
 
             return result;

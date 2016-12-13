@@ -141,12 +141,16 @@ namespace Rights.Service.Rights
         /// <returns></returns>
         public ServiceResult<bool> DeleteButton(DeleteButtonRequest request)
         {
+            //删除按钮数据
+            //删除菜单按钮数据
+            //删除角色菜单按钮数据
+            //使用事务
             var result = new ServiceResult<bool>
             {
                 ReturnCode = ReturnCodeType.Error
             };
 
-            var rs = btnDao.Delete(request.DeleteButtonId.ToInt());
+            var rs = btnDao.DeleteButton(request);
             if (rs == true)
             {
                 result.ReturnCode = ReturnCodeType.Success;
