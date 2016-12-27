@@ -151,6 +151,13 @@
             $.show_warning("提示", "请先选择要修改的机构!");
             return;
         }
+
+        //不可以修改根节点
+        if (row.ParentId== 0) {
+            $.show_warning("提示", "不能修改顶级机构!");
+            return;
+        }
+
         $("<div/>").dialog({
             id: "ui_org_edit_dialog",
             href: '@Url.Action("Edit", "Organization")',
